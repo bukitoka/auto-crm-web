@@ -1,0 +1,6 @@
+export type { User } from "@/features/users/types";
+
+export type TokenResponse = {
+  access_token: string;
+  token_type: string;
+};
