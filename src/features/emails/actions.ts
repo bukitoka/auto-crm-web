@@ -7,7 +7,7 @@ import { apiFetch } from "@/lib/api-client";
 import { type SendEmailValues, sendEmailSchema } from "./schemas";
 
 /**
- * Email a contact through the API (SMTP, Mailpit in development). Replies go to
+ * Email a contact through the API (sent through Brevo). Replies go to
  * the signed-in user, and the email is logged on the contact's timeline.
  */
 export async function sendEmail(
