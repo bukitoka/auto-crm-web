@@ -1,39 +1,41 @@
-import { ShieldAlert } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { Metadata } from "next";
-import { EmptyState } from "@/components/shared/empty-state";
+import { ForbiddenState } from "@/components/shared/forbidden-state";
 import { PageHeader } from "@/components/shared/page-header";
+import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/features/auth/api";
 import { listTeam } from "@/features/users/api";
+import { AdminFormDialog } from "@/features/users/components/admin-form-dialog";
 import { TeamTable } from "@/features/users/components/team-table";
-import { isAdmin } from "@/features/users/roles";
+import { canManageAdmins } from "@/features/users/roles";
 
-export const metadata: Metadata = { title: "Team" };
+export const metadata: Metadata = { title: "Admins" };
 
 export default async function TeamPage() {
   const user = await getCurrentUser();
-  if (!isAdmin(user)) {
-    return (
-      <EmptyState
-        icon={ShieldAlert}
-        title="Admins only"
-        description="Ask a workspace admin to manage the team."
-      />
-    );
+  if (!canManageAdmins(user)) {
+    return <ForbiddenState description="Only the super admin manages admin accounts." />;
   }
 
-  const users = await listTeam();
+  const admins = await listTeam();
 
   return (
     <>
       <PageHeader
-        title="Team"
-        description={
-          user.is_super_admin
-            ? "Change roles and deactivate accounts. New teammates sign up on the register page."
-            : "Deactivate member accounts. Only the super admin can change roles or manage admins."
+        title="Admins"
+        description="Create admin accounts and switch them on or off. Each admin works on their own records."
+        actions={
+          <AdminFormDialog
+            trigger={
+              <Button>
+                <Plus />
+                New admin
+              </Button>
+            }
+          />
         }
       />
-      <TeamTable users={users} currentUser={user} />
+      <TeamTable users={admins} />
     </>
   );
 }

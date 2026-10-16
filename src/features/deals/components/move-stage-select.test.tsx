@@ -25,6 +25,12 @@ describe("MoveStageSelect", () => {
     expect(screen.getByRole("combobox", { name: "Move to stage" })).toHaveValue("Lead");
   });
 
+  it("is disabled for read-only viewers", () => {
+    renderWithUser(<MoveStageSelect dealId="deal-1" stageId="lead" stages={stages} readOnly />);
+
+    expect(screen.getByRole("combobox", { name: "Move to stage" })).toBeDisabled();
+  });
+
   it("moves the deal and confirms with a toast", async () => {
     vi.mocked(moveDealToStage).mockResolvedValue({ ok: true, data: makeDeal() });
     const { user } = renderSelect();

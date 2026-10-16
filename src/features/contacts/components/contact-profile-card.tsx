@@ -17,7 +17,13 @@ function Row({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   );
 }
 
-export function ContactProfileCard({ contact }: { contact: Contact }) {
+export function ContactProfileCard({
+  contact,
+  readOnly = false,
+}: {
+  contact: Contact;
+  readOnly?: boolean;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -29,6 +35,7 @@ export function ContactProfileCard({ contact }: { contact: Contact }) {
           src={contact.avatar_url}
           onUpload={uploadContactAvatar.bind(null, contact.id)}
           onRemove={removeContactAvatar.bind(null, contact.id)}
+          readOnly={readOnly}
           className="mb-5"
         />
         <Row icon={<Mail />}>
@@ -52,7 +59,7 @@ export function ContactProfileCard({ contact }: { contact: Contact }) {
             <span className="text-muted-foreground">No company</span>
           )}
         </Row>
-        <Row icon={<UserRound />}>Owner: {contact.owner?.full_name ?? "—"}</Row>
+        <Row icon={<UserRound />}>Owner: {contact.owner?.full_name ?? "Not set"}</Row>
         <Row icon={<Tag />}>
           {contact.tags.length > 0 ? (
             <span className="flex flex-wrap gap-1">

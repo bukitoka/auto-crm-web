@@ -1,4 +1,5 @@
-export type UserRole = "admin" | "member";
+/** Only `admin` exists; the super admin is an admin with `is_super_admin` set. */
+export type UserRole = "admin";
 
 export type User = {
   id: string;
@@ -6,7 +7,7 @@ export type User = {
   full_name: string;
   role: UserRole;
   is_active: boolean;
-  /** Created on the setup page. Has every permission and is not listed as a team member. */
+  /** Created on the setup page. Reads everything, writes no CRM data, and is not listed on the Team page. */
   is_super_admin: boolean;
   avatar_url: string | null;
   created_at: string;
@@ -18,4 +19,10 @@ export type UserRef = {
   id: string;
   full_name: string;
   avatar_url?: string | null;
+};
+
+export type AdminCreatePayload = {
+  email: string;
+  password: string;
+  full_name: string;
 };

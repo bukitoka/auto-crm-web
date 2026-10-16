@@ -2,7 +2,6 @@
 
 import { type ReactNode, useState, useTransition } from "react";
 import { FormDialog } from "@/components/shared/form-dialog";
-import type { UserRef } from "@/features/users/types";
 import { toastResult } from "@/lib/toast-result";
 import { createCompany, updateCompany } from "../actions";
 import { type CompanyFormValues, companyToForm, emptyCompanyForm } from "../schemas";
@@ -11,11 +10,10 @@ import { CompanyForm } from "./company-form";
 
 type CompanyFormDialogProps = {
   company?: Company;
-  users: UserRef[];
   trigger: ReactNode;
 };
 
-export function CompanyFormDialog({ company, users, trigger }: CompanyFormDialogProps) {
+export function CompanyFormDialog({ company, trigger }: CompanyFormDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -40,12 +38,7 @@ export function CompanyFormDialog({ company, users, trigger }: CompanyFormDialog
       submitLabel={company ? "Save changes" : "Create company"}
       isPending={isPending}
     >
-      <CompanyForm
-        formId="company-form"
-        defaultValues={defaultValues}
-        onSubmit={handleSubmit}
-        users={users}
-      />
+      <CompanyForm formId="company-form" defaultValues={defaultValues} onSubmit={handleSubmit} />
     </FormDialog>
   );
 }

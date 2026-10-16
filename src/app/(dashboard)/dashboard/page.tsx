@@ -20,6 +20,7 @@ import { KpiCards } from "@/features/dashboard/components/kpi-cards";
 import { PipelineChart } from "@/features/dashboard/components/pipeline-chart";
 import { TeamLeaderboard } from "@/features/dashboard/components/team-leaderboard";
 import { TaskList } from "@/features/tasks/components/task-list";
+import { canViewTeam } from "@/features/users/roles";
 import { enumOptions } from "@/lib/options";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -66,6 +67,7 @@ function chartRows(rows: { key: string; count: number }[]) {
 export default async function DashboardPage() {
   const [user, summary] = await Promise.all([getCurrentUser(), getDashboardSummary()]);
   const firstName = user.full_name.split(" ")[0];
+  const oversight = canViewTeam(user);
   const statusRows = chartRows(
     summary.contacts_by_status.map(({ status, count }) => ({ key: status, count })),
   );
@@ -77,7 +79,11 @@ export default async function DashboardPage() {
     <>
       <PageHeader
         title={`Hi, ${firstName}`}
-        description="Here's what's happening in your pipeline."
+        description={
+          oversight
+            ? "Here's how every admin's pipeline is doing."
+            : "Here's what's happening in your pipeline."
+        }
       />
       <KpiCards summary={summary} />
       <div className="grid gap-6 lg:grid-cols-2">
@@ -93,18 +99,20 @@ export default async function DashboardPage() {
             <p className="py-12 text-center text-sm text-muted-foreground">No deals yet.</p>
           )}
         </DashboardCard>
-        <DashboardCard title="My tasks" description="Upcoming work assigned to you" href="/tasks">
-          <TaskList tasks={summary.my_tasks} emptyText="Nothing due. Nice!" />
-        </DashboardCard>
+        {oversight ? null : (
+          <DashboardCard title="My tasks" description="Upcoming work assigned to you" href="/tasks">
+            <TaskList tasks={summary.my_tasks} emptyText="Nothing due." />
+          </DashboardCard>
+        )}
         <DashboardCard
           title="Overdue tasks"
-          description="Whole team, oldest first"
+          description={oversight ? "All admins, oldest first" : "Oldest first"}
           href="/tasks?overdue=true"
         >
           <TaskList
             tasks={summary.overdue_task_list}
-            emptyText="Nothing overdue. Nice!"
-            showAssignee
+            emptyText="Nothing overdue."
+            showAssignee={oversight}
           />
         </DashboardCard>
         <DashboardCard
@@ -123,13 +131,15 @@ export default async function DashboardPage() {
         <DashboardCard title="Activity" description="Logged in the last 30 days, by type">
           <CountBarChart data={activityRows} label="Activities" />
         </DashboardCard>
-        <DashboardCard
-          title="Team"
-          description="Won this month, open pipeline and open tasks per person"
-          className="lg:col-span-2"
-        >
-          <TeamLeaderboard team={summary.team} />
-        </DashboardCard>
+        {oversight ? (
+          <DashboardCard
+            title="Admins"
+            description="Won this month, open pipeline and open tasks per admin"
+            className="lg:col-span-2"
+          >
+            <TeamLeaderboard team={summary.team} />
+          </DashboardCard>
+        ) : null}
         <DashboardCard
           title="Recent activity"
           description="Latest notes, calls, emails and meetings"

@@ -27,7 +27,6 @@ const expectedPayload = {
   size: null,
   website: null,
   notes: null,
-  owner_id: null,
 };
 
 describe("createCompany", () => {

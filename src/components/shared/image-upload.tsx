@@ -20,6 +20,8 @@ type ImageUploadProps = {
   /** Server Action that uploads `formData.get("file")`. */
   onUpload: (formData: FormData) => Promise<ActionResult<unknown>>;
   onRemove: () => Promise<ActionResult<unknown>>;
+  /** Show the picture without the upload and remove buttons. */
+  readOnly?: boolean;
   className?: string;
 };
 
@@ -30,6 +32,7 @@ export function ImageUpload({
   label = "photo",
   onUpload,
   onRemove,
+  readOnly = false,
   className,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,6 +57,20 @@ export function ImageUpload({
     startTransition(async () => {
       toastResult(await onRemove(), `${capitalize(label)} removed`);
     });
+  }
+
+  if (readOnly) {
+    return (
+      <div className={className}>
+        <EntityAvatar
+          name={name}
+          src={src}
+          shape={shape}
+          className="size-16"
+          fallbackClassName="text-lg"
+        />
+      </div>
+    );
   }
 
   return (

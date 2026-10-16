@@ -37,7 +37,6 @@ const expectedPayload = {
   source: "manual",
   tags: ["vip", "newsletter"],
   company_id: null,
-  owner_id: null,
 };
 
 describe("createContact", () => {

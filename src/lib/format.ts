@@ -23,17 +23,17 @@ export function formatCompactCurrency(value: number | string, currency = "USD") 
 }
 
 export function formatDate(value: string | null | undefined) {
-  if (!value) return "—";
+  if (!value) return "Not set";
   return format(parseISO(value), "MMM d, yyyy");
 }
 
 export function formatDateTime(value: string | null | undefined) {
-  if (!value) return "—";
+  if (!value) return "Not set";
   return format(parseISO(value), "MMM d, yyyy · HH:mm");
 }
 
 export function formatRelative(value: string | null | undefined) {
-  if (!value) return "—";
+  if (!value) return "Not set";
   return formatDistanceToNow(parseISO(value), { addSuffix: true });
 }
 

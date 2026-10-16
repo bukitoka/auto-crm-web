@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getCurrentUser } from "@/features/auth/api";
 import { ThemeSettings } from "@/features/settings/components/theme-settings";
 import { removeMyAvatar, uploadMyAvatar } from "@/features/users/actions";
-import { isAdmin, roleLabel } from "@/features/users/roles";
+import { isSuperAdmin, roleLabel } from "@/features/users/roles";
 import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -31,7 +31,11 @@ export default async function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Profile</CardTitle>
-            <CardDescription>Ask an admin to change your name or role.</CardDescription>
+            <CardDescription>
+              {isSuperAdmin(user)
+                ? "Your account details."
+                : "Ask the super admin to change your name."}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-4">
@@ -47,7 +51,10 @@ export default async function SettingsPage() {
             />
             <div className="divide-y">
               <Detail label="Role">
-                <Badge variant={isAdmin(user) ? "default" : "secondary"} className="capitalize">
+                <Badge
+                  variant={isSuperAdmin(user) ? "default" : "secondary"}
+                  className="capitalize"
+                >
                   {roleLabel(user)}
                 </Badge>
               </Detail>

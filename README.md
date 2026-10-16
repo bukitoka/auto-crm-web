@@ -15,9 +15,9 @@ bun install
 bun dev
 ```
 
-Open http://localhost:3000. With the demo data loaded you can log in as `admin@example.com` /
-`admin12345`. On an empty database the app opens a one-time setup page to create the super admin;
-after that, new sign-ups are members.
+Open http://localhost:3000. With the demo data loaded you can log in as `alex@example.com` /
+`admin12345` (an admin) or `superadmin@example.com` / `superadmin12345`. On an empty database the app
+opens a one-time setup page to create the super admin, who then creates the admins. There is no public sign-up.
 
 ## Commands
 

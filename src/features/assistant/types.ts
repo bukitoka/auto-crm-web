@@ -53,7 +53,7 @@ export type ConversationFilters = {
   size?: number;
   search?: string;
   archived?: boolean;
-  /** Admins only: everyone's conversations. */
+  /** Super admin only: every admin's conversations (read-only). */
   scope?: "mine" | "all";
   user_id?: string;
 };

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { apiFetch } from "@/lib/api-client";
 import { PICKER_PAGE_SIZE } from "@/lib/constants";
 import { makePage } from "@/test/factories";
-import { listUserOptions } from "./api";
+import { listTeam, listUserOptions } from "./api";
 import type { User } from "./types";
 
 vi.mock("@/lib/api-client", () => ({ apiFetch: vi.fn() }));
@@ -12,7 +12,7 @@ function makeUser(overrides: Partial<User>): User {
     id: "u1",
     email: "jane@acme.com",
     full_name: "Jane Doe",
-    role: "member",
+    role: "admin",
     is_active: true,
     is_super_admin: false,
     avatar_url: null,
@@ -21,6 +21,15 @@ function makeUser(overrides: Partial<User>): User {
     ...overrides,
   };
 }
+
+describe("listTeam", () => {
+  it("returns every admin the API lists, active or not", async () => {
+    const users = [makeUser({ id: "u1" }), makeUser({ id: "u2", is_active: false })];
+    vi.mocked(apiFetch).mockResolvedValue(makePage(users));
+
+    expect(await listTeam()).toEqual(users);
+  });
+});
 
 describe("listUserOptions", () => {
   it("returns only active users", async () => {

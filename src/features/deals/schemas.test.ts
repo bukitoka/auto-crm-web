@@ -60,7 +60,6 @@ describe("toDealPayload", () => {
       stage_id: "stage-1",
       contact_id: null,
       company_id: null,
-      owner_id: null,
       expected_close_date: null,
     });
   });
@@ -81,7 +80,6 @@ describe("dealToForm", () => {
       stage_id: "stage-1",
       contact_id: "contact-1",
       company_id: "",
-      owner_id: "",
       expected_close_date: "2026-06-30",
     });
   });

@@ -103,6 +103,14 @@ describe("DealsCanvas", () => {
     expect(moveDealToStage).not.toHaveBeenCalled();
   });
 
+  it("has no drag handles for read-only viewers", () => {
+    renderWithUser(<DealsCanvas deals={deals} stages={stages} readOnly />);
+
+    expect(lane("Lead").getByRole("link", { name: "Website" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Move Website" })).not.toBeInTheDocument();
+    expect(lane("Won").getByText("No deals")).toBeInTheDocument();
+  });
+
   it("shows the add-stage lane only to pipeline editors", () => {
     const { rerender } = renderWithUser(<DealsCanvas deals={deals} stages={stages} />);
     expect(screen.queryByRole("region", { name: "Add stage" })).not.toBeInTheDocument();

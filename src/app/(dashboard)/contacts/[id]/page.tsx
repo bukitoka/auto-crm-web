@@ -17,6 +17,7 @@ import { ActivityList } from "@/features/activities/components/activity-list";
 import { AddActivityForm } from "@/features/activities/components/add-activity-form";
 import { AiScoreCard } from "@/features/ai/components/ai-score-card";
 import { TimelineSummary } from "@/features/ai/components/timeline-summary";
+import { getCurrentUser } from "@/features/auth/api";
 import { listCompanyOptions } from "@/features/companies/api";
 import { deleteContact } from "@/features/contacts/actions";
 import { getContact } from "@/features/contacts/api";
@@ -30,7 +31,7 @@ import { ComposeEmailDialog } from "@/features/emails/components/compose-email-d
 import { listTasks } from "@/features/tasks/api";
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog";
 import { TaskList } from "@/features/tasks/components/task-list";
-import { listUserOptions } from "@/features/users/api";
+import { canWriteCrm } from "@/features/users/roles";
 import { ApiError } from "@/lib/api-client";
 import { personName } from "@/lib/format";
 
@@ -51,13 +52,13 @@ export async function generateMetadata({ params }: PageProps<"/contacts/[id]">):
 
 export default async function ContactDetailPage({ params }: PageProps<"/contacts/[id]">) {
   const { id } = await params;
-  const contact = await loadContact(id);
-  const [activities, deals, tasks, companies, users, stages] = await Promise.all([
+  const [contact, user] = await Promise.all([loadContact(id), getCurrentUser()]);
+  const readOnly = !canWriteCrm(user);
+  const [activities, deals, tasks, companies, stages] = await Promise.all([
     listActivities({ contact_id: id }),
     listDeals({ page: 1, size: 50, contact_id: id }),
     listTasks({ page: 1, size: 50, contact_id: id }),
     listCompanyOptions(),
-    listUserOptions(),
     listStages(),
   ]);
   const name = personName(contact);
@@ -75,41 +76,43 @@ export default async function ContactDetailPage({ params }: PageProps<"/contacts
           [contact.job_title, contact.company?.name].filter(Boolean).join(" · ") || undefined
         }
         actions={
-          <>
-            <ComposeEmailDialog
-              recipients={[{ id: contact.id, name, email: contact.email }]}
-              contactId={contact.id}
-              deals={deals.items.map(({ id, title }) => ({ id, title }))}
-            />
-            <ContactFormDialog
-              contact={contact}
-              companies={companies}
-              users={users}
-              trigger={
-                <Button variant="outline">
-                  <Pencil />
-                  Edit
-                </Button>
-              }
-            />
-            <ConfirmDeleteButton
-              variant="button"
-              title={`Delete ${name}?`}
-              description="The contact and its activities will be removed."
-              action={deleteContact.bind(null, contact.id)}
-              redirectTo="/contacts"
-            />
-          </>
+          readOnly ? null : (
+            <>
+              <ComposeEmailDialog
+                recipients={[{ id: contact.id, name, email: contact.email }]}
+                contactId={contact.id}
+                deals={deals.items.map(({ id, title }) => ({ id, title }))}
+              />
+              <ContactFormDialog
+                contact={contact}
+                companies={companies}
+                trigger={
+                  <Button variant="outline">
+                    <Pencil />
+                    Edit
+                  </Button>
+                }
+              />
+              <ConfirmDeleteButton
+                variant="button"
+                title={`Delete ${name}?`}
+                description="The contact and its activities will be removed."
+                action={deleteContact.bind(null, contact.id)}
+                redirectTo="/contacts"
+              />
+            </>
+          )
         }
       />
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6">
-          <ContactProfileCard contact={contact} />
+          <ContactProfileCard contact={contact} readOnly={readOnly} />
           <AiScoreCard
             contactId={contact.id}
             score={contact.ai_score}
             reasoning={contact.ai_summary}
             scoredAt={contact.ai_scored_at}
+            readOnly={readOnly}
           />
         </div>
         <div className="space-y-6 lg:col-span-2">
@@ -119,36 +122,40 @@ export default async function ContactDetailPage({ params }: PageProps<"/contacts
               <CardDescription>Notes, calls, emails and meetings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <AddActivityForm contactId={contact.id} />
+              {readOnly ? null : <AddActivityForm contactId={contact.id} />}
               <TimelineSummary contactId={contact.id} />
-              <ActivityList activities={activities.items} canDelete />
+              <ActivityList activities={activities.items} canDelete={!readOnly} />
             </CardContent>
           </Card>
           <div className="grid gap-6 xl:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Deals</CardTitle>
-                <CardAction>
-                  <DealFormDialog
-                    stages={stages}
-                    companies={companies}
-                    contacts={[
-                      {
-                        id: contact.id,
-                        first_name: contact.first_name,
-                        last_name: contact.last_name,
-                      },
-                    ]}
-                    users={users}
-                    initialValues={{ contact_id: contact.id, company_id: contact.company_id ?? "" }}
-                    trigger={
-                      <Button size="sm" variant="ghost">
-                        <Plus />
-                        Add
-                      </Button>
-                    }
-                  />
-                </CardAction>
+                {readOnly ? null : (
+                  <CardAction>
+                    <DealFormDialog
+                      stages={stages}
+                      companies={companies}
+                      contacts={[
+                        {
+                          id: contact.id,
+                          first_name: contact.first_name,
+                          last_name: contact.last_name,
+                        },
+                      ]}
+                      initialValues={{
+                        contact_id: contact.id,
+                        company_id: contact.company_id ?? "",
+                      }}
+                      trigger={
+                        <Button size="sm" variant="ghost">
+                          <Plus />
+                          Add
+                        </Button>
+                      }
+                    />
+                  </CardAction>
+                )}
               </CardHeader>
               <CardContent>
                 <DealList deals={deals.items} />
@@ -157,29 +164,30 @@ export default async function ContactDetailPage({ params }: PageProps<"/contacts
             <Card>
               <CardHeader>
                 <CardTitle>Tasks</CardTitle>
-                <CardAction>
-                  <TaskFormDialog
-                    users={users}
-                    contacts={[
-                      {
-                        id: contact.id,
-                        first_name: contact.first_name,
-                        last_name: contact.last_name,
-                      },
-                    ]}
-                    deals={deals.items.map(({ id, title }) => ({ id, title }))}
-                    initialValues={{ contact_id: contact.id }}
-                    trigger={
-                      <Button size="sm" variant="ghost">
-                        <Plus />
-                        Add
-                      </Button>
-                    }
-                  />
-                </CardAction>
+                {readOnly ? null : (
+                  <CardAction>
+                    <TaskFormDialog
+                      contacts={[
+                        {
+                          id: contact.id,
+                          first_name: contact.first_name,
+                          last_name: contact.last_name,
+                        },
+                      ]}
+                      deals={deals.items.map(({ id, title }) => ({ id, title }))}
+                      initialValues={{ contact_id: contact.id }}
+                      trigger={
+                        <Button size="sm" variant="ghost">
+                          <Plus />
+                          Add
+                        </Button>
+                      }
+                    />
+                  </CardAction>
+                )}
               </CardHeader>
               <CardContent>
-                <TaskList tasks={tasks.items} />
+                <TaskList tasks={tasks.items} readOnly={readOnly} />
               </CardContent>
             </Card>
           </div>

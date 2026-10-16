@@ -3,14 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ApiError, apiFetch } from "@/lib/api-client";
 import { SESSION_COOKIE } from "@/lib/constants";
 import { cookieStore, setCookie } from "@/test/next-mocks";
-import {
-  login,
-  logout,
-  register,
-  requestPasswordReset,
-  resetPassword,
-  setUpWorkspace,
-} from "./actions";
+import { login, logout, requestPasswordReset, resetPassword, setUpWorkspace } from "./actions";
 
 vi.mock("@/lib/api-client", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/api-client")>()),
@@ -110,53 +103,6 @@ describe("setUpWorkspace", () => {
       error: "The workspace is already set up",
       status: 409,
     });
-  });
-});
-
-describe("register", () => {
-  const values = {
-    full_name: "Jane Doe",
-    ...credentials,
-    confirm_password: credentials.password,
-  };
-
-  it("creates the account, logs in and redirects to the assistant home", async () => {
-    apiFetchMock.mockResolvedValueOnce({ id: "u1" }); // register
-    apiFetchMock.mockResolvedValueOnce(token); // login
-
-    await expect(register(values)).rejects.toThrow("NEXT_REDIRECT");
-
-    expect(apiFetchMock).toHaveBeenNthCalledWith(1, "/auth/register", {
-      method: "POST",
-      body: { full_name: "Jane Doe", ...credentials }, // no confirm_password
-      auth: false,
-    });
-    expect(apiFetchMock).toHaveBeenNthCalledWith(2, "/auth/login", {
-      method: "POST",
-      body: credentials,
-      auth: false,
-    });
-    expect(cookieStore.set).toHaveBeenCalledWith(SESSION_COOKIE, "jwt-123", expect.anything());
-    expect(redirect).toHaveBeenCalledWith("/assistant");
-  });
-
-  it("returns the API error (e.g. email taken)", async () => {
-    apiFetchMock.mockRejectedValue(new ApiError(409, "Email already registered"));
-
-    expect(await register(values)).toEqual({
-      ok: false,
-      error: "Email already registered",
-      status: 409,
-    });
-    expect(redirect).not.toHaveBeenCalled();
-  });
-
-  it("validates the input", async () => {
-    expect(await register({ ...values, confirm_password: "other" })).toMatchObject({
-      ok: false,
-      error: "Passwords do not match",
-    });
-    expect(apiFetchMock).not.toHaveBeenCalled();
   });
 });
 

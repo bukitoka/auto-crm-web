@@ -8,13 +8,14 @@ import { ParamSelect } from "@/components/shared/param-select";
 import { SearchInput } from "@/components/shared/search-input";
 import { Button } from "@/components/ui/button";
 import { SmartCaptureDialog } from "@/features/ai/components/smart-capture-dialog";
+import { getCurrentUser } from "@/features/auth/api";
 import { listCompanyOptions } from "@/features/companies/api";
 import { importContacts } from "@/features/contacts/actions";
 import { contactFiltersFromParams, listContacts } from "@/features/contacts/api";
 import { ContactFormDialog } from "@/features/contacts/components/contact-form-dialog";
 import { ContactsTable } from "@/features/contacts/components/contacts-table";
 import { CONTACT_STATUSES } from "@/features/contacts/types";
-import { listUserOptions } from "@/features/users/api";
+import { canWriteCrm } from "@/features/users/roles";
 import { enumOptions } from "@/lib/options";
 
 export const metadata: Metadata = { title: "Contacts" };
@@ -34,11 +35,12 @@ const IMPORT_COLUMNS = [
 export default async function ContactsPage({ searchParams }: PageProps<"/contacts">) {
   const params = await searchParams;
 
-  const [contacts, companies, users] = await Promise.all([
+  const [user, contacts, companies] = await Promise.all([
+    getCurrentUser(),
     listContacts(contactFiltersFromParams(params)),
     listCompanyOptions(),
-    listUserOptions(),
   ]);
+  const readOnly = !canWriteCrm(user);
 
   return (
     <>
@@ -48,23 +50,26 @@ export default async function ContactsPage({ searchParams }: PageProps<"/contact
         actions={
           <>
             <ExportButton entity="contacts" />
-            <ImportCsvDialog
-              entity="contacts"
-              columns={IMPORT_COLUMNS}
-              note="Separate tags with semicolons. Companies are matched by name; rows with an existing email are skipped."
-              action={importContacts}
-            />
-            <SmartCaptureDialog companies={companies} users={users} />
-            <ContactFormDialog
-              companies={companies}
-              users={users}
-              trigger={
-                <Button>
-                  <Plus />
-                  New contact
-                </Button>
-              }
-            />
+            {readOnly ? null : (
+              <>
+                <ImportCsvDialog
+                  entity="contacts"
+                  columns={IMPORT_COLUMNS}
+                  note="Separate tags with semicolons. Companies are matched by name; rows with an existing email are skipped."
+                  action={importContacts}
+                />
+                <SmartCaptureDialog companies={companies} />
+                <ContactFormDialog
+                  companies={companies}
+                  trigger={
+                    <Button>
+                      <Plus />
+                      New contact
+                    </Button>
+                  }
+                />
+              </>
+            )}
           </>
         }
       />
@@ -76,7 +81,7 @@ export default async function ContactsPage({ searchParams }: PageProps<"/contact
           options={enumOptions(CONTACT_STATUSES)}
         />
       </div>
-      <ContactsTable contacts={contacts.items} companies={companies} users={users} />
+      <ContactsTable contacts={contacts.items} companies={companies} readOnly={readOnly} />
       <PaginationBar
         pathname="/contacts"
         searchParams={params}

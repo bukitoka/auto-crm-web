@@ -66,6 +66,6 @@ describe("status color mapping", () => {
 
   it("AI score shows a dash when not scored", () => {
     render(<AiScoreBadge score={null} />);
-    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getByText("Not set")).toBeInTheDocument();
   });
 });

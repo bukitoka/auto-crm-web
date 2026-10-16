@@ -18,6 +18,7 @@ import { listActivities } from "@/features/activities/api";
 import { ActivityList } from "@/features/activities/components/activity-list";
 import { AddActivityForm } from "@/features/activities/components/add-activity-form";
 import { TimelineSummary } from "@/features/ai/components/timeline-summary";
+import { getCurrentUser } from "@/features/auth/api";
 import { listCompanyOptions } from "@/features/companies/api";
 import { listContactOptions } from "@/features/contacts/api";
 import { deleteDeal } from "@/features/deals/actions";
@@ -29,7 +30,7 @@ import { ComposeEmailDialog } from "@/features/emails/components/compose-email-d
 import { listTasks } from "@/features/tasks/api";
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog";
 import { TaskList } from "@/features/tasks/components/task-list";
-import { listUserOptions } from "@/features/users/api";
+import { canWriteCrm } from "@/features/users/roles";
 import { ApiError } from "@/lib/api-client";
 import { formatCurrency, formatDate, personName } from "@/lib/format";
 
@@ -59,14 +60,14 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
 
 export default async function DealDetailPage({ params }: PageProps<"/deals/[id]">) {
   const { id } = await params;
-  const deal = await loadDeal(id);
-  const [activities, tasks, stages, companies, contacts, users] = await Promise.all([
+  const [deal, user] = await Promise.all([loadDeal(id), getCurrentUser()]);
+  const readOnly = !canWriteCrm(user);
+  const [activities, tasks, stages, companies, contacts] = await Promise.all([
     listActivities({ deal_id: id }),
     listTasks({ page: 1, size: 50, deal_id: id }),
     listStages(),
     listCompanyOptions(),
     listContactOptions(),
-    listUserOptions(),
   ]);
 
   return (
@@ -80,33 +81,34 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
         }
         description={formatCurrency(deal.value, deal.currency)}
         actions={
-          <>
-            <ComposeEmailDialog
-              recipients={contacts.map((c) => ({ id: c.id, name: personName(c) }))}
-              contactId={deal.contact_id ?? undefined}
-              deals={[{ id: deal.id, title: deal.title }]}
-              dealId={deal.id}
-            />
-            <DealFormDialog
-              deal={deal}
-              stages={stages}
-              companies={companies}
-              contacts={contacts}
-              users={users}
-              trigger={
-                <Button variant="outline">
-                  <Pencil />
-                  Edit
-                </Button>
-              }
-            />
-            <ConfirmDeleteButton
-              variant="button"
-              title={`Delete "${deal.title}"?`}
-              action={deleteDeal.bind(null, deal.id)}
-              redirectTo="/deals"
-            />
-          </>
+          readOnly ? null : (
+            <>
+              <ComposeEmailDialog
+                recipients={contacts.map((c) => ({ id: c.id, name: personName(c) }))}
+                contactId={deal.contact_id ?? undefined}
+                deals={[{ id: deal.id, title: deal.title }]}
+                dealId={deal.id}
+              />
+              <DealFormDialog
+                deal={deal}
+                stages={stages}
+                companies={companies}
+                contacts={contacts}
+                trigger={
+                  <Button variant="outline">
+                    <Pencil />
+                    Edit
+                  </Button>
+                }
+              />
+              <ConfirmDeleteButton
+                variant="button"
+                title={`Delete "${deal.title}"?`}
+                action={deleteDeal.bind(null, deal.id)}
+                redirectTo="/deals"
+              />
+            </>
+          )
         }
       />
       <div className="grid gap-6 lg:grid-cols-3">
@@ -118,7 +120,12 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
             <CardContent className="space-y-3">
               <div className="space-y-1.5">
                 <span className="text-sm text-muted-foreground">Stage</span>
-                <MoveStageSelect dealId={deal.id} stageId={deal.stage_id} stages={stages} />
+                <MoveStageSelect
+                  dealId={deal.id}
+                  stageId={deal.stage_id}
+                  stages={stages}
+                  readOnly={readOnly}
+                />
               </div>
               <Detail label="Value">{formatCurrency(deal.value, deal.currency)}</Detail>
               <Detail label="Contact">
@@ -127,7 +134,7 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
                     {personName(deal.contact)}
                   </Link>
                 ) : (
-                  "—"
+                  "Not set"
                 )}
               </Detail>
               <Detail label="Company">
@@ -136,10 +143,10 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
                     {deal.company.name}
                   </Link>
                 ) : (
-                  "—"
+                  "Not set"
                 )}
               </Detail>
-              <Detail label="Owner">{deal.owner?.full_name ?? "—"}</Detail>
+              <Detail label="Owner">{deal.owner?.full_name ?? "Not set"}</Detail>
               <Detail label="Expected close">{formatDate(deal.expected_close_date)}</Detail>
               {deal.closed_at ? <Detail label="Closed">{formatDate(deal.closed_at)}</Detail> : null}
             </CardContent>
@@ -147,23 +154,24 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
           <Card>
             <CardHeader>
               <CardTitle>Tasks</CardTitle>
-              <CardAction>
-                <TaskFormDialog
-                  users={users}
-                  contacts={contacts}
-                  deals={[{ id: deal.id, title: deal.title }]}
-                  initialValues={{ deal_id: deal.id, contact_id: deal.contact_id ?? "" }}
-                  trigger={
-                    <Button size="sm" variant="ghost">
-                      <Plus />
-                      Add
-                    </Button>
-                  }
-                />
-              </CardAction>
+              {readOnly ? null : (
+                <CardAction>
+                  <TaskFormDialog
+                    contacts={contacts}
+                    deals={[{ id: deal.id, title: deal.title }]}
+                    initialValues={{ deal_id: deal.id, contact_id: deal.contact_id ?? "" }}
+                    trigger={
+                      <Button size="sm" variant="ghost">
+                        <Plus />
+                        Add
+                      </Button>
+                    }
+                  />
+                </CardAction>
+              )}
             </CardHeader>
             <CardContent>
-              <TaskList tasks={tasks.items} />
+              <TaskList tasks={tasks.items} readOnly={readOnly} />
             </CardContent>
           </Card>
         </div>
@@ -173,9 +181,11 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
             <CardDescription>Everything that happened on this deal</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <AddActivityForm dealId={deal.id} contactId={deal.contact_id ?? undefined} />
+            {readOnly ? null : (
+              <AddActivityForm dealId={deal.id} contactId={deal.contact_id ?? undefined} />
+            )}
             <TimelineSummary dealId={deal.id} />
-            <ActivityList activities={activities.items} canDelete />
+            <ActivityList activities={activities.items} canDelete={!readOnly} />
           </CardContent>
         </Card>
       </div>

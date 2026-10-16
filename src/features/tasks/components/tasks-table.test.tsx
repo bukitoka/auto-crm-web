@@ -13,7 +13,7 @@ describe("TasksTable", () => {
     renderWithUser(
       <TasksTable
         tasks={[makeTask({ title: "Call back", created_at: "2026-03-04T12:00:00Z" })]}
-        options={{ users: [], contacts: [], deals: [] }}
+        options={{ contacts: [], deals: [] }}
       />,
     );
 
@@ -24,5 +24,18 @@ describe("TasksTable", () => {
       "datetime",
       "2026-03-04T12:00:00Z",
     );
+  });
+
+  it("hides complete and row actions for read-only viewers", () => {
+    renderWithUser(
+      <TasksTable
+        tasks={[makeTask({ title: "Call back" })]}
+        options={{ contacts: [], deals: [] }}
+        readOnly
+      />,
+    );
+
+    expect(screen.queryByRole("button", { name: "Mark as done" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Edit task" })).not.toBeInTheDocument();
   });
 });

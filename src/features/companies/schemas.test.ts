@@ -40,18 +40,16 @@ describe("toCompanyPayload", () => {
       size: "11-50",
       website: null,
       notes: null,
-      owner_id: null,
     });
   });
 });
 
 describe("companyToForm", () => {
   it("maps API nulls to empty strings", () => {
-    expect(companyToForm(makeCompany({ industry: "SaaS", owner_id: "u1" }))).toEqual({
+    expect(companyToForm(makeCompany({ industry: "SaaS" }))).toEqual({
       ...emptyCompanyForm,
       name: "Acme Inc",
       industry: "SaaS",
-      owner_id: "u1",
     });
   });
 });

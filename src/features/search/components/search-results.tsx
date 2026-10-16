@@ -60,7 +60,7 @@ export function SearchResults({ results }: { results: Results }) {
               {company.name}
             </Link>
             <p className="text-xs text-muted-foreground">
-              {company.domain ?? company.industry ?? "—"}
+              {company.domain ?? company.industry ?? "Not set"}
             </p>
           </li>
         ))}

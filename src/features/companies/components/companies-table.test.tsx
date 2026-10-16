@@ -13,7 +13,6 @@ describe("CompaniesTable", () => {
     renderWithUser(
       <CompaniesTable
         companies={[makeCompany({ name: "Umbrella", created_at: "2026-03-04T12:00:00Z" })]}
-        users={[]}
       />,
     );
 
@@ -24,5 +23,10 @@ describe("CompaniesTable", () => {
       "datetime",
       "2026-03-04T12:00:00Z",
     );
+  });
+
+  it("hides row actions in read-only view", () => {
+    renderWithUser(<CompaniesTable companies={[makeCompany()]} readOnly />);
+    expect(screen.queryByRole("button", { name: "Edit company" })).not.toBeInTheDocument();
   });
 });

@@ -5,11 +5,11 @@ export const SESSION_COOKIE = "acrm_session";
 export const HOME_PATH = "/assistant";
 
 /** Routes that are reachable without a session. */
-export const AUTH_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password", "/setup"];
+export const AUTH_ROUTES = ["/login", "/forgot-password", "/reset-password", "/setup"];
 
 export const DEFAULT_PAGE_SIZE = 20;
 
-/** Size used when loading options for selects (owner, company, stage pickers). */
+/** Size used when loading options for selects (company, contact, stage pickers). */
 export const PICKER_PAGE_SIZE = 100;
 
 /** Image uploads (contact photos, company logos, avatars). Mirrors the API's limits. */

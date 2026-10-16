@@ -9,7 +9,6 @@ export const companyFormSchema = z.object({
   size: z.string().trim().max(50),
   website: z.string().trim().max(255),
   notes: z.string(),
-  owner_id: z.string(),
 });
 export type CompanyFormValues = z.infer<typeof companyFormSchema>;
 
@@ -20,7 +19,6 @@ export const emptyCompanyForm: CompanyFormValues = {
   size: "",
   website: "",
   notes: "",
-  owner_id: "",
 };
 
 export const COMPANY_SIZES = ["1-10", "11-50", "51-200", "201-1000", "1000+"] as const;
@@ -33,7 +31,6 @@ export function companyToForm(company: Company): CompanyFormValues {
     size: company.size ?? "",
     website: company.website ?? "",
     notes: company.notes ?? "",
-    owner_id: company.owner_id ?? "",
   };
 }
 

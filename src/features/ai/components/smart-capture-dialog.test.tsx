@@ -16,7 +16,7 @@ const companies = [{ id: "co1", name: "Acme Inc" }];
 const signature = "Jane Doe\nHead of Operations, Acme Inc.\njane@acme.com";
 
 async function openAndExtract(text = signature) {
-  const view = renderWithUser(<SmartCaptureDialog companies={companies} users={[]} />);
+  const view = renderWithUser(<SmartCaptureDialog companies={companies} />);
   await view.user.click(screen.getByRole("button", { name: "Smart capture" }));
   await view.user.type(screen.getByLabelText("Text"), text);
   await view.user.click(screen.getByRole("button", { name: "Extract contact" }));
@@ -110,7 +110,7 @@ describe("SmartCaptureDialog", () => {
       ok: true,
       data: { first_name: "Dana", last_name: "Lee", source_text: "Dana Lee" },
     });
-    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} users={[]} />);
+    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} />);
     await user.click(screen.getByRole("button", { name: "Smart capture" }));
     const card = new File(["png"], "card.png", { type: "image/png" });
 
@@ -127,7 +127,7 @@ describe("SmartCaptureDialog", () => {
   });
 
   it("can remove the file and go back to text", async () => {
-    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} users={[]} />);
+    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} />);
     await user.click(screen.getByRole("button", { name: "Smart capture" }));
     await user.upload(
       screen.getByLabelText("Upload a file to capture"),
@@ -141,7 +141,7 @@ describe("SmartCaptureDialog", () => {
   });
 
   it("refuses files over 5 MB", async () => {
-    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} users={[]} />);
+    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} />);
     await user.click(screen.getByRole("button", { name: "Smart capture" }));
     const big = new File([new Uint8Array(5 * 1024 * 1024 + 1)], "big.pdf", {
       type: "application/pdf",
@@ -154,7 +154,7 @@ describe("SmartCaptureDialog", () => {
   });
 
   it("attaches a pasted screenshot", async () => {
-    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} users={[]} />);
+    const { user } = renderWithUser(<SmartCaptureDialog companies={companies} />);
     await user.click(screen.getByRole("button", { name: "Smart capture" }));
     const screenshot = new File(["png"], "image.png", { type: "image/png" });
 

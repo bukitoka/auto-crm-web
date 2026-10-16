@@ -2,8 +2,6 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 
-/** Extra setup for the jsdom project (`*.test.tsx`). */
-
 afterEach(() => {
   cleanup();
 });

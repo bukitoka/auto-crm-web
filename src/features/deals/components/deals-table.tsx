@@ -16,13 +16,15 @@ import { deleteDeal } from "../actions";
 import type { Deal } from "../types";
 import { DealStageBadge } from "./deal-stage-badge";
 
-export function DealsTable({ deals }: { deals: Deal[] }) {
+export function DealsTable({ deals, readOnly = false }: { deals: Deal[]; readOnly?: boolean }) {
   if (deals.length === 0) {
     return (
       <EmptyState
         icon={Handshake}
         title="No deals found"
-        description="Create your first deal to start tracking your pipeline."
+        description={
+          readOnly ? "No admin has added deals yet." : "Add a deal to start tracking your pipeline."
+        }
       />
     );
   }
@@ -45,9 +47,11 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
             <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
               Added
             </SortableHeader>
-            <TableHead className="w-12">
-              <span className="sr-only">Actions</span>
-            </TableHead>
+            {readOnly ? null : (
+              <TableHead className="w-12">
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -67,25 +71,27 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
               <TableCell className="hidden text-muted-foreground md:table-cell">
                 {[deal.contact ? personName(deal.contact) : null, deal.company?.name]
                   .filter(Boolean)
-                  .join(" · ") || "—"}
+                  .join(" · ") || "Not set"}
               </TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
                 {formatDate(deal.expected_close_date)}
               </TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
-                {deal.owner?.full_name ?? "—"}
+                {deal.owner?.full_name ?? "Not set"}
               </TableCell>
               <TableCell className="hidden text-muted-foreground xl:table-cell">
                 <time dateTime={deal.created_at} title={formatDateTime(deal.created_at)}>
                   {formatDate(deal.created_at)}
                 </time>
               </TableCell>
-              <TableCell>
-                <ConfirmDeleteButton
-                  title={`Delete "${deal.title}"?`}
-                  action={deleteDeal.bind(null, deal.id)}
-                />
-              </TableCell>
+              {readOnly ? null : (
+                <TableCell>
+                  <ConfirmDeleteButton
+                    title={`Delete "${deal.title}"?`}
+                    action={deleteDeal.bind(null, deal.id)}
+                  />
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

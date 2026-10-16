@@ -20,7 +20,6 @@ const expectedPayload = {
   due_date: null,
   priority: "medium",
   status: "todo",
-  assignee_id: null,
   contact_id: null,
   deal_id: null,
 };

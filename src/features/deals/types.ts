@@ -48,7 +48,6 @@ export type DealPayload = {
   stage_id: string;
   contact_id: string | null;
   company_id: string | null;
-  owner_id: string | null;
   expected_close_date: string | null;
 };
 

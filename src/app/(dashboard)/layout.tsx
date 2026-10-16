@@ -1,9 +1,11 @@
 import { cookies } from "next/headers";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SiteHeader } from "@/components/layout/site-header";
+import { ReadOnlyBanner } from "@/components/shared/read-only-banner";
 import { SIDEBAR_DEFAULT_WIDTH, SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { listConversations } from "@/features/assistant/api";
 import { getCurrentUser } from "@/features/auth/api";
+import { canWriteCrm } from "@/features/users/roles";
 
 export default async function DashboardLayout({ children }: LayoutProps<"/">) {
   const [user, cookieStore, recentChats] = await Promise.all([
@@ -24,7 +26,10 @@ export default async function DashboardLayout({ children }: LayoutProps<"/">) {
       {/* min-w-0 lets wide content (e.g. the deals canvas) scroll instead of stretching the page. */}
       <SidebarInset className="min-w-0">
         <SiteHeader />
-        <div className="flex min-w-0 flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>
+        <div className="flex min-w-0 flex-1 flex-col gap-6 p-4 md:p-6">
+          {canWriteCrm(user) ? null : <ReadOnlyBanner />}
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

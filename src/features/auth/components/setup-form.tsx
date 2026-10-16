@@ -1,16 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toastResult } from "@/lib/toast-result";
-import { register, setUpWorkspace } from "../actions";
-import { type RegisterValues, registerSchema } from "../schemas";
+import { setUpWorkspace } from "../actions";
+import { type SetupValues, setupSchema } from "../schemas";
 
 const fields = [
   { name: "full_name", label: "Full name", type: "text", autoComplete: "name" },
@@ -24,41 +23,28 @@ const fields = [
   },
 ] as const;
 
-const copy = {
-  register: {
-    title: "Create your account",
-    description: "New accounts start as members. An admin can change your role later.",
-    submit: "Create account",
-  },
-  setup: {
-    title: "Set up your workspace",
-    description:
-      "Create the super admin account. It can manage everything, including who becomes an admin. You only do this once.",
-    submit: "Create super admin",
-  },
-};
-
-/** `setup` is the one-time first-run page; the API refuses it once a super admin exists. */
-export function RegisterForm({ mode = "register" }: { mode?: "register" | "setup" }) {
-  const text = copy[mode];
+/** The one-time first-run page; the API refuses it once a super admin exists. */
+export function SetupForm() {
   const [isPending, startTransition] = useTransition();
-  const form = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<SetupValues>({
+    resolver: zodResolver(setupSchema),
     defaultValues: { full_name: "", email: "", password: "", confirm_password: "" },
   });
 
-  function onSubmit(values: RegisterValues) {
+  function onSubmit(values: SetupValues) {
     startTransition(async () => {
-      const result = await (mode === "setup" ? setUpWorkspace : register)(values);
-      toastResult(result);
+      toastResult(await setUpWorkspace(values));
     });
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{text.title}</h1>
-        <p className="text-sm text-muted-foreground">{text.description}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">Set up your workspace</h1>
+        <p className="text-sm text-muted-foreground">
+          Create the super admin account. It oversees every admin and creates their accounts. You
+          only do this once.
+        </p>
       </div>
       <FieldGroup>
         {fields.map((config) => (
@@ -84,13 +70,8 @@ export function RegisterForm({ mode = "register" }: { mode?: "register" | "setup
         <Field>
           <Button type="submit" disabled={isPending}>
             {isPending ? <Spinner /> : null}
-            {text.submit}
+            Create super admin
           </Button>
-          {mode === "register" ? (
-            <FieldDescription className="text-center">
-              Already have an account? <Link href="/login">Log in</Link>
-            </FieldDescription>
-          ) : null}
         </Field>
       </FieldGroup>
     </form>

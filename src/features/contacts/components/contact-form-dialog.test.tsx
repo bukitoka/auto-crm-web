@@ -12,16 +12,10 @@ import { ContactFormDialog } from "./contact-form-dialog";
 vi.mock("../actions", () => ({ createContact: vi.fn(), updateContact: vi.fn() }));
 
 const companies = [{ id: "co1", name: "Acme Inc" }];
-const users = [{ id: "u1", full_name: "Sam Seller" }];
 
 function renderDialog(props: { contact?: ReturnType<typeof makeContact> } = {}) {
   const view = renderWithUser(
-    <ContactFormDialog
-      {...props}
-      companies={companies}
-      users={users}
-      trigger={<Button>Open form</Button>}
-    />,
+    <ContactFormDialog {...props} companies={companies} trigger={<Button>Open form</Button>} />,
   );
   return view;
 }

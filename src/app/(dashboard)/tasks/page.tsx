@@ -6,26 +6,28 @@ import { PaginationBar } from "@/components/shared/pagination-bar";
 import { ParamSelect } from "@/components/shared/param-select";
 import { SearchInput } from "@/components/shared/search-input";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/features/auth/api";
 import { listContactOptions } from "@/features/contacts/api";
 import { listDealOptions } from "@/features/deals/api";
 import { listTasks, taskFiltersFromParams } from "@/features/tasks/api";
 import { taskStatusOptions } from "@/features/tasks/components/task-badges";
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog";
 import { TasksTable } from "@/features/tasks/components/tasks-table";
-import { listUserOptions } from "@/features/users/api";
+import { canWriteCrm } from "@/features/users/roles";
 
 export const metadata: Metadata = { title: "Tasks" };
 
 export default async function TasksPage({ searchParams }: PageProps<"/tasks">) {
   const params = await searchParams;
 
-  const [tasks, users, contacts, deals] = await Promise.all([
+  const [user, tasks, contacts, deals] = await Promise.all([
+    getCurrentUser(),
     listTasks(taskFiltersFromParams(params)),
-    listUserOptions(),
     listContactOptions(),
     listDealOptions(),
   ]);
-  const options = { users, contacts, deals };
+  const options = { contacts, deals };
+  const readOnly = !canWriteCrm(user);
 
   return (
     <>
@@ -35,15 +37,17 @@ export default async function TasksPage({ searchParams }: PageProps<"/tasks">) {
         actions={
           <>
             <ExportButton entity="tasks" />
-            <TaskFormDialog
-              {...options}
-              trigger={
-                <Button>
-                  <Plus />
-                  New task
-                </Button>
-              }
-            />
+            {readOnly ? null : (
+              <TaskFormDialog
+                {...options}
+                trigger={
+                  <Button>
+                    <Plus />
+                    New task
+                  </Button>
+                }
+              />
+            )}
           </>
         }
       />
@@ -56,7 +60,7 @@ export default async function TasksPage({ searchParams }: PageProps<"/tasks">) {
           options={[{ value: "true", label: "Overdue only" }]}
         />
       </div>
-      <TasksTable tasks={tasks.items} options={options} />
+      <TasksTable tasks={tasks.items} options={options} readOnly={readOnly} />
       <PaginationBar
         pathname="/tasks"
         searchParams={params}

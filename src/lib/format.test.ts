@@ -49,9 +49,9 @@ describe("date formatting", () => {
   });
 
   it("shows a dash for empty values", () => {
-    expect(formatDate(null)).toBe("—");
-    expect(formatDateTime(undefined)).toBe("—");
-    expect(formatRelative("")).toBe("—");
+    expect(formatDate(null)).toBe("Not set");
+    expect(formatDateTime(undefined)).toBe("Not set");
+    expect(formatRelative("")).toBe("Not set");
   });
 
   it("converts ISO values to YYYY-MM-DD for date inputs", () => {

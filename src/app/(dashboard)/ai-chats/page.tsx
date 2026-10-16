@@ -1,7 +1,6 @@
-import { ShieldAlert } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EmptyState } from "@/components/shared/empty-state";
+import { ForbiddenState } from "@/components/shared/forbidden-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationBar } from "@/components/shared/pagination-bar";
 import { ParamSelect } from "@/components/shared/param-select";
@@ -11,21 +10,15 @@ import { listConversations } from "@/features/assistant/api";
 import { ConversationsAdminTable } from "@/features/assistant/components/conversations-admin-table";
 import { getCurrentUser } from "@/features/auth/api";
 import { listUserOptions } from "@/features/users/api";
-import { isAdmin } from "@/features/users/roles";
+import { canViewTeam } from "@/features/users/roles";
 import { getListParams, getParam } from "@/lib/search-params";
 
 export const metadata: Metadata = { title: "AI chats" };
 
 export default async function AiChatsPage({ searchParams }: PageProps<"/ai-chats">) {
   const user = await getCurrentUser();
-  if (!isAdmin(user)) {
-    return (
-      <EmptyState
-        icon={ShieldAlert}
-        title="Admins only"
-        description="Ask a workspace admin to manage AI chat history."
-      />
-    );
+  if (!canViewTeam(user)) {
+    return <ForbiddenState description="Only the super admin can read other admins' chats." />;
   }
 
   const params = await searchParams;
@@ -47,7 +40,7 @@ export default async function AiChatsPage({ searchParams }: PageProps<"/ai-chats
     <>
       <PageHeader
         title="AI chats"
-        description="Everyone's conversations with the assistant. Archive old ones or delete what you don't need."
+        description="Read what admins asked the assistant. Chats are view-only."
       />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Tabs value={archived ? "archived" : "active"}>

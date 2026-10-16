@@ -6,7 +6,6 @@ import { DateField, SelectField, TextField } from "@/components/shared/form-fiel
 import { FieldGroup } from "@/components/ui/field";
 import type { CompanyRef } from "@/features/companies/types";
 import type { ContactRef } from "@/features/contacts/types";
-import type { UserRef } from "@/features/users/types";
 import { personName } from "@/lib/format";
 import { toOptions } from "@/lib/options";
 import { type DealFormValues, dealFormSchema } from "../schemas";
@@ -16,7 +15,6 @@ export type DealFormOptions = {
   stages: PipelineStage[];
   companies: CompanyRef[];
   contacts: ContactRef[];
-  users: UserRef[];
 };
 
 type DealFormProps = DealFormOptions & {
@@ -32,7 +30,6 @@ export function DealForm({
   stages,
   companies,
   contacts,
-  users,
 }: DealFormProps) {
   const { control, handleSubmit } = useForm<DealFormValues>({
     resolver: zodResolver(dealFormSchema),
@@ -47,7 +44,7 @@ export function DealForm({
           name="title"
           label="Title"
           className="sm:col-span-2"
-          placeholder="Acme — annual plan"
+          placeholder="Acme annual plan"
           autoFocus
         />
         <TextField
@@ -79,14 +76,6 @@ export function DealForm({
           name="company_id"
           label="Company"
           options={toOptions(companies, (c) => c.name)}
-          allowNone
-        />
-        <SelectField
-          control={control}
-          name="owner_id"
-          label="Owner"
-          options={toOptions(users, (u) => u.full_name)}
-          placeholder="Me"
           allowNone
         />
       </FieldGroup>

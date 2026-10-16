@@ -9,7 +9,6 @@ export const taskFormSchema = z.object({
   due_date: z.string(),
   priority: z.enum(TASK_PRIORITIES),
   status: z.enum(TASK_STATUSES),
-  assignee_id: z.string(),
   contact_id: z.string(),
   deal_id: z.string(),
 });
@@ -22,7 +21,6 @@ export function emptyTaskForm(link: { contactId?: string; dealId?: string } = {}
     due_date: "",
     priority: "medium",
     status: "todo",
-    assignee_id: "",
     contact_id: link.contactId ?? "",
     deal_id: link.dealId ?? "",
   };
@@ -35,7 +33,6 @@ export function taskToForm(task: Task): TaskFormValues {
     due_date: toDateInput(task.due_date),
     priority: task.priority,
     status: task.status,
-    assignee_id: task.assignee_id ?? "",
     contact_id: task.contact_id ?? "",
     deal_id: task.deal_id ?? "",
   };

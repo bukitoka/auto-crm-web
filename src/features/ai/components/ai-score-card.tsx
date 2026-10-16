@@ -22,9 +22,16 @@ type AiScoreCardProps = {
   score: number | null;
   reasoning: string | null;
   scoredAt: string | null;
+  readOnly?: boolean;
 };
 
-export function AiScoreCard({ contactId, score, reasoning, scoredAt }: AiScoreCardProps) {
+export function AiScoreCard({
+  contactId,
+  score,
+  reasoning,
+  scoredAt,
+  readOnly = false,
+}: AiScoreCardProps) {
   const [isPending, startTransition] = useTransition();
 
   function handleScore() {
@@ -44,12 +51,14 @@ export function AiScoreCard({ contactId, score, reasoning, scoredAt }: AiScoreCa
         <CardDescription>
           {scoredAt ? `Scored ${formatRelative(scoredAt)}` : "Not scored yet"}
         </CardDescription>
-        <CardAction>
-          <Button size="sm" variant="outline" onClick={handleScore} disabled={isPending}>
-            {isPending ? <Spinner /> : <Sparkles />}
-            {score === null ? "Score with AI" : "Re-score"}
-          </Button>
-        </CardAction>
+        {readOnly ? null : (
+          <CardAction>
+            <Button size="sm" variant="outline" onClick={handleScore} disabled={isPending}>
+              {isPending ? <Spinner /> : <Sparkles />}
+              {score === null ? "Score with AI" : "Re-score"}
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       <CardContent className="space-y-3">
         {isPending ? (
@@ -58,7 +67,9 @@ export function AiScoreCard({ contactId, score, reasoning, scoredAt }: AiScoreCa
           </p>
         ) : score === null ? (
           <p className="text-sm text-muted-foreground">
-            Let AI rate how likely this lead is to convert, based on profile, deals and activity.
+            {readOnly
+              ? "The admin who owns this contact has not scored it."
+              : "Let AI rate how likely this lead is to convert, based on profile, deals and activity."}
           </p>
         ) : (
           <>

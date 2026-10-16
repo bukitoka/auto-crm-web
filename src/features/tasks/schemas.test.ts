@@ -49,7 +49,6 @@ describe("toTaskPayload", () => {
       due_date: "2026-03-10",
       priority: "medium",
       status: "todo",
-      assignee_id: null,
       contact_id: "c1",
       deal_id: null,
     });
@@ -66,7 +65,6 @@ describe("taskToForm", () => {
       due_date: "2026-03-10",
       priority: "high",
       status: "todo",
-      assignee_id: "",
       contact_id: "",
       deal_id: "d1",
     });

@@ -21,10 +21,22 @@ import { TaskPriorityBadge, TaskStatusBadge } from "./task-badges";
 import type { TaskFormOptions } from "./task-form";
 import { TaskFormDialog } from "./task-form-dialog";
 
-export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFormOptions }) {
+export function TasksTable({
+  tasks,
+  options,
+  readOnly = false,
+}: {
+  tasks: Task[];
+  options: TaskFormOptions;
+  readOnly?: boolean;
+}) {
   if (tasks.length === 0) {
     return (
-      <EmptyState icon={CheckSquare} title="No tasks found" description="You're all caught up." />
+      <EmptyState
+        icon={CheckSquare}
+        title="No tasks found"
+        description={readOnly ? "No admin has added tasks yet." : "You're all caught up."}
+      />
     );
   }
 
@@ -33,9 +45,11 @@ export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFor
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-12">
-              <span className="sr-only">Complete</span>
-            </TableHead>
+            {readOnly ? null : (
+              <TableHead className="w-12">
+                <span className="sr-only">Complete</span>
+              </TableHead>
+            )}
             <SortableHeader field="title">Task</SortableHeader>
             <SortableHeader field="due_date">Due</SortableHeader>
             <SortableHeader field="priority" className="hidden sm:table-cell">
@@ -48,9 +62,11 @@ export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFor
             <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
               Added
             </SortableHeader>
-            <TableHead className="w-24">
-              <span className="sr-only">Actions</span>
-            </TableHead>
+            {readOnly ? null : (
+              <TableHead className="w-24">
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -58,9 +74,11 @@ export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFor
             const overdue = task.status !== "done" && isOverdue(task.due_date);
             return (
               <TableRow key={task.id}>
-                <TableCell>
-                  <CompleteTaskButton taskId={task.id} status={task.status} />
-                </TableCell>
+                {readOnly ? null : (
+                  <TableCell>
+                    <CompleteTaskButton taskId={task.id} status={task.status} />
+                  </TableCell>
+                )}
                 <TableCell className="max-w-xs">
                   <p
                     className={cn(
@@ -94,30 +112,32 @@ export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFor
                   <TaskStatusBadge status={task.status} />
                 </TableCell>
                 <TableCell className="hidden text-muted-foreground lg:table-cell">
-                  {task.assignee?.full_name ?? "—"}
+                  {task.assignee?.full_name ?? "Not set"}
                 </TableCell>
                 <TableCell className="hidden text-muted-foreground xl:table-cell">
                   <time dateTime={task.created_at} title={formatDateTime(task.created_at)}>
                     {formatDate(task.created_at)}
                   </time>
                 </TableCell>
-                <TableCell>
-                  <div className="flex justify-end gap-1">
-                    <TaskFormDialog
-                      task={task}
-                      {...options}
-                      trigger={
-                        <Button variant="ghost" size="icon-sm" aria-label="Edit task">
-                          <Pencil />
-                        </Button>
-                      }
-                    />
-                    <ConfirmDeleteButton
-                      title={`Delete "${task.title}"?`}
-                      action={deleteTask.bind(null, task.id)}
-                    />
-                  </div>
-                </TableCell>
+                {readOnly ? null : (
+                  <TableCell>
+                    <div className="flex justify-end gap-1">
+                      <TaskFormDialog
+                        task={task}
+                        {...options}
+                        trigger={
+                          <Button variant="ghost" size="icon-sm" aria-label="Edit task">
+                            <Pencil />
+                          </Button>
+                        }
+                      />
+                      <ConfirmDeleteButton
+                        title={`Delete "${task.title}"?`}
+                        action={deleteTask.bind(null, task.id)}
+                      />
+                    </div>
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}

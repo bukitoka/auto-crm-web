@@ -16,7 +16,7 @@ export type ChatThreadProps = {
   initialMessages?: ChatMessage[];
   /** The record being viewed (only used by the header panel). */
   context?: PageContext | null;
-  /** Admins looking at someone else's chat: no composer. */
+  /** The super admin looking at another admin's chat: no composer. */
   readOnly?: boolean;
   /** "page": the /assistant pages; "panel": the header side panel. */
   variant?: "page" | "panel";

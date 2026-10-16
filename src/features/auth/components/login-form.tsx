@@ -102,7 +102,7 @@ export function LoginForm({ from, expired, reset }: LoginFormProps) {
             Log in
           </Button>
           <FieldDescription className="text-center">
-            No account yet? <Link href="/register">Create one</Link>
+            Accounts are created by your workspace's super admin.
           </FieldDescription>
         </Field>
       </FieldGroup>

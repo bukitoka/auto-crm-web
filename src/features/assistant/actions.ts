@@ -145,7 +145,7 @@ export async function deleteConversation(id: string): Promise<ActionResult> {
   return result;
 }
 
-/** Archive / restore / delete many at once (admins: anyone's chats). */
+/** Archive / restore / delete several of your own chats at once. */
 export async function bulkConversations(
   ids: string[],
   action: BulkConversationAction,

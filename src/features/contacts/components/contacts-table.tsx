@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/table";
 import { AiScoreBadge } from "@/features/ai/components/ai-score-badge";
 import type { CompanyRef } from "@/features/companies/types";
-import type { UserRef } from "@/features/users/types";
 import { formatDate, formatDateTime, personName } from "@/lib/format";
 import { deleteContact } from "../actions";
 import type { Contact } from "../types";
@@ -25,16 +24,20 @@ import { ContactStatusBadge } from "./contact-status-badge";
 type ContactsTableProps = {
   contacts: Contact[];
   companies: CompanyRef[];
-  users: UserRef[];
+  readOnly?: boolean;
 };
 
-export function ContactsTable({ contacts, companies, users }: ContactsTableProps) {
+export function ContactsTable({ contacts, companies, readOnly = false }: ContactsTableProps) {
   if (contacts.length === 0) {
     return (
       <EmptyState
         icon={Users}
         title="No contacts found"
-        description="Try a different search or filter, or add your first contact."
+        description={
+          readOnly
+            ? "Try a different search or filter."
+            : "Try a different search or filter, or add your first contact."
+        }
       />
     );
   }
@@ -56,9 +59,11 @@ export function ContactsTable({ contacts, companies, users }: ContactsTableProps
             <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
               Added
             </SortableHeader>
-            <TableHead className="w-24 text-right">
-              <span className="sr-only">Actions</span>
-            </TableHead>
+            {readOnly ? null : (
+              <TableHead className="w-24 text-right">
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -72,7 +77,7 @@ export function ContactsTable({ contacts, companies, users }: ContactsTableProps
                       {personName(contact)}
                     </Link>
                     <div className="text-xs text-muted-foreground">
-                      {contact.email ?? contact.job_title ?? "—"}
+                      {contact.email ?? contact.job_title ?? "Not set"}
                     </div>
                   </div>
                 </div>
@@ -83,7 +88,7 @@ export function ContactsTable({ contacts, companies, users }: ContactsTableProps
                     {contact.company.name}
                   </Link>
                 ) : (
-                  <span className="text-muted-foreground">—</span>
+                  <span className="text-muted-foreground">Not set</span>
                 )}
               </TableCell>
               <TableCell>
@@ -93,32 +98,33 @@ export function ContactsTable({ contacts, companies, users }: ContactsTableProps
                 <AiScoreBadge score={contact.ai_score} />
               </TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
-                {contact.owner?.full_name ?? "—"}
+                {contact.owner?.full_name ?? "Not set"}
               </TableCell>
               <TableCell className="hidden text-muted-foreground xl:table-cell">
                 <time dateTime={contact.created_at} title={formatDateTime(contact.created_at)}>
                   {formatDate(contact.created_at)}
                 </time>
               </TableCell>
-              <TableCell>
-                <div className="flex justify-end gap-1">
-                  <ContactFormDialog
-                    contact={contact}
-                    companies={companies}
-                    users={users}
-                    trigger={
-                      <Button variant="ghost" size="icon-sm" aria-label="Edit contact">
-                        <Pencil />
-                      </Button>
-                    }
-                  />
-                  <ConfirmDeleteButton
-                    title={`Delete ${personName(contact)}?`}
-                    description="The contact and its activities will be removed."
-                    action={deleteContact.bind(null, contact.id)}
-                  />
-                </div>
-              </TableCell>
+              {readOnly ? null : (
+                <TableCell>
+                  <div className="flex justify-end gap-1">
+                    <ContactFormDialog
+                      contact={contact}
+                      companies={companies}
+                      trigger={
+                        <Button variant="ghost" size="icon-sm" aria-label="Edit contact">
+                          <Pencil />
+                        </Button>
+                      }
+                    />
+                    <ConfirmDeleteButton
+                      title={`Delete ${personName(contact)}?`}
+                      description="The contact and its activities will be removed."
+                      action={deleteContact.bind(null, contact.id)}
+                    />
+                  </div>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

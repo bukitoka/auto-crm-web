@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { SelectField, TextField } from "@/components/shared/form-fields";
 import { FieldGroup } from "@/components/ui/field";
 import type { CompanyRef } from "@/features/companies/types";
-import type { UserRef } from "@/features/users/types";
 import { enumOptions, toOptions } from "@/lib/options";
 import { type ContactFormValues, contactFormSchema } from "../schemas";
 import { CONTACT_SOURCES, CONTACT_STATUSES } from "../types";
@@ -15,16 +14,9 @@ type ContactFormProps = {
   defaultValues: ContactFormValues;
   onSubmit: (values: ContactFormValues) => void;
   companies: CompanyRef[];
-  users: UserRef[];
 };
 
-export function ContactForm({
-  formId,
-  defaultValues,
-  onSubmit,
-  companies,
-  users,
-}: ContactFormProps) {
+export function ContactForm({ formId, defaultValues, onSubmit, companies }: ContactFormProps) {
   // Keep sources set elsewhere (e.g. by n8n integrations) selectable.
   const sourceOptions = enumOptions(
     !defaultValues.source ||
@@ -59,14 +51,6 @@ export function ContactForm({
           options={enumOptions(CONTACT_STATUSES)}
         />
         <SelectField control={control} name="source" label="Source" options={sourceOptions} />
-        <SelectField
-          control={control}
-          name="owner_id"
-          label="Owner"
-          options={toOptions(users, (u) => u.full_name)}
-          placeholder="Me"
-          allowNone
-        />
         <TextField
           control={control}
           name="tags"

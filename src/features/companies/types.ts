@@ -28,5 +28,4 @@ export type CompanyPayload = {
   size: string | null;
   website: string | null;
   notes: string | null;
-  owner_id?: string | null;
 };

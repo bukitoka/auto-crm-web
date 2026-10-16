@@ -9,11 +9,14 @@ export function TaskList({
   tasks,
   emptyText = "No tasks.",
   showAssignee = false,
+  readOnly = false,
 }: {
   tasks: Task[];
   emptyText?: string;
   /** Show who the task is assigned to (team-wide lists). */
   showAssignee?: boolean;
+  /** No complete button (the super admin cannot change tasks). */
+  readOnly?: boolean;
 }) {
   if (tasks.length === 0) {
     return <p className="py-6 text-center text-sm text-muted-foreground">{emptyText}</p>;
@@ -25,7 +28,7 @@ export function TaskList({
         const overdue = task.status !== "done" && isOverdue(task.due_date);
         return (
           <li key={task.id} className="flex items-center gap-3 py-2.5">
-            <CompleteTaskButton taskId={task.id} status={task.status} />
+            {readOnly ? null : <CompleteTaskButton taskId={task.id} status={task.status} />}
             <div className="min-w-0 flex-1">
               <p
                 className={cn(

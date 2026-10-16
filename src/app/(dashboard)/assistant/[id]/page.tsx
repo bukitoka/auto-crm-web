@@ -27,7 +27,7 @@ export async function generateMetadata({
 export default async function ConversationPage({ params }: PageProps<"/assistant/[id]">) {
   const { id } = await params;
   const [conversation, user] = await Promise.all([loadConversation(id), getCurrentUser()]);
-  // Admins can open anyone's chat (from "AI chats") but only read it.
+  // The super admin can open any admin's chat but only read it.
   const readOnly = conversation.user_id !== user.id;
 
   return (

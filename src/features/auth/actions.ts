@@ -10,10 +10,10 @@ import {
   forgotPasswordSchema,
   type LoginValues,
   loginSchema,
-  type RegisterValues,
   type ResetPasswordValues,
-  registerSchema,
   resetPasswordSchema,
+  type SetupValues,
+  setupSchema,
 } from "./schemas";
 import type { TokenResponse } from "./types";
 
@@ -47,22 +47,18 @@ export async function login(values: LoginValues, from?: string): Promise<ActionR
   redirect(safeRedirectPath(from));
 }
 
-export async function register(values: RegisterValues): Promise<ActionResult> {
-  return createAccount("/auth/register", values);
-}
-
 /** Create the super admin of a new workspace (the one-time setup page). */
-export async function setUpWorkspace(values: RegisterValues): Promise<ActionResult> {
-  return createAccount("/auth/setup", values);
-}
-
-async function createAccount(path: string, values: RegisterValues): Promise<ActionResult> {
-  const parsed = parseInput(registerSchema, values);
+export async function setUpWorkspace(values: SetupValues): Promise<ActionResult> {
+  const parsed = parseInput(setupSchema, values);
   if (!parsed.ok) return parsed;
 
   const { full_name, email, password } = parsed.data;
   const result = await runAction(async () => {
-    await apiFetch(path, { method: "POST", body: { full_name, email, password }, auth: false });
+    await apiFetch("/auth/setup", {
+      method: "POST",
+      body: { full_name, email, password },
+      auth: false,
+    });
     await loginWithCredentials(email, password);
   });
   if (!result.ok) return result;

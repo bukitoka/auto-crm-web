@@ -20,7 +20,6 @@ import { Spinner } from "@/components/ui/spinner";
 import type { CompanyRef } from "@/features/companies/types";
 import { ContactFormDialog } from "@/features/contacts/components/contact-form-dialog";
 import type { ContactFormValues } from "@/features/contacts/schemas";
-import type { UserRef } from "@/features/users/types";
 import type { ActionResult } from "@/lib/action-result";
 import { MAX_UPLOAD_BYTES } from "@/lib/constants";
 import { toastResult } from "@/lib/toast-result";
@@ -31,7 +30,6 @@ import { CaptureDropzone } from "./capture-dropzone";
 
 type SmartCaptureDialogProps = {
   companies: CompanyRef[];
-  users: UserRef[];
 };
 
 /** Map AI-extracted fields onto the contact form; match company by name. */
@@ -51,7 +49,7 @@ function toFormValues(data: ExtractedContact, companies: CompanyRef[]): Partial<
 }
 
 /** Nothing is saved here: the extracted fields open the regular contact form for review. */
-export function SmartCaptureDialog({ companies, users }: SmartCaptureDialogProps) {
+export function SmartCaptureDialog({ companies }: SmartCaptureDialogProps) {
   const [open, setOpen] = useState(false);
   const [prefill, setPrefill] = useState<Partial<ContactFormValues> | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -173,7 +171,6 @@ export function SmartCaptureDialog({ companies, users }: SmartCaptureDialogProps
           }}
           initialValues={prefill}
           companies={companies}
-          users={users}
         />
       ) : null}
     </>

@@ -21,7 +21,7 @@ export function N8nGuide({ events }: { events: string[] }) {
             <li>Create a subscription below for the event you care about, pasting that URL.</li>
             <li>
               Copy the signing secret (shown once) and verify the{" "}
-              <code className="font-mono text-xs">X-AutoCRM-Signature</code> header — an HMAC-SHA256
+              <code className="font-mono text-xs">X-AutoCRM-Signature</code> header, an HMAC-SHA256
               of the raw body.
             </li>
           </ol>

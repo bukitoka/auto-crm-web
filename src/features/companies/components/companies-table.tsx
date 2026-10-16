@@ -13,19 +13,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { UserRef } from "@/features/users/types";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { deleteCompany } from "../actions";
 import type { Company } from "../types";
 import { CompanyFormDialog } from "./company-form-dialog";
 
-export function CompaniesTable({ companies, users }: { companies: Company[]; users: UserRef[] }) {
+export function CompaniesTable({
+  companies,
+  readOnly = false,
+}: {
+  companies: Company[];
+  readOnly?: boolean;
+}) {
   if (companies.length === 0) {
     return (
       <EmptyState
         icon={Building2}
         title="No companies found"
-        description="Try a different search, or add your first company."
+        description={
+          readOnly
+            ? "Try a different search."
+            : "Try a different search, or add your first company."
+        }
       />
     );
   }
@@ -44,9 +53,11 @@ export function CompaniesTable({ companies, users }: { companies: Company[]; use
             <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
               Added
             </SortableHeader>
-            <TableHead className="w-24">
-              <span className="sr-only">Actions</span>
-            </TableHead>
+            {readOnly ? null : (
+              <TableHead className="w-24">
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -59,38 +70,43 @@ export function CompaniesTable({ companies, users }: { companies: Company[]; use
                     <Link href={`/companies/${company.id}`} className="font-medium hover:underline">
                       {company.name}
                     </Link>
-                    <div className="text-xs text-muted-foreground">{company.domain ?? "—"}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {company.domain ?? "Not set"}
+                    </div>
                   </div>
                 </div>
               </TableCell>
-              <TableCell className="hidden md:table-cell">{company.industry ?? "—"}</TableCell>
-              <TableCell className="hidden md:table-cell">{company.size ?? "—"}</TableCell>
+              <TableCell className="hidden md:table-cell">
+                {company.industry ?? "Not set"}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">{company.size ?? "Not set"}</TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
-                {company.owner?.full_name ?? "—"}
+                {company.owner?.full_name ?? "Not set"}
               </TableCell>
               <TableCell className="hidden text-muted-foreground xl:table-cell">
                 <time dateTime={company.created_at} title={formatDateTime(company.created_at)}>
                   {formatDate(company.created_at)}
                 </time>
               </TableCell>
-              <TableCell>
-                <div className="flex justify-end gap-1">
-                  <CompanyFormDialog
-                    company={company}
-                    users={users}
-                    trigger={
-                      <Button variant="ghost" size="icon-sm" aria-label="Edit company">
-                        <Pencil />
-                      </Button>
-                    }
-                  />
-                  <ConfirmDeleteButton
-                    title={`Delete ${company.name}?`}
-                    description="Contacts and deals stay, but lose the link to this company."
-                    action={deleteCompany.bind(null, company.id)}
-                  />
-                </div>
-              </TableCell>
+              {readOnly ? null : (
+                <TableCell>
+                  <div className="flex justify-end gap-1">
+                    <CompanyFormDialog
+                      company={company}
+                      trigger={
+                        <Button variant="ghost" size="icon-sm" aria-label="Edit company">
+                          <Pencil />
+                        </Button>
+                      }
+                    />
+                    <ConfirmDeleteButton
+                      title={`Delete ${company.name}?`}
+                      description="Contacts and deals stay, but lose the link to this company."
+                      action={deleteCompany.bind(null, company.id)}
+                    />
+                  </div>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

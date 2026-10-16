@@ -24,7 +24,7 @@ type ApiFetchOptions = {
   /** JSON-serialisable value, or `FormData` for file uploads (sent as multipart). */
   body?: unknown;
   query?: Record<string, QueryValue>;
-  /** Send the session JWT (default true). Set false for login/register. */
+  /** Send the session JWT (default true). Set false for login and setup. */
   auth?: boolean;
 };
 

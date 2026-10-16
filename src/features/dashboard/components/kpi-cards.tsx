@@ -74,7 +74,7 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
     },
     {
       label: "Win rate",
-      value: summary.win_rate === null ? "—" : `${Math.round(summary.win_rate * 100)}%`,
+      value: summary.win_rate === null ? "N/A" : `${Math.round(summary.win_rate * 100)}%`,
       detail: "Won vs. lost, last 90 days",
       hint: "See closed deals",
       icon: Percent,
@@ -83,7 +83,7 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
     },
     {
       label: "Average deal size",
-      value: summary.average_deal_size === null ? "—" : formatCurrency(summary.average_deal_size),
+      value: summary.average_deal_size === null ? "N/A" : formatCurrency(summary.average_deal_size),
       detail: "Won deals, last 90 days",
       hint: "See closed deals",
       icon: Scale,

@@ -13,9 +13,11 @@ type DealCardProps = {
   /** Rendered inside the DragOverlay (the copy that follows the pointer). */
   isOverlay?: boolean;
   handle?: React.ReactNode;
+  /** No drag grip (the super admin cannot move deals). */
+  readOnly?: boolean;
 };
 
-export function DealCard({ deal, isOverlay = false, handle }: DealCardProps) {
+export function DealCard({ deal, isOverlay = false, handle, readOnly = false }: DealCardProps) {
   const related = deal.contact ? personName(deal.contact) : deal.company?.name;
 
   return (
@@ -33,7 +35,9 @@ export function DealCard({ deal, isOverlay = false, handle }: DealCardProps) {
         >
           {deal.title}
         </Link>
-        {handle ?? <GripVertical className="size-4 text-muted-foreground" aria-hidden />}
+        {readOnly
+          ? null
+          : (handle ?? <GripVertical className="size-4 text-muted-foreground" aria-hidden />)}
       </div>
 
       <p className="text-lg font-semibold tabular-nums tracking-tight">

@@ -33,7 +33,6 @@ describe("createDeal", () => {
         stage_id: "stage-1",
         contact_id: null,
         company_id: null,
-        owner_id: null,
         expected_close_date: null,
       },
     });

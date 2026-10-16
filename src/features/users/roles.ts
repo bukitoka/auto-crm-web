@@ -1,24 +1,33 @@
-import type { User, UserRole } from "./types";
+import type { User } from "./types";
 
-type HasRole = Pick<User, "role" | "is_super_admin">;
+type HasRole = Pick<User, "is_super_admin">;
 
-export const USER_ROLES: UserRole[] = ["member", "admin"];
-
-/** The API enforces the same rules. */
-export function isAdmin(user: HasRole) {
-  return user.is_super_admin || user.role === "admin";
+/** The boss: reads everything, manages admins, pipeline and automations. The API enforces the same rules. */
+export function isSuperAdmin(user: HasRole) {
+  return user.is_super_admin;
 }
 
-/** Whether `actor` may change `target`: never themselves; other admins only as a super admin. */
-export function canManageUser(
-  actor: Pick<User, "id" | "role" | "is_super_admin">,
-  target: Pick<User, "id" | "role" | "is_super_admin">,
-) {
-  if (!isAdmin(actor) || actor.id === target.id || target.is_super_admin) return false;
-  return target.role !== "admin" || actor.is_super_admin;
+/** Admins own and edit their CRM records; the super admin only views them. */
+export function canWriteCrm(user: HasRole) {
+  return !user.is_super_admin;
 }
 
-/** "super admin", "admin" or "member", for display. */
+/** Create and switch off admin accounts. */
+export function canManageAdmins(user: HasRole) {
+  return user.is_super_admin;
+}
+
+/** Pipeline stages and webhook subscriptions. */
+export function canManageWorkspace(user: HasRole) {
+  return user.is_super_admin;
+}
+
+/** Read other admins' assistant chats and see every admin's numbers. */
+export function canViewTeam(user: HasRole) {
+  return user.is_super_admin;
+}
+
+/** "super admin" or "admin", for display. */
 export function roleLabel(user: HasRole) {
-  return user.is_super_admin ? "super admin" : user.role;
+  return user.is_super_admin ? "super admin" : "admin";
 }

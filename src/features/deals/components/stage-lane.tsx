@@ -9,10 +9,11 @@ type StageLaneProps = {
   column: StageColumn;
   dotClassName: string;
   children: React.ReactNode;
+  readOnly?: boolean;
 };
 
 /** The whole lane is a drop target, not just the card list. */
-export function StageLane({ column, dotClassName, children }: StageLaneProps) {
+export function StageLane({ column, dotClassName, children, readOnly = false }: StageLaneProps) {
   const { stage, deals, total } = column;
   const { setNodeRef, isOver } = useDroppable({ id: stage.id });
   const headingId = `stage-${stage.id}`;
@@ -46,7 +47,7 @@ export function StageLane({ column, dotClassName, children }: StageLaneProps) {
           children
         ) : (
           <p className="flex flex-1 items-center justify-center rounded-md border border-dashed p-6 text-center text-xs text-muted-foreground">
-            Drop deals here
+            {readOnly ? "No deals" : "Drop deals here"}
           </p>
         )}
       </div>

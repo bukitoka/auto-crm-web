@@ -22,4 +22,10 @@ describe("DealsTable", () => {
       "2026-03-04T12:00:00Z",
     );
   });
+
+  it("hides row actions for read-only viewers", () => {
+    renderWithUser(<DealsTable deals={[makeDeal({ title: "Renewal" })]} readOnly />);
+
+    expect(screen.queryByRole("columnheader", { name: "Actions" })).not.toBeInTheDocument();
+  });
 });

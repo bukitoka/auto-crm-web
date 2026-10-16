@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loginSchema, type RegisterValues, registerSchema } from "./schemas";
+import { loginSchema, type SetupValues, setupSchema } from "./schemas";
 
 describe("loginSchema", () => {
   it("accepts an email and password", () => {
@@ -15,20 +15,20 @@ describe("loginSchema", () => {
   });
 });
 
-describe("registerSchema", () => {
-  const valid: RegisterValues = {
+describe("setupSchema", () => {
+  const valid: SetupValues = {
     full_name: "Jane Doe",
     email: "jane@acme.com",
     password: "secret123",
     confirm_password: "secret123",
   };
 
-  it("accepts a valid registration", () => {
-    expect(registerSchema.safeParse(valid).success).toBe(true);
+  it("accepts valid details", () => {
+    expect(setupSchema.safeParse(valid).success).toBe(true);
   });
 
   it("requires at least 8 characters", () => {
-    const result = registerSchema.safeParse({
+    const result = setupSchema.safeParse({
       ...valid,
       password: "short",
       confirm_password: "short",
@@ -37,7 +37,7 @@ describe("registerSchema", () => {
   });
 
   it("reports mismatched passwords on confirm_password", () => {
-    const result = registerSchema.safeParse({ ...valid, confirm_password: "different1" });
+    const result = setupSchema.safeParse({ ...valid, confirm_password: "different1" });
     expect(result.error?.issues[0]).toMatchObject({
       message: "Passwords do not match",
       path: ["confirm_password"],
@@ -45,7 +45,7 @@ describe("registerSchema", () => {
   });
 
   it("requires a name", () => {
-    const result = registerSchema.safeParse({ ...valid, full_name: "  " });
+    const result = setupSchema.safeParse({ ...valid, full_name: "  " });
     expect(result.error?.issues[0]?.message).toBe("Name is required");
   });
 });

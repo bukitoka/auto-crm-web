@@ -19,10 +19,9 @@ import {
 } from "@/components/ui/sidebar";
 import { NavChats } from "@/features/assistant/components/nav-chats";
 import type { Conversation } from "@/features/assistant/types";
-import { isAdmin } from "@/features/users/roles";
 import type { User } from "@/features/users/types";
 import { HOME_PATH } from "@/lib/constants";
-import { mainNav, type NavItem, secondaryNav } from "./nav-items";
+import { mainNav, type NavItem, secondaryNav, visibleNav } from "./nav-items";
 import { NavUser } from "./nav-user";
 
 type AppSidebarProps = ComponentProps<typeof Sidebar> & {
@@ -58,7 +57,7 @@ function NavGroup({ label, items }: { label: string; items: NavItem[] }) {
 }
 
 export function AppSidebar({ user, recentChats, ...props }: AppSidebarProps) {
-  const workspaceItems = secondaryNav.filter((item) => !item.adminOnly || isAdmin(user));
+  const workspaceItems = visibleNav(secondaryNav, user);
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -72,7 +71,7 @@ export function AppSidebar({ user, recentChats, ...props }: AppSidebarProps) {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Auto CRM</span>
-                  <span className="truncate text-xs text-muted-foreground">AI-assisted</span>
+                  <span className="truncate text-xs text-muted-foreground">CRM workspace</span>
                 </div>
               </Link>
             </SidebarMenuButton>

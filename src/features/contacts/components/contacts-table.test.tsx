@@ -14,7 +14,6 @@ describe("ContactsTable", () => {
       <ContactsTable
         contacts={[makeContact({ first_name: "Avery", created_at: "2026-03-04T12:00:00Z" })]}
         companies={[]}
-        users={[]}
       />,
     );
 
@@ -25,5 +24,16 @@ describe("ContactsTable", () => {
       "datetime",
       "2026-03-04T12:00:00Z",
     );
+  });
+
+  it("offers edit and delete to admins", () => {
+    renderWithUser(<ContactsTable contacts={[makeContact()]} companies={[]} />);
+    expect(screen.getByRole("button", { name: "Edit contact" })).toBeInTheDocument();
+  });
+
+  it("hides row actions in read-only view", () => {
+    renderWithUser(<ContactsTable contacts={[makeContact()]} companies={[]} readOnly />);
+    expect(screen.queryByRole("button", { name: "Edit contact" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: "Actions" })).not.toBeInTheDocument();
   });
 });

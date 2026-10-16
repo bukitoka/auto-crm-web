@@ -27,12 +27,18 @@ type DealsCanvasProps = {
   deals: Deal[];
   stages: PipelineStage[];
   canEditPipeline?: boolean;
+  readOnly?: boolean;
 };
 
 type Move = { dealId: string; stage: PipelineStage };
 
 /** Stage moves are optimistic; if saving fails the deal snaps back and an error toast is shown. */
-export function DealsCanvas({ deals, stages, canEditPipeline = false }: DealsCanvasProps) {
+export function DealsCanvas({
+  deals,
+  stages,
+  canEditPipeline = false,
+  readOnly = false,
+}: DealsCanvasProps) {
   const [optimisticDeals, applyMove] = useOptimistic(deals, (current: Deal[], move: Move) =>
     moveDeal(current, move.dealId, move.stage),
   );
@@ -104,10 +110,15 @@ export function DealsCanvas({ deals, stages, canEditPipeline = false }: DealsCan
               key={column.stage.id}
               column={column}
               dotClassName={dotClasses[column.stage.id]}
+              readOnly={readOnly}
             >
-              {column.deals.map((deal) => (
-                <DraggableDealCard key={deal.id} deal={deal} />
-              ))}
+              {column.deals.map((deal) =>
+                readOnly ? (
+                  <DealCard key={deal.id} deal={deal} readOnly />
+                ) : (
+                  <DraggableDealCard key={deal.id} deal={deal} />
+                ),
+              )}
             </StageLane>
           ))}
           {canEditPipeline ? <AddStageLane /> : null}

@@ -33,7 +33,6 @@ export type TaskPayload = {
   due_date: string | null;
   priority: TaskPriority;
   status: TaskStatus;
-  assignee_id: string | null;
   contact_id: string | null;
   deal_id: string | null;
 };

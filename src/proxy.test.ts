@@ -31,9 +31,12 @@ describe("proxy", () => {
       expect(redirectTarget(response)).toBe("http://localhost:3000/login");
     });
 
-    it("lets the user open the login and register pages", () => {
+    it("lets the user open the login page", () => {
       expect(redirectTarget(proxy(request("/login")))).toBeNull();
-      expect(redirectTarget(proxy(request("/register")))).toBeNull();
+    });
+
+    it("sends the removed /register page to login", () => {
+      expect(redirectTarget(proxy(request("/register")))).toContain("/login");
     });
 
     it("lets /logout through", () => {
@@ -51,9 +54,6 @@ describe("proxy", () => {
 
     it("keeps logged-in users away from the auth pages", () => {
       expect(redirectTarget(proxy(request("/login", { loggedIn: true })))).toBe(
-        "http://localhost:3000/assistant",
-      );
-      expect(redirectTarget(proxy(request("/register", { loggedIn: true })))).toBe(
         "http://localhost:3000/assistant",
       );
     });

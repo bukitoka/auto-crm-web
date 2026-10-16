@@ -13,7 +13,6 @@ export const dealFormSchema = z.object({
   stage_id: z.string().min(1, "Pick a stage"),
   contact_id: z.string(),
   company_id: z.string(),
-  owner_id: z.string(),
   expected_close_date: z.string(),
 });
 export type DealFormValues = z.infer<typeof dealFormSchema>;
@@ -26,7 +25,6 @@ export function emptyDealForm(stageId = ""): DealFormValues {
     stage_id: stageId,
     contact_id: "",
     company_id: "",
-    owner_id: "",
     expected_close_date: "",
   };
 }
@@ -39,7 +37,6 @@ export function dealToForm(deal: Deal): DealFormValues {
     stage_id: deal.stage_id,
     contact_id: deal.contact_id ?? "",
     company_id: deal.company_id ?? "",
-    owner_id: deal.owner_id ?? "",
     expected_close_date: toDateInput(deal.expected_close_date),
   };
 }

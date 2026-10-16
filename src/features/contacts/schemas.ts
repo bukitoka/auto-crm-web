@@ -13,7 +13,6 @@ export const contactFormSchema = z.object({
   /** Comma-separated in the form, `string[]` in the API. */
   tags: z.string(),
   company_id: z.string(),
-  owner_id: z.string(),
 });
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
 
@@ -27,7 +26,6 @@ export const emptyContactForm: ContactFormValues = {
   source: "manual",
   tags: "",
   company_id: "",
-  owner_id: "",
 };
 
 export function contactToForm(contact: Contact): ContactFormValues {
@@ -41,7 +39,6 @@ export function contactToForm(contact: Contact): ContactFormValues {
     source: contact.source,
     tags: contact.tags.join(", "),
     company_id: contact.company_id ?? "",
-    owner_id: contact.owner_id ?? "",
   };
 }
 

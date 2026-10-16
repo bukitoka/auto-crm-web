@@ -47,7 +47,7 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
 }) {
-  // Lets popups inside the dialog (e.g. Combobox) portal into it — see portal-container.tsx.
+  // Lets popups inside the dialog (e.g. Combobox) portal into it (see portal-container.tsx).
   const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
 
   return (

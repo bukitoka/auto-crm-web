@@ -53,7 +53,6 @@ export type ContactPayload = {
   source: string;
   tags: string[];
   company_id: string | null;
-  owner_id: string | null;
 };
 
 export type ContactFilters = SortParams & {

@@ -6,21 +6,23 @@ import { PageHeader } from "@/components/shared/page-header";
 import { PaginationBar } from "@/components/shared/pagination-bar";
 import { SearchInput } from "@/components/shared/search-input";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/features/auth/api";
 import { importCompanies } from "@/features/companies/actions";
 import { listCompanies } from "@/features/companies/api";
 import { CompaniesTable } from "@/features/companies/components/companies-table";
 import { CompanyFormDialog } from "@/features/companies/components/company-form-dialog";
-import { listUserOptions } from "@/features/users/api";
+import { canWriteCrm } from "@/features/users/roles";
 import { getListParams, getSortParams } from "@/lib/search-params";
 
 export const metadata: Metadata = { title: "Companies" };
 
 export default async function CompaniesPage({ searchParams }: PageProps<"/companies">) {
   const params = await searchParams;
-  const [companies, users] = await Promise.all([
+  const [user, companies] = await Promise.all([
+    getCurrentUser(),
     listCompanies({ ...getListParams(params), ...getSortParams(params) }),
-    listUserOptions(),
   ]);
+  const readOnly = !canWriteCrm(user);
 
   return (
     <>
@@ -30,26 +32,29 @@ export default async function CompaniesPage({ searchParams }: PageProps<"/compan
         actions={
           <>
             <ExportButton entity="companies" />
-            <ImportCsvDialog
-              entity="companies"
-              columns={["name", "domain", "industry", "size", "website", "notes"]}
-              note="Names that already exist are skipped."
-              action={importCompanies}
-            />
-            <CompanyFormDialog
-              users={users}
-              trigger={
-                <Button>
-                  <Plus />
-                  New company
-                </Button>
-              }
-            />
+            {readOnly ? null : (
+              <>
+                <ImportCsvDialog
+                  entity="companies"
+                  columns={["name", "domain", "industry", "size", "website", "notes"]}
+                  note="Names that already exist are skipped."
+                  action={importCompanies}
+                />
+                <CompanyFormDialog
+                  trigger={
+                    <Button>
+                      <Plus />
+                      New company
+                    </Button>
+                  }
+                />
+              </>
+            )}
           </>
         }
       />
       <SearchInput placeholder="Search companies…" />
-      <CompaniesTable companies={companies.items} users={users} />
+      <CompaniesTable companies={companies.items} readOnly={readOnly} />
       <PaginationBar
         pathname="/companies"
         searchParams={params}

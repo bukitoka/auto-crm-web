@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { type ReactNode, useState, useTransition } from "react";
 import { FormDialog } from "@/components/shared/form-dialog";
 import type { CompanyRef } from "@/features/companies/types";
-import type { UserRef } from "@/features/users/types";
 import { toastResult } from "@/lib/toast-result";
 import { createContact, updateContact } from "../actions";
 import { type ContactFormValues, contactToForm, emptyContactForm } from "../schemas";
@@ -16,7 +15,6 @@ type ContactFormDialogProps = {
   /** Prefill for create mode (e.g. from AI smart capture). */
   initialValues?: Partial<ContactFormValues>;
   companies: CompanyRef[];
-  users: UserRef[];
   trigger?: ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -26,7 +24,6 @@ export function ContactFormDialog({
   contact,
   initialValues,
   companies,
-  users,
   trigger,
   open: controlledOpen,
   onOpenChange,
@@ -68,7 +65,6 @@ export function ContactFormDialog({
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         companies={companies}
-        users={users}
       />
     </FormDialog>
   );

@@ -65,7 +65,6 @@ describe("toContactPayload", () => {
       source: "manual",
       tags: ["vip", "newsletter"],
       company_id: null,
-      owner_id: null,
     });
   });
 
@@ -94,7 +93,6 @@ describe("contactToForm", () => {
       source: "web_form",
       tags: "vip, newsletter",
       company_id: "company-1",
-      owner_id: "",
     });
   });
 

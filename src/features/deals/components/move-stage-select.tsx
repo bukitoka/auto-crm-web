@@ -10,9 +10,15 @@ type MoveStageSelectProps = {
   dealId: string;
   stageId: string;
   stages: PipelineStage[];
+  readOnly?: boolean;
 };
 
-export function MoveStageSelect({ dealId, stageId, stages }: MoveStageSelectProps) {
+export function MoveStageSelect({
+  dealId,
+  stageId,
+  stages,
+  readOnly = false,
+}: MoveStageSelectProps) {
   const [isPending, startTransition] = useTransition();
   const options = stages.map((stage) => ({ value: stage.id, label: stage.name }));
 
@@ -31,7 +37,7 @@ export function MoveStageSelect({ dealId, stageId, stages }: MoveStageSelectProp
       value={stageId}
       onChange={handleChange}
       aria-label="Move to stage"
-      disabled={isPending}
+      disabled={isPending || readOnly}
     />
   );
 }

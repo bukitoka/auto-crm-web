@@ -6,7 +6,7 @@ export const loginSchema = z.object({
 });
 export type LoginValues = z.infer<typeof loginSchema>;
 
-export const registerSchema = z
+export const setupSchema = z
   .object({
     full_name: z.string().trim().min(1, "Name is required").max(200),
     email: z.email("Enter a valid email"),
@@ -17,7 +17,7 @@ export const registerSchema = z
     message: "Passwords do not match",
     path: ["confirm_password"],
   });
-export type RegisterValues = z.infer<typeof registerSchema>;
+export type SetupValues = z.infer<typeof setupSchema>;
 
 export const forgotPasswordSchema = z.object({
   email: z.email("Enter a valid email"),

@@ -11,12 +11,14 @@ import {
   Users,
   Workflow,
 } from "lucide-react";
+import { isSuperAdmin } from "@/features/users/roles";
+import type { User } from "@/features/users/types";
 
 export type NavItem = {
   title: string;
   href: string;
   icon: LucideIcon;
-  adminOnly?: boolean;
+  superAdminOnly?: boolean;
 };
 
 export const mainNav: NavItem[] = [
@@ -29,11 +31,15 @@ export const mainNav: NavItem[] = [
 ];
 
 export const secondaryNav: NavItem[] = [
-  { title: "AI chats", href: "/ai-chats", icon: MessagesSquare, adminOnly: true },
-  { title: "Automations", href: "/automations", icon: Workflow, adminOnly: true },
-  { title: "Team", href: "/team", icon: UserCog, adminOnly: true },
+  { title: "AI chats", href: "/ai-chats", icon: MessagesSquare, superAdminOnly: true },
+  { title: "Automations", href: "/automations", icon: Workflow, superAdminOnly: true },
+  { title: "Admins", href: "/team", icon: UserCog, superAdminOnly: true },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
+
+export function visibleNav(items: NavItem[], user: Pick<User, "is_super_admin">) {
+  return items.filter((item) => !item.superAdminOnly || isSuperAdmin(user));
+}
 
 /** Labels used by the header breadcrumbs. */
 export const segmentLabels: Record<string, string> = {
@@ -46,7 +52,7 @@ export const segmentLabels: Record<string, string> = {
   deals: "Deals",
   tasks: "Tasks",
   automations: "Automations",
-  team: "Team",
+  team: "Admins",
   settings: "Settings",
   search: "Search",
 };
