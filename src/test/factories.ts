@@ -64,6 +64,7 @@ export function makeStage(overrides: Partial<PipelineStage> = {}): PipelineStage
     probability: 10,
     is_won: false,
     is_lost: false,
+    deal_count: 0,
     ...overrides,
   };
 }

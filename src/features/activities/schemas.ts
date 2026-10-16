@@ -28,7 +28,7 @@ export function emptyActivityForm(link: {
 
 export function toActivityPayload(values: ActivityFormValues): ActivityPayload {
   const payload = emptyToNull(values) as ActivityPayload;
-  // Date-only input → midnight UTC; omit to let the API default to "now".
+  // A date-only input becomes midnight UTC; omit to let the API default to "now".
   return {
     ...payload,
     occurred_at: values.occurred_at ? new Date(values.occurred_at).toISOString() : null,

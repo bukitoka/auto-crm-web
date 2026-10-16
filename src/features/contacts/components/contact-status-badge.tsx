@@ -3,7 +3,6 @@ import type { ContactStatus } from "../types";
 
 type BadgeVariant = React.ComponentProps<typeof Badge>["variant"];
 
-/** lead = new (info) → prospect = in progress (warning) → customer (success) → churned (muted). */
 const variants: Record<ContactStatus, BadgeVariant> = {
   lead: "info",
   prospect: "warning",

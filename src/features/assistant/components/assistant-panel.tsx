@@ -51,9 +51,8 @@ function saveChat(chat: PanelChat) {
 }
 
 /**
- * Quick access to the assistant from any page (header "Ask AI", ⌘J / Ctrl+J).
- * It knows the record you are viewing ("this contact"). Chats are saved like the
- * ones on /assistant; this tab remembers the open one, and "Open" continues it full-page.
+ * Opened with ⌘J / Ctrl+J. Passes the record being viewed as context so "this contact"
+ * works. The open chat is remembered per tab (sessionStorage).
  */
 export function AssistantPanel() {
   const pathname = usePathname();

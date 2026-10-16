@@ -5,7 +5,7 @@ import type { ActionResult } from "./action-result";
 
 /**
  * Show a toast for a Server Action result. Returns true on success.
- * 503 = AI provider not configured → friendly warning instead of an error.
+ * A 503 means the AI provider is not configured, so it shows a warning instead of an error.
  */
 export function toastResult<T>(
   result: ActionResult<T>,

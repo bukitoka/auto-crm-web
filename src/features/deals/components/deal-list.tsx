@@ -3,7 +3,6 @@ import { formatCurrency } from "@/lib/format";
 import type { Deal } from "../types";
 import { DealStageBadge } from "./deal-stage-badge";
 
-/** Compact list of deals for contact/company detail pages. */
 export function DealList({ deals }: { deals: Deal[] }) {
   if (deals.length === 0) {
     return <p className="py-6 text-center text-sm text-muted-foreground">No deals yet.</p>;

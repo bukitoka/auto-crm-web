@@ -9,6 +9,7 @@ import {
   sendMessage,
   setConversationArchived,
   startConversation,
+  transcribeRecording,
 } from "./actions";
 import type { ChatTurn } from "./types";
 
@@ -23,12 +24,13 @@ function turn(withActions = false): ChatTurn {
   return {
     conversation: { id: "c1" } as ChatTurn["conversation"],
     messages: [
-      { id: "m1", role: "user", content: "Hi", actions: [], created_at: "" },
+      { id: "m1", role: "user", content: "Hi", actions: [], attachments: [], created_at: "" },
       {
         id: "m2",
         role: "assistant",
         content: "Done",
         actions: withActions ? [{ kind: "created" } as never] : [],
+        attachments: [],
         created_at: "",
       },
     ],
@@ -70,6 +72,41 @@ describe("startConversation / sendMessage", () => {
       status: 422,
     });
     expect(await sendMessage("c1", "", null)).toMatchObject({ ok: false });
+    expect(apiFetchMock).not.toHaveBeenCalled();
+  });
+
+  it("sends attached files as multipart, with the text optional", async () => {
+    apiFetchMock.mockResolvedValue(turn());
+    const file = new File(["Jane Doe"], "card.txt", { type: "text/plain" });
+    const attachments = new FormData();
+    attachments.append("files", file);
+
+    await sendMessage("c1", "  ", { type: "contact", id: "ct1" }, attachments);
+
+    const [path, options] = apiFetchMock.mock.calls[0];
+    expect(path).toBe("/assistant/conversations/c1/messages/with-files");
+    const body = options?.body as FormData;
+    expect(body.get("content")).toBe("");
+    expect(body.get("context_type")).toBe("contact");
+    expect(body.get("context_id")).toBe("ct1");
+    expect(body.getAll("files")).toEqual([file]);
+
+    await startConversation("Add her", null, attachments);
+    expect(apiFetchMock.mock.calls[1][0]).toBe("/assistant/conversations/with-files");
+  });
+
+  it("refuses too many or too large files", async () => {
+    const many = new FormData();
+    for (const name of ["a", "b", "c", "d"]) many.append("files", new File(["x"], name));
+    expect(await sendMessage("c1", "Hi", null, many)).toMatchObject({ ok: false, status: 422 });
+
+    const big = new FormData();
+    big.append("files", new File([new Uint8Array(5 * 1024 * 1024 + 1)], "big.pdf"));
+    expect(await startConversation("", null, big)).toEqual({
+      ok: false,
+      error: "big.pdf is larger than 5 MB",
+      status: 413,
+    });
     expect(apiFetchMock).not.toHaveBeenCalled();
   });
 
@@ -135,5 +172,48 @@ describe("managing chats", () => {
       body: { ids: ["a", "b"], action: "archive" },
     });
     expect(await bulkConversations([], "delete")).toMatchObject({ ok: false, status: 422 });
+  });
+});
+
+describe("transcribeRecording", () => {
+  function recording(size = 5) {
+    const formData = new FormData();
+    formData.set("audio", new File(["x".repeat(size)], "voice.webm", { type: "audio/webm" }));
+    return formData;
+  }
+
+  it("sends the audio to the API and returns the text", async () => {
+    apiFetchMock.mockResolvedValue({ text: "Call Jane" });
+
+    const result = await transcribeRecording(recording());
+
+    expect(result).toEqual({ ok: true, data: { text: "Call Jane" } });
+    const [path, init] = apiFetchMock.mock.calls[0];
+    expect(path).toBe("/assistant/transcribe");
+    expect(init?.method).toBe("POST");
+    const body = init?.body as FormData;
+    const audio = body.get("audio") as File;
+    expect(audio.name).toBe("voice.webm");
+    expect(audio.size).toBe(5);
+  });
+
+  it("rejects empty or oversized recordings without calling the API", async () => {
+    expect(await transcribeRecording(new FormData())).toMatchObject({ ok: false, status: 422 });
+    expect(await transcribeRecording(recording(0))).toMatchObject({ ok: false, status: 422 });
+    expect(await transcribeRecording(recording(10 * 1024 * 1024 + 1))).toMatchObject({
+      ok: false,
+      status: 413,
+    });
+    expect(apiFetchMock).not.toHaveBeenCalled();
+  });
+
+  it("passes on the API's error", async () => {
+    apiFetchMock.mockRejectedValue(new ApiError(400, "The recording could not be read"));
+
+    expect(await transcribeRecording(recording())).toEqual({
+      ok: false,
+      error: "The recording could not be read",
+      status: 400,
+    });
   });
 });

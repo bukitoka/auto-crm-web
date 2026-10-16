@@ -20,7 +20,6 @@ const typeOptions = ACTIVITY_TYPES.map((type) => ({
   label: type[0].toUpperCase() + type.slice(1),
 }));
 
-/** Inline form to log a note/call/email/meeting on a contact or deal. */
 export function AddActivityForm({ contactId, dealId }: { contactId?: string; dealId?: string }) {
   const [isPending, startTransition] = useTransition();
   const defaults = emptyActivityForm({ contactId, dealId });

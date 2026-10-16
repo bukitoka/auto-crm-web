@@ -7,7 +7,6 @@ import { formatCompactCurrency } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Assistant" };
 
-/** Home: "What are you going to do today?" with a few numbers to start from. */
 export default async function AssistantPage() {
   const [user, summary] = await Promise.all([
     getCurrentUser(),

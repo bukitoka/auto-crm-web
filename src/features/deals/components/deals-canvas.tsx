@@ -19,23 +19,20 @@ import { toastResult } from "@/lib/toast-result";
 import { moveDealToStage } from "../actions";
 import { groupDealsByStage, moveDeal, stageDotClasses } from "../board";
 import type { Deal, PipelineStage } from "../types";
+import { AddStageLane } from "./add-stage-form";
 import { DealCard, DraggableDealCard } from "./deal-card";
 import { StageLane } from "./stage-lane";
 
 type DealsCanvasProps = {
   deals: Deal[];
   stages: PipelineStage[];
+  canEditPipeline?: boolean;
 };
 
 type Move = { dealId: string; stage: PipelineStage };
 
-/**
- * Pipeline board on a pannable, dotted canvas.
- * Drag a deal onto another stage to move it: the UI updates immediately
- * (optimistic), then the server action saves it. If saving fails, the deal
- * snaps back and an error toast is shown.
- */
-export function DealsCanvas({ deals, stages }: DealsCanvasProps) {
+/** Stage moves are optimistic; if saving fails the deal snaps back and an error toast is shown. */
+export function DealsCanvas({ deals, stages, canEditPipeline = false }: DealsCanvasProps) {
   const [optimisticDeals, applyMove] = useOptimistic(deals, (current: Deal[], move: Move) =>
     moveDeal(current, move.dealId, move.stage),
   );
@@ -113,6 +110,7 @@ export function DealsCanvas({ deals, stages }: DealsCanvasProps) {
               ))}
             </StageLane>
           ))}
+          {canEditPipeline ? <AddStageLane /> : null}
         </div>
       </ScrollArea>
 

@@ -24,7 +24,6 @@ type AiScoreCardProps = {
   scoredAt: string | null;
 };
 
-/** Lead score (0–100) with reasoning, plus a button to (re)score with AI. */
 export function AiScoreCard({ contactId, score, reasoning, scoredAt }: AiScoreCardProps) {
   const [isPending, startTransition] = useTransition();
 

@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
+import { ExportButton } from "@/components/shared/export-button";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationBar } from "@/components/shared/pagination-bar";
 import { ParamSelect } from "@/components/shared/param-select";
@@ -32,15 +33,18 @@ export default async function TasksPage({ searchParams }: PageProps<"/tasks">) {
         title="Tasks"
         description="Follow-ups and to-dos across your contacts and deals."
         actions={
-          <TaskFormDialog
-            {...options}
-            trigger={
-              <Button>
-                <Plus />
-                New task
-              </Button>
-            }
-          />
+          <>
+            <ExportButton entity="tasks" />
+            <TaskFormDialog
+              {...options}
+              trigger={
+                <Button>
+                  <Plus />
+                  New task
+                </Button>
+              }
+            />
+          </>
         }
       />
       <div className="flex flex-col gap-2 sm:flex-row">

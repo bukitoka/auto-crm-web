@@ -7,3 +7,9 @@ export const sendEmailSchema = z.object({
   deal_id: z.string(),
 });
 export type SendEmailValues = z.infer<typeof sendEmailSchema>;
+
+/** The compose dialog also picks who to write to (on a deal page there can be several). */
+export const composeEmailSchema = sendEmailSchema.extend({
+  contact_id: z.string().min(1, "Choose who to email"),
+});
+export type ComposeEmailValues = z.infer<typeof composeEmailSchema>;

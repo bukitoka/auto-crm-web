@@ -12,7 +12,6 @@ type ActivityListProps = {
   canDelete?: boolean;
 };
 
-/** Vertical timeline of activities. */
 export function ActivityList({
   activities,
   showLinks = false,

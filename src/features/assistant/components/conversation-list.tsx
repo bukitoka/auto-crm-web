@@ -17,7 +17,6 @@ type ConversationListProps = {
   conversations: Conversation[];
 };
 
-/** The chat history page: search, Chats / Archived, grouped by date, each with a ⋯ menu. */
 export function ConversationList({ conversations }: ConversationListProps) {
   const [search, setSearch] = useState("");
   const [archived, setArchived] = useState(false);

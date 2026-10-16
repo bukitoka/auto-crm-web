@@ -1,6 +1,5 @@
 import type { Deal, PipelineStage } from "./types";
 
-/** One lane on the deals canvas. */
 export type StageColumn = {
   stage: PipelineStage;
   deals: Deal[];
@@ -51,4 +50,19 @@ export function stageDotClasses(stages: PipelineStage[]): Record<string, string>
     }
   }
   return classes;
+}
+
+/** Drag-and-drop reorder: move the `activeId` item to where `overId` is. Returns a new array. */
+export function reorderById<T extends { id: string }>(
+  items: T[],
+  activeId: string,
+  overId: string,
+): T[] {
+  const from = items.findIndex((item) => item.id === activeId);
+  const to = items.findIndex((item) => item.id === overId);
+  if (from < 0 || to < 0 || from === to) return items;
+  const next = [...items];
+  const [moved] = next.splice(from, 1);
+  next.splice(to, 0, moved);
+  return next;
 }

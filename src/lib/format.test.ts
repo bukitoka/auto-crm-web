@@ -44,7 +44,7 @@ describe("date formatting", () => {
   });
 
   it("formats a date with time", () => {
-    // No timezone suffix → parsed as local time, so the output is the same everywhere.
+    // Without a timezone suffix it is parsed as local time, so the output is the same everywhere.
     expect(formatDateTime("2026-03-05T14:30:00")).toBe("Mar 5, 2026 · 14:30");
   });
 

@@ -1,6 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-/** Generic skeleton for list pages: header, toolbar, table rows. */
 export function ListPageSkeleton({ rows = 8 }: { rows?: number }) {
   return (
     <div className="flex flex-col gap-6">
@@ -22,7 +21,6 @@ export function ListPageSkeleton({ rows = 8 }: { rows?: number }) {
   );
 }
 
-/** Skeleton for detail pages: header + two-column cards. */
 export function DetailPageSkeleton() {
   return (
     <div className="flex flex-col gap-6">

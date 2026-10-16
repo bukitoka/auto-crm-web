@@ -50,11 +50,7 @@ function toFormValues(data: ExtractedContact, companies: CompanyRef[]): Partial<
   };
 }
 
-/**
- * Smart capture: paste text, or drop/paste a file (business card photo, screenshot, PDF,
- * Word, email) → AI extracts the fields → the regular contact form opens prefilled for
- * review before saving. Files are read on the API (OCR for images).
- */
+/** Nothing is saved here: the extracted fields open the regular contact form for review. */
 export function SmartCaptureDialog({ companies, users }: SmartCaptureDialogProps) {
   const [open, setOpen] = useState(false);
   const [prefill, setPrefill] = useState<Partial<ContactFormValues> | null>(null);
@@ -100,7 +96,6 @@ export function SmartCaptureDialog({ companies, users }: SmartCaptureDialogProps
     });
   }
 
-  /** Same for text and files: open the contact form prefilled with what the AI found. */
   function showResult(result: ActionResult<ExtractedContact>) {
     if (!toastResult(result)) return;
 

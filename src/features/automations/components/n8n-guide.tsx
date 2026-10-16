@@ -2,7 +2,6 @@ import { ArrowDownToLine, ArrowUpFromLine } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-/** Short explanation of how the CRM and n8n talk to each other. */
 export function N8nGuide({ events }: { events: string[] }) {
   return (
     <div className="grid gap-6 lg:grid-cols-2">

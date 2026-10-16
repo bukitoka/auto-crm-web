@@ -5,13 +5,15 @@ import type { Task } from "../types";
 import { CompleteTaskButton } from "./complete-task-button";
 import { TaskPriorityBadge } from "./task-badges";
 
-/** Compact task list for the dashboard and detail pages. */
 export function TaskList({
   tasks,
   emptyText = "No tasks.",
+  showAssignee = false,
 }: {
   tasks: Task[];
   emptyText?: string;
+  /** Show who the task is assigned to (team-wide lists). */
+  showAssignee?: boolean;
 }) {
   if (tasks.length === 0) {
     return <p className="py-6 text-center text-sm text-muted-foreground">{emptyText}</p>;
@@ -37,6 +39,7 @@ export function TaskList({
                 <span className={cn(overdue && "font-medium text-destructive")}>
                   {task.due_date ? `Due ${formatDate(task.due_date)}` : "No due date"}
                 </span>
+                {showAssignee ? ` · ${task.assignee?.full_name ?? "Unassigned"}` : null}
                 {task.contact ? (
                   <>
                     {" · "}

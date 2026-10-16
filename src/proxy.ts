@@ -3,7 +3,7 @@ import { AUTH_ROUTES, HOME_PATH, SESSION_COOKIE } from "@/lib/constants";
 
 /**
  * Optimistic auth check (cookie presence only). The API still validates the
- * JWT on every call; an expired token is handled by `apiFetch` → `/logout`.
+ * JWT on every call; an expired token is handled by `apiFetch`, which redirects to `/logout`.
  */
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;

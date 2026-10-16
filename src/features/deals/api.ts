@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { PICKER_PAGE_SIZE } from "@/lib/constants";
-import { getListParams, getParam } from "@/lib/search-params";
+import { getListParams, getParam, getSortParams } from "@/lib/search-params";
 import type { Paginated, SearchParams } from "@/lib/types";
 import type { Deal, DealFilters, DealRef, DealsView, PipelineStage } from "./types";
 
@@ -20,7 +20,16 @@ export function dealsQueryFromParams(params: SearchParams): {
   const view: DealsView = getParam(params, "view") === "table" ? "table" : "board";
   const { page, size, search } = getListParams(params);
   if (view === "board") return { view, filters: { page: 1, size: BOARD_SIZE, search } };
-  return { view, filters: { page, size, search, stage_id: getParam(params, "stage_id") } };
+  return {
+    view,
+    filters: {
+      page,
+      size,
+      search,
+      stage_id: getParam(params, "stage_id"),
+      ...getSortParams(params),
+    },
+  };
 }
 
 export function listDeals(filters: DealFilters) {

@@ -47,3 +47,12 @@ export function dealToForm(deal: Deal): DealFormValues {
 export function toDealPayload(values: DealFormValues): DealPayload {
   return { ...(emptyToNull(values) as Omit<DealPayload, "value">), value: Number(values.value) };
 }
+
+/** A pipeline stage as edited in the "Edit pipeline" sheet (won/lost exclusivity is checked by the API). */
+export const stageFormSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Use at most 100 characters"),
+  probability: z.number().int().min(0, "Use 0–100%").max(100, "Use 0–100%"),
+  is_won: z.boolean(),
+  is_lost: z.boolean(),
+});
+export type StageFormValues = z.infer<typeof stageFormSchema>;

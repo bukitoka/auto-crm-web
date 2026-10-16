@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { SortableHeader } from "@/components/shared/sortable-header";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { UserRef } from "@/features/users/types";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { deleteCompany } from "../actions";
 import type { Company } from "../types";
 import { CompanyFormDialog } from "./company-form-dialog";
@@ -33,10 +35,15 @@ export function CompaniesTable({ companies, users }: { companies: Company[]; use
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead className="hidden md:table-cell">Industry</TableHead>
+            <SortableHeader field="name">Name</SortableHeader>
+            <SortableHeader field="industry" className="hidden md:table-cell">
+              Industry
+            </SortableHeader>
             <TableHead className="hidden md:table-cell">Size</TableHead>
             <TableHead className="hidden lg:table-cell">Owner</TableHead>
+            <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
+              Added
+            </SortableHeader>
             <TableHead className="w-24">
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -60,6 +67,11 @@ export function CompaniesTable({ companies, users }: { companies: Company[]; use
               <TableCell className="hidden md:table-cell">{company.size ?? "—"}</TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
                 {company.owner?.full_name ?? "—"}
+              </TableCell>
+              <TableCell className="hidden text-muted-foreground xl:table-cell">
+                <time dateTime={company.created_at} title={formatDateTime(company.created_at)}>
+                  {formatDate(company.created_at)}
+                </time>
               </TableCell>
               <TableCell>
                 <div className="flex justify-end gap-1">

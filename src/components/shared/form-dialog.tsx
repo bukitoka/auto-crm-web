@@ -26,7 +26,6 @@ type FormDialogProps = {
   children: ReactNode;
 };
 
-/** Dialog chrome shared by all create/edit forms. The form itself is `children`. */
 export function FormDialog({
   open,
   onOpenChange,

@@ -14,8 +14,8 @@ function turn(reply: string): ChatTurn {
   return {
     conversation: { id: "c7" } as ChatTurn["conversation"],
     messages: [
-      { id: "u", role: "user", content: "q", actions: [], created_at: "" },
-      { id: "a", role: "assistant", content: reply, actions: [], created_at: "" },
+      { id: "u", role: "user", content: "q", actions: [], attachments: [], created_at: "" },
+      { id: "a", role: "assistant", content: reply, actions: [], attachments: [], created_at: "" },
     ],
   };
 }
@@ -35,10 +35,11 @@ describe("AssistantPanel", () => {
       screen.getByRole("button", { name: "Create a follow-up for this contact tomorrow" }),
     );
 
-    expect(startConversation).toHaveBeenCalledWith("Create a follow-up for this contact tomorrow", {
-      type: "contact",
-      id: contactId,
-    });
+    expect(startConversation).toHaveBeenCalledWith(
+      "Create a follow-up for this contact tomorrow",
+      { type: "contact", id: contactId },
+      undefined,
+    );
     expect(await screen.findByText("Here you go")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Open/ })).toHaveAttribute("href", "/assistant/c7");
   });
@@ -57,7 +58,12 @@ describe("AssistantPanel", () => {
     expect(await screen.findByText("First")).toBeInTheDocument();
     await user.type(screen.getByLabelText("Message the assistant"), "Again{Enter}");
     await waitFor(() =>
-      expect(sendMessage).toHaveBeenCalledWith("c7", "Again", { type: "contact", id: contactId }),
+      expect(sendMessage).toHaveBeenCalledWith(
+        "c7",
+        "Again",
+        { type: "contact", id: contactId },
+        undefined,
+      ),
     );
 
     await user.click(screen.getByRole("button", { name: /New/ }));

@@ -16,7 +16,6 @@ import { listActivities } from "@/features/activities/api";
 import { ActivityList } from "@/features/activities/components/activity-list";
 import { AddActivityForm } from "@/features/activities/components/add-activity-form";
 import { AiScoreCard } from "@/features/ai/components/ai-score-card";
-import { EmailDraftDialog } from "@/features/ai/components/email-draft-dialog";
 import { TimelineSummary } from "@/features/ai/components/timeline-summary";
 import { listCompanyOptions } from "@/features/companies/api";
 import { deleteContact } from "@/features/contacts/actions";
@@ -27,7 +26,7 @@ import { ContactStatusBadge } from "@/features/contacts/components/contact-statu
 import { listDeals, listStages } from "@/features/deals/api";
 import { DealFormDialog } from "@/features/deals/components/deal-form-dialog";
 import { DealList } from "@/features/deals/components/deal-list";
-import { SendEmailDialog } from "@/features/emails/components/send-email-dialog";
+import { ComposeEmailDialog } from "@/features/emails/components/compose-email-dialog";
 import { listTasks } from "@/features/tasks/api";
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog";
 import { TaskList } from "@/features/tasks/components/task-list";
@@ -77,15 +76,9 @@ export default async function ContactDetailPage({ params }: PageProps<"/contacts
         }
         actions={
           <>
-            <SendEmailDialog
+            <ComposeEmailDialog
+              recipients={[{ id: contact.id, name, email: contact.email }]}
               contactId={contact.id}
-              contactName={name}
-              contactEmail={contact.email}
-              deals={deals.items.map(({ id, title }) => ({ id, title }))}
-            />
-            <EmailDraftDialog
-              contactId={contact.id}
-              contactEmail={contact.email}
               deals={deals.items.map(({ id, title }) => ({ id, title }))}
             />
             <ContactFormDialog

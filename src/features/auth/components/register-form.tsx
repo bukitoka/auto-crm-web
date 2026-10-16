@@ -9,7 +9,7 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/c
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toastResult } from "@/lib/toast-result";
-import { register } from "../actions";
+import { register, setUpWorkspace } from "../actions";
 import { type RegisterValues, registerSchema } from "../schemas";
 
 const fields = [
@@ -24,7 +24,23 @@ const fields = [
   },
 ] as const;
 
-export function RegisterForm() {
+const copy = {
+  register: {
+    title: "Create your account",
+    description: "New accounts start as members. An admin can change your role later.",
+    submit: "Create account",
+  },
+  setup: {
+    title: "Set up your workspace",
+    description:
+      "Create the super admin account. It can manage everything, including who becomes an admin. You only do this once.",
+    submit: "Create super admin",
+  },
+};
+
+/** `setup` is the one-time first-run page; the API refuses it once a super admin exists. */
+export function RegisterForm({ mode = "register" }: { mode?: "register" | "setup" }) {
+  const text = copy[mode];
   const [isPending, startTransition] = useTransition();
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
@@ -33,7 +49,7 @@ export function RegisterForm() {
 
   function onSubmit(values: RegisterValues) {
     startTransition(async () => {
-      const result = await register(values);
+      const result = await (mode === "setup" ? setUpWorkspace : register)(values);
       toastResult(result);
     });
   }
@@ -41,10 +57,8 @@ export function RegisterForm() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Create your account</h1>
-        <p className="text-sm text-muted-foreground">
-          The first account becomes the workspace admin.
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight">{text.title}</h1>
+        <p className="text-sm text-muted-foreground">{text.description}</p>
       </div>
       <FieldGroup>
         {fields.map((config) => (
@@ -70,11 +84,13 @@ export function RegisterForm() {
         <Field>
           <Button type="submit" disabled={isPending}>
             {isPending ? <Spinner /> : null}
-            Create account
+            {text.submit}
           </Button>
-          <FieldDescription className="text-center">
-            Already have an account? <Link href="/login">Log in</Link>
-          </FieldDescription>
+          {mode === "register" ? (
+            <FieldDescription className="text-center">
+              Already have an account? <Link href="/login">Log in</Link>
+            </FieldDescription>
+          ) : null}
         </Field>
       </FieldGroup>
     </form>

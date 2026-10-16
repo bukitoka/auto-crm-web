@@ -6,6 +6,8 @@ export type User = {
   full_name: string;
   role: UserRole;
   is_active: boolean;
+  /** Created on the setup page. Has every permission and is not listed as a team member. */
+  is_super_admin: boolean;
   avatar_url: string | null;
   created_at: string;
   updated_at: string;

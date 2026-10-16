@@ -2,6 +2,7 @@ import { CheckSquare, Pencil } from "lucide-react";
 import Link from "next/link";
 import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
+import { SortableHeader } from "@/components/shared/sortable-header";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -11,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate, isOverdue, personName } from "@/lib/format";
+import { formatDate, formatDateTime, isOverdue, personName } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { deleteTask } from "../actions";
 import type { Task } from "../types";
@@ -35,11 +36,18 @@ export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFor
             <TableHead className="w-12">
               <span className="sr-only">Complete</span>
             </TableHead>
-            <TableHead>Task</TableHead>
-            <TableHead>Due</TableHead>
-            <TableHead className="hidden sm:table-cell">Priority</TableHead>
-            <TableHead className="hidden md:table-cell">Status</TableHead>
+            <SortableHeader field="title">Task</SortableHeader>
+            <SortableHeader field="due_date">Due</SortableHeader>
+            <SortableHeader field="priority" className="hidden sm:table-cell">
+              Priority
+            </SortableHeader>
+            <SortableHeader field="status" className="hidden md:table-cell">
+              Status
+            </SortableHeader>
             <TableHead className="hidden lg:table-cell">Assignee</TableHead>
+            <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
+              Added
+            </SortableHeader>
             <TableHead className="w-24">
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -87,6 +95,11 @@ export function TasksTable({ tasks, options }: { tasks: Task[]; options: TaskFor
                 </TableCell>
                 <TableCell className="hidden text-muted-foreground lg:table-cell">
                   {task.assignee?.full_name ?? "—"}
+                </TableCell>
+                <TableCell className="hidden text-muted-foreground xl:table-cell">
+                  <time dateTime={task.created_at} title={formatDateTime(task.created_at)}>
+                    {formatDate(task.created_at)}
+                  </time>
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-end gap-1">

@@ -24,7 +24,6 @@ type ConfirmDeleteButtonProps = {
   action: () => Promise<ActionResult>;
   title: string;
   description?: string;
-  /** Navigate here after deleting (e.g. back to the list from a detail page). */
   redirectTo?: string;
   variant?: "icon" | "button";
 };

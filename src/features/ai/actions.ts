@@ -18,8 +18,6 @@ import type {
   TimelineSummary,
 } from "./types";
 
-/** AI calls can take several seconds; the UI shows pending states meanwhile. */
-
 export async function scoreContact(contactId: string): Promise<ActionResult<LeadScore>> {
   const result = await runAction(() =>
     apiFetch<LeadScore>(`/ai/contacts/${contactId}/score`, { method: "POST" }),
@@ -70,10 +68,7 @@ export async function extractContact(
   );
 }
 
-/**
- * Smart capture from a file: photo or screenshot (read with OCR), PDF, Word, email or
- * text file. The API turns it into text, then the AI extracts the contact fields.
- */
+/** The API turns the file into text (OCR for images), then the AI extracts the contact fields. */
 export async function extractContactFromFile(
   formData: FormData,
 ): Promise<ActionResult<CapturedContact>> {

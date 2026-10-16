@@ -1,6 +1,7 @@
 import type { ContactRef } from "@/features/contacts/types";
 import type { DealRef } from "@/features/deals/types";
 import type { UserRef } from "@/features/users/types";
+import type { SortParams } from "@/lib/types";
 
 export const TASK_STATUSES = ["todo", "in_progress", "done"] as const;
 export type TaskStatus = (typeof TASK_STATUSES)[number];
@@ -37,7 +38,7 @@ export type TaskPayload = {
   deal_id: string | null;
 };
 
-export type TaskFilters = {
+export type TaskFilters = SortParams & {
   page: number;
   size: number;
   search?: string;

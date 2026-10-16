@@ -1,6 +1,7 @@
 import type { CompanyRef } from "@/features/companies/types";
 import type { ContactRef } from "@/features/contacts/types";
 import type { UserRef } from "@/features/users/types";
+import type { SortParams } from "@/lib/types";
 
 export type PipelineStage = {
   id: string;
@@ -9,6 +10,8 @@ export type PipelineStage = {
   probability: number;
   is_won: boolean;
   is_lost: boolean;
+  /** Deals currently in the stage (all of them, not just the loaded page). */
+  deal_count: number;
 };
 
 export type StageRef = Pick<PipelineStage, "id" | "name" | "is_won" | "is_lost">;
@@ -21,7 +24,7 @@ export type DealRef = {
 export type Deal = {
   id: string;
   title: string;
-  /** numeric(14,2) — may arrive as number or string; always wrap in Number(). */
+  /** numeric(14,2): may arrive as number or string, so always wrap in Number(). */
   value: number | string;
   currency: string;
   stage_id: string;
@@ -52,7 +55,7 @@ export type DealPayload = {
 /** `?view=` on the deals page. */
 export type DealsView = "board" | "table";
 
-export type DealFilters = {
+export type DealFilters = SortParams & {
   page: number;
   size: number;
   search?: string;

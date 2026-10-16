@@ -8,7 +8,6 @@ import { ConversationList } from "@/features/assistant/components/conversation-l
 
 export const metadata: Metadata = { title: "Chat history" };
 
-/** All your assistant chats: search, archived, rename / archive / delete. */
 export default async function ChatHistoryPage() {
   const conversations = await listConversations();
 

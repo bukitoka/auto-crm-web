@@ -12,7 +12,6 @@ type MoveStageSelectProps = {
   stages: PipelineStage[];
 };
 
-/** "Move to stage" control on the deal page. */
 export function MoveStageSelect({ dealId, stageId, stages }: MoveStageSelectProps) {
   const [isPending, startTransition] = useTransition();
   const options = stages.map((stage) => ({ value: stage.id, label: stage.name }));

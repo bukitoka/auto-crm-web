@@ -33,10 +33,9 @@ export type ChatThreadProps = {
 };
 
 /**
- * A conversation with the assistant: messages, a "working on it" row and the composer.
- * Render it with `key={conversationId}` so switching chats starts from fresh state.
- * The user's message shows immediately; if sending fails it is taken back and the
- * text returns to the box so it can be sent again.
+ * Render with `key={conversationId}` so switching chats starts from fresh state.
+ * The user's message shows immediately; if sending fails it is removed and the text
+ * goes back into the composer.
  */
 export function ChatThread({
   conversationId,
@@ -52,6 +51,7 @@ export function ChatThread({
   const [id, setId] = useState(conversationId);
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [isPending, startTransition] = useTransition();
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -63,25 +63,35 @@ export function ChatThread({
 
   function send(text: string) {
     const content = text.trim();
-    if (!content || isPending) return;
+    if ((!content && files.length === 0) || isPending) return;
     const before = messages;
+    const sentFiles = files;
     const optimistic: ChatMessage = {
       id: `pending-${Date.now()}`,
       role: "user",
       content,
       actions: [],
+      attachments: sentFiles.map((file) => ({ name: file.name })),
       created_at: new Date().toISOString(),
     };
     setMessages([...before, optimistic]);
     setDraft("");
+    setFiles([]);
+
+    let attachments: FormData | undefined;
+    if (sentFiles.length > 0) {
+      attachments = new FormData();
+      for (const file of sentFiles) attachments.append("files", file);
+    }
 
     startTransition(async () => {
       const result = id
-        ? await sendMessage(id, content, context)
-        : await startConversation(content, context);
+        ? await sendMessage(id, content, context, attachments)
+        : await startConversation(content, context, attachments);
       if (!toastResult(result)) {
         setMessages(before);
         setDraft(content);
+        setFiles(sentFiles);
         inputRef.current?.focus();
         return;
       }
@@ -105,6 +115,8 @@ export function ChatThread({
       value={draft}
       onChange={setDraft}
       onSubmit={() => send(draft)}
+      files={files}
+      onFilesChange={setFiles}
       isPending={isPending}
       variant={messages.length === 0 && !isPanel ? "hero" : "compact"}
       autoFocus={!isPanel}
@@ -126,6 +138,7 @@ export function ChatThread({
               role={message.role}
               content={message.content}
               actions={message.actions}
+              attachments={message.attachments}
               onNavigate={onNavigate}
             />
           ))}

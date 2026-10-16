@@ -12,7 +12,6 @@ type EntityAvatarProps = {
   fallbackClassName?: string;
 };
 
-/** Picture of a person or company, falling back to their initials. */
 export function EntityAvatar({
   name,
   src,

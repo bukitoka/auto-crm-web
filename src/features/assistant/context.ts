@@ -48,7 +48,6 @@ export function groupByDate(
   return groups.filter((group) => group.items.length > 0);
 }
 
-/** "Good morning" / "Good afternoon" / "Good evening" for the assistant home. */
 export function greeting(now = new Date()): string {
   const hour = now.getHours();
   if (hour < 12) return "Good morning";

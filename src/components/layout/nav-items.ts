@@ -7,6 +7,7 @@ import {
   MessagesSquare,
   Settings,
   Sparkles,
+  UserCog,
   Users,
   Workflow,
 } from "lucide-react";
@@ -30,6 +31,7 @@ export const mainNav: NavItem[] = [
 export const secondaryNav: NavItem[] = [
   { title: "AI chats", href: "/ai-chats", icon: MessagesSquare, adminOnly: true },
   { title: "Automations", href: "/automations", icon: Workflow, adminOnly: true },
+  { title: "Team", href: "/team", icon: UserCog, adminOnly: true },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 
@@ -44,6 +46,7 @@ export const segmentLabels: Record<string, string> = {
   deals: "Deals",
   tasks: "Tasks",
   automations: "Automations",
+  team: "Team",
   settings: "Settings",
   search: "Search",
 };

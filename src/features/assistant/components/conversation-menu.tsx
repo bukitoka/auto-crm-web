@@ -45,10 +45,7 @@ type ConversationMenuProps = {
   side?: "right" | "bottom";
 };
 
-/**
- * Rename / archive / restore / delete for one chat. Used by the sidebar's recent chats
- * and the chat history page. Leaving the open chat (archive/delete) goes back to /assistant.
- */
+/** Archiving or deleting the chat that is currently open navigates back to /assistant. */
 export function ConversationMenu({
   conversation,
   trigger,

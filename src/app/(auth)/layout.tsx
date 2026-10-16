@@ -14,15 +14,14 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
           <div className="w-full max-w-sm">{children}</div>
         </div>
       </div>
-      {/* Brand panel: an inset rounded card rather than a full-height color block. */}
       <div className="hidden p-3 lg:flex">
         <div className="relative flex flex-1 flex-col justify-end overflow-hidden rounded-lg bg-teal-950 p-10 text-teal-50">
           <div className="absolute -top-24 -right-24 size-96 rounded-full bg-teal-700/50 blur-3xl" />
           <div className="absolute bottom-10 -left-20 size-80 rounded-full bg-teal-400/25 blur-3xl" />
           <blockquote className="relative space-y-3">
             <p className="text-2xl font-medium text-balance">
-              Score leads, draft follow-ups and automate the busywork — so your team can focus on
-              relationships.
+              Contacts, deals and follow-ups in one place, with an assistant that knows your
+              pipeline.
             </p>
             <footer className="text-sm text-teal-200">AI-assisted CRM · DeepSeek · n8n</footer>
           </blockquote>

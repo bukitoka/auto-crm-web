@@ -1,13 +1,13 @@
 import "server-only";
 import { apiFetch } from "@/lib/api-client";
-import { getListParams, getParam } from "@/lib/search-params";
+import { getListParams, getParam, getSortParams } from "@/lib/search-params";
 import type { Paginated, SearchParams } from "@/lib/types";
 import type { Task, TaskFilters } from "./types";
 
-/** Filters for the tasks list page, read from its URL. */
 export function taskFiltersFromParams(params: SearchParams): TaskFilters {
   return {
     ...getListParams(params),
+    ...getSortParams(params),
     status: getParam(params, "status"),
     overdue: getParam(params, "overdue") === "true" ? true : undefined,
   };

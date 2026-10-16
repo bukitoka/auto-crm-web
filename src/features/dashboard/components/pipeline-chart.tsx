@@ -14,7 +14,6 @@ const chartConfig = {
   total_value: { label: "Value", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
-/** Single-series bar chart: total deal value per pipeline stage. */
 export function PipelineChart({ data }: { data: PipelineStageSummary[] }) {
   const rows = data.map((stage) => ({
     stage: stage.stage_name,

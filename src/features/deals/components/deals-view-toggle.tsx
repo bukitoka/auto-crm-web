@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { DealsView } from "../types";
 
-/** Board/table switch driven by `?view=`. */
 export function DealsViewToggle({ view }: { view: DealsView }) {
   return (
     <div className="inline-flex rounded-full border p-0.5">

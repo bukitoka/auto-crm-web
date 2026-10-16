@@ -41,11 +41,7 @@ function ItemIcon({ item }: { item: QuickSearchItem }) {
   );
 }
 
-/**
- * Global search in the header: a combobox with live, grouped results (contacts,
- * companies, deals). Pick one to open it, or "See all results" for the /search page.
- * ⌘K / Ctrl+K focuses it from anywhere.
- */
+/** ⌘K / Ctrl+K focuses the input from anywhere. */
 export function HeaderSearch() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);

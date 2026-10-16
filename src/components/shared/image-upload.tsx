@@ -23,10 +23,6 @@ type ImageUploadProps = {
   className?: string;
 };
 
-/**
- * Shows a picture with "Upload" / "Remove" buttons. The file is sent to a
- * Server Action, which forwards it to the API (stored in MinIO).
- */
 export function ImageUpload({
   name,
   src,

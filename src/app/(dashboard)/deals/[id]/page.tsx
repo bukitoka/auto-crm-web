@@ -25,6 +25,7 @@ import { getDeal, listStages } from "@/features/deals/api";
 import { DealFormDialog } from "@/features/deals/components/deal-form-dialog";
 import { DealStageBadge } from "@/features/deals/components/deal-stage-badge";
 import { MoveStageSelect } from "@/features/deals/components/move-stage-select";
+import { ComposeEmailDialog } from "@/features/emails/components/compose-email-dialog";
 import { listTasks } from "@/features/tasks/api";
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog";
 import { TaskList } from "@/features/tasks/components/task-list";
@@ -80,6 +81,12 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
         description={formatCurrency(deal.value, deal.currency)}
         actions={
           <>
+            <ComposeEmailDialog
+              recipients={contacts.map((c) => ({ id: c.id, name: personName(c) }))}
+              contactId={deal.contact_id ?? undefined}
+              deals={[{ id: deal.id, title: deal.title }]}
+              dealId={deal.id}
+            />
             <DealFormDialog
               deal={deal}
               stages={stages}

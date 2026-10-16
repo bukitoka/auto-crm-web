@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { describe, expect, it, vi } from "vitest";
 import { ApiError, apiFetch } from "@/lib/api-client";
-import { removeMyAvatar, uploadMyAvatar } from "./actions";
+import { removeMyAvatar, updateUser, uploadMyAvatar } from "./actions";
 
 vi.mock("@/lib/api-client", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/api-client")>()),
@@ -55,5 +55,31 @@ describe("removeMyAvatar", () => {
 
     expect(apiFetchMock).toHaveBeenCalledWith("/users/me/avatar", { method: "DELETE" });
     expect(revalidatePath).toHaveBeenCalledWith("/", "layout");
+  });
+});
+
+describe("updateUser", () => {
+  it("PATCHes the changes and refreshes the Team page", async () => {
+    apiFetchMock.mockResolvedValue({ id: "user-2" });
+
+    expect((await updateUser("user-2", { role: "admin" })).ok).toBe(true);
+    expect(apiFetchMock).toHaveBeenCalledWith("/users/user-2", {
+      method: "PATCH",
+      body: { role: "admin" },
+    });
+    expect(revalidatePath).toHaveBeenCalledWith("/team");
+  });
+
+  it("returns the API's permission error", async () => {
+    apiFetchMock.mockRejectedValue(new ApiError(403, "Only the super admin can manage admins"));
+
+    const result = await updateUser("user-2", { is_active: false });
+
+    expect(result).toEqual({
+      ok: false,
+      error: "Only the super admin can manage admins",
+      status: 403,
+    });
+    expect(revalidatePath).not.toHaveBeenCalled();
   });
 });

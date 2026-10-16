@@ -11,6 +11,7 @@ import type { Deal } from "../types";
 import { DealsCanvas } from "./deals-canvas";
 
 vi.mock("../actions", () => ({ moveDealToStage: vi.fn() }));
+vi.mock("../stage-actions", () => ({ createStage: vi.fn() }));
 
 // jsdom has no layout, so real pointer dragging can't be simulated.
 // Instead we capture the DndContext props and call its drag handlers directly.
@@ -100,5 +101,13 @@ describe("DealsCanvas", () => {
     drop("d1", "lead");
 
     expect(moveDealToStage).not.toHaveBeenCalled();
+  });
+
+  it("shows the add-stage lane only to pipeline editors", () => {
+    const { rerender } = renderWithUser(<DealsCanvas deals={deals} stages={stages} />);
+    expect(screen.queryByRole("region", { name: "Add stage" })).not.toBeInTheDocument();
+
+    rerender(<DealsCanvas deals={deals} stages={stages} canEditPipeline />);
+    expect(screen.getByRole("region", { name: "Add stage" })).toBeInTheDocument();
   });
 });

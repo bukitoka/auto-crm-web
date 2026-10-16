@@ -3,18 +3,31 @@ import { toast } from "sonner";
 import { describe, expect, it, vi } from "vitest";
 import type { ActionResult } from "@/lib/action-result";
 import { deferred } from "@/test/deferred";
+import { removeMicrophone, stubMicrophone } from "@/test/microphone";
 import { router } from "@/test/next-mocks";
 import { renderWithUser } from "@/test/render";
-import { sendMessage, startConversation } from "../actions";
+import { sendMessage, startConversation, transcribeRecording } from "../actions";
 import type { ChatMessage, ChatTurn } from "../types";
 import { ChatThread } from "./chat-thread";
 
-vi.mock("../actions", () => ({ startConversation: vi.fn(), sendMessage: vi.fn() }));
+vi.mock("../actions", () => ({
+  startConversation: vi.fn(),
+  sendMessage: vi.fn(),
+  transcribeRecording: vi.fn(),
+}));
 
 const contactId = "01a133fe-b59b-7501-8708-5e2e01a850be";
 
 function msg(role: ChatMessage["role"], content: string, extra: Partial<ChatMessage> = {}) {
-  return { id: `${role}-${content}`, role, content, actions: [], created_at: "", ...extra };
+  return {
+    id: `${role}-${content}`,
+    role,
+    content,
+    actions: [],
+    attachments: [],
+    created_at: "",
+    ...extra,
+  };
 }
 
 function turn(reply: string, actions: ChatMessage["actions"] = []): ChatTurn {
@@ -37,7 +50,7 @@ describe("ChatThread", () => {
     expect(screen.getByText("Hello")).toBeInTheDocument();
     await user.type(screen.getByLabelText("Message the assistant"), "Next{Enter}");
 
-    expect(sendMessage).toHaveBeenCalledWith("c1", "Next", null);
+    expect(sendMessage).toHaveBeenCalledWith("c1", "Next", null, undefined);
     expect(await screen.findByText("Sure!")).toBeInTheDocument();
     expect(startConversation).not.toHaveBeenCalled();
   });
@@ -62,7 +75,7 @@ describe("ChatThread", () => {
 
     await user.click(screen.getByRole("button", { name: "Idea" }));
 
-    expect(startConversation).toHaveBeenCalledWith("Plan my day", null);
+    expect(startConversation).toHaveBeenCalledWith("Plan my day", null, undefined);
     await waitFor(() => expect(onTurn).toHaveBeenCalled());
     expect(onTurn.mock.calls[0][0].conversation.id).toBe("c1");
   });
@@ -134,7 +147,54 @@ describe("ChatThread", () => {
     expect(screen.getByText("Using this contact")).toBeInTheDocument();
     await user.type(screen.getByLabelText("Message the assistant"), "Hi{Enter}");
 
-    expect(sendMessage).toHaveBeenCalledWith("c1", "Hi", { type: "contact", id: contactId });
+    expect(sendMessage).toHaveBeenCalledWith(
+      "c1",
+      "Hi",
+      { type: "contact", id: contactId },
+      undefined,
+    );
+  });
+
+  it("sends attached files and shows them as chips", async () => {
+    const request = deferred<ActionResult<ChatTurn>>();
+    vi.mocked(sendMessage).mockReturnValue(request.promise);
+    const { user } = renderWithUser(<ChatThread conversationId="c1" />);
+    const card = new File(["Jane Doe"], "card.png", { type: "image/png" });
+    const notes = new File(["notes"], "notes.txt", { type: "text/plain" });
+
+    await user.upload(screen.getByLabelText("Attach files to the message"), [card, notes]);
+    await user.click(screen.getByRole("button", { name: "Remove notes.txt" }));
+    expect(screen.queryByText("notes.txt")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Send" })); // files alone are enough
+
+    const [, content, , attachments] = vi.mocked(sendMessage).mock.calls[0];
+    expect(content).toBe("");
+    expect((attachments as FormData).getAll("files")).toEqual([card]);
+    expect(screen.getByText("card.png")).toBeInTheDocument(); // on the sent message
+    await act(async () =>
+      request.resolve({ ok: false, error: "card.png: No text was found", status: 400 }),
+    );
+    // Failed: the file is back in the composer.
+    expect(screen.getByRole("button", { name: "Remove card.png" })).toBeInTheDocument();
+  });
+
+  it("adds a voice message to the box", async () => {
+    stubMicrophone();
+    vi.mocked(transcribeRecording).mockResolvedValue({ ok: true, data: { text: "call Jane" } });
+    const { user } = renderWithUser(<ChatThread conversationId="c1" />);
+    const input = screen.getByLabelText("Message the assistant");
+    await user.type(input, "Note:");
+
+    await user.click(screen.getByRole("button", { name: "Record voice message" }));
+    await user.click(screen.getByRole("button", { name: "Stop recording" }));
+
+    await waitFor(() => expect(input).toHaveValue("Note: call Jane"));
+    removeMicrophone();
+  });
+
+  it("hides the mic when the browser cannot record", () => {
+    renderWithUser(<ChatThread conversationId="c1" />);
+    expect(screen.queryByRole("button", { name: "Record voice message" })).not.toBeInTheDocument();
   });
 
   it("is read-only for admins viewing someone else's chat", () => {

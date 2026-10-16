@@ -2,9 +2,9 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
 /**
- * Unit tests. Two projects so each file runs in the right environment:
- * - `*.test.ts`  → "node"  (lib, Server Actions, api fetchers, schemas, proxy)
- * - `*.test.tsx` → "jsdom" (client components and hooks)
+ * Two projects so each file runs in the right environment: `*.test.ts` in node
+ * (lib, Server Actions, api fetchers, schemas, proxy) and `*.test.tsx` in jsdom
+ * (client components and hooks).
  */
 export default defineConfig({
   plugins: [react()],

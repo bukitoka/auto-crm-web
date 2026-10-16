@@ -12,7 +12,6 @@ import type { Contact } from "../types";
 import { ContactForm } from "./contact-form";
 
 type ContactFormDialogProps = {
-  /** Pass a contact to edit it; omit to create a new one. */
   contact?: Contact;
   /** Prefill for create mode (e.g. from AI smart capture). */
   initialValues?: Partial<ContactFormValues>;

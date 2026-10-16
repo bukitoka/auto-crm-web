@@ -11,7 +11,7 @@ type StageLaneProps = {
   children: React.ReactNode;
 };
 
-/** One pipeline stage on the canvas. Deals can be dropped anywhere on it. */
+/** The whole lane is a drop target, not just the card list. */
 export function StageLane({ column, dotClassName, children }: StageLaneProps) {
   const { stage, deals, total } = column;
   const { setNodeRef, isOver } = useDroppable({ id: stage.id });

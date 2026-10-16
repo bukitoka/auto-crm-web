@@ -15,7 +15,7 @@ type OptionSelectProps = {
   invalid?: boolean;
 };
 
-/** Searchable form select for a list of options; `""` means "nothing selected". */
+/** `""` means nothing selected. */
 export function OptionSelect({
   id,
   value,

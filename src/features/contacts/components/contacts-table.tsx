@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { SortableHeader } from "@/components/shared/sortable-header";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -15,7 +16,7 @@ import {
 import { AiScoreBadge } from "@/features/ai/components/ai-score-badge";
 import type { CompanyRef } from "@/features/companies/types";
 import type { UserRef } from "@/features/users/types";
-import { personName } from "@/lib/format";
+import { formatDate, formatDateTime, personName } from "@/lib/format";
 import { deleteContact } from "../actions";
 import type { Contact } from "../types";
 import { ContactFormDialog } from "./contact-form-dialog";
@@ -43,11 +44,18 @@ export function ContactsTable({ contacts, companies, users }: ContactsTableProps
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead className="hidden md:table-cell">Company</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="hidden lg:table-cell">AI score</TableHead>
+            <SortableHeader field="name">Name</SortableHeader>
+            <SortableHeader field="company" className="hidden md:table-cell">
+              Company
+            </SortableHeader>
+            <SortableHeader field="status">Status</SortableHeader>
+            <SortableHeader field="ai_score" className="hidden lg:table-cell">
+              AI score
+            </SortableHeader>
             <TableHead className="hidden lg:table-cell">Owner</TableHead>
+            <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
+              Added
+            </SortableHeader>
             <TableHead className="w-24 text-right">
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -86,6 +94,11 @@ export function ContactsTable({ contacts, companies, users }: ContactsTableProps
               </TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
                 {contact.owner?.full_name ?? "—"}
+              </TableCell>
+              <TableCell className="hidden text-muted-foreground xl:table-cell">
+                <time dateTime={contact.created_at} title={formatDateTime(contact.created_at)}>
+                  {formatDate(contact.created_at)}
+                </time>
               </TableCell>
               <TableCell>
                 <div className="flex justify-end gap-1">

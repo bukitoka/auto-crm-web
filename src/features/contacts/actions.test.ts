@@ -5,6 +5,7 @@ import { makeContact } from "@/test/factories";
 import {
   createContact,
   deleteContact,
+  importContacts,
   removeContactAvatar,
   updateContact,
   uploadContactAvatar,
@@ -159,5 +160,32 @@ describe("removeContactAvatar", () => {
 
     expect(apiFetchMock).toHaveBeenCalledWith("/contacts/contact-1/avatar", { method: "DELETE" });
     expect(revalidatePath).toHaveBeenCalledWith("/contacts");
+  });
+});
+
+describe("importContacts", () => {
+  function csvForm(content: string) {
+    const formData = new FormData();
+    formData.set("file", new File([content], "contacts.csv", { type: "text/csv" }));
+    return formData;
+  }
+
+  it("POSTs the CSV as multipart and revalidates the list", async () => {
+    apiFetchMock.mockResolvedValue({ created: 1, skipped: 0, errors: [] });
+
+    const result = await importContacts(csvForm("first_name\nJane\n"));
+
+    expect(result).toEqual({ ok: true, data: { created: 1, skipped: 0, errors: [] } });
+    const [path, options] = apiFetchMock.mock.calls[0];
+    expect(path).toBe("/contacts/import");
+    expect(options?.method).toBe("POST");
+    expect(revalidatePath).toHaveBeenCalledWith("/contacts");
+  });
+
+  it("rejects files over 2 MB without calling the API", async () => {
+    const result = await importContacts(csvForm("x".repeat(2 * 1024 * 1024 + 1)));
+
+    expect(result).toMatchObject({ ok: false, status: 413 });
+    expect(apiFetchMock).not.toHaveBeenCalled();
   });
 });

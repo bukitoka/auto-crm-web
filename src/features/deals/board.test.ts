@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeDeal, makeStage } from "@/test/factories";
-import { groupDealsByStage, moveDeal, stageDotClasses } from "./board";
+import { groupDealsByStage, moveDeal, reorderById, stageDotClasses } from "./board";
 
 const lead = makeStage({ id: "lead", name: "Lead", position: 1 });
 const proposal = makeStage({ id: "proposal", name: "Proposal", position: 2 });
@@ -53,5 +53,21 @@ describe("stageDotClasses", () => {
       won: "bg-success",
       lost: "bg-destructive",
     });
+  });
+});
+
+describe("reorderById", () => {
+  const items = [{ id: "a" }, { id: "b" }, { id: "c" }];
+  const ids = (list: { id: string }[]) => list.map((item) => item.id);
+
+  it("moves the dragged item to the drop target's place, in both directions", () => {
+    expect(ids(reorderById(items, "a", "c"))).toEqual(["b", "c", "a"]);
+    expect(ids(reorderById(items, "c", "a"))).toEqual(["c", "a", "b"]);
+    expect(ids(items)).toEqual(["a", "b", "c"]); // input is not mutated
+  });
+
+  it("returns the same array when nothing moves", () => {
+    expect(reorderById(items, "b", "b")).toBe(items);
+    expect(reorderById(items, "x", "a")).toBe(items);
   });
 });

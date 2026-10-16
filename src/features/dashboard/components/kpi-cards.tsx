@@ -4,6 +4,8 @@ import {
   CircleCheck,
   HandCoins,
   type LucideIcon,
+  Percent,
+  Scale,
   Trophy,
   UserRoundPlus,
 } from "lucide-react";
@@ -42,6 +44,8 @@ const TONES = {
 type Kpi = {
   label: string;
   value: string;
+  /** Optional context under the value, e.g. "3 won · 1 lost". */
+  detail?: string;
   hint: string;
   icon: LucideIcon;
   tone: keyof typeof TONES;
@@ -62,9 +66,28 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
     {
       label: "Won this month",
       value: formatCurrency(summary.won_this_month_value),
+      detail: `${summary.deals_won_this_month} won · ${summary.deals_lost_this_month} lost`,
       hint: "See won deals",
       icon: Trophy,
       tone: "success",
+      href: "/deals?view=table",
+    },
+    {
+      label: "Win rate",
+      value: summary.win_rate === null ? "—" : `${Math.round(summary.win_rate * 100)}%`,
+      detail: "Won vs. lost, last 90 days",
+      hint: "See closed deals",
+      icon: Percent,
+      tone: "success",
+      href: "/deals?view=table",
+    },
+    {
+      label: "Average deal size",
+      value: summary.average_deal_size === null ? "—" : formatCurrency(summary.average_deal_size),
+      detail: "Won deals, last 90 days",
+      hint: "See closed deals",
+      icon: Scale,
+      tone: "primary",
       href: "/deals?view=table",
     },
     {
@@ -78,8 +101,8 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
     {
       label: "Overdue tasks",
       value: String(summary.overdue_tasks),
+      detail: `${summary.tasks_due_today} due today · ${summary.tasks_due_this_week} this week`,
       hint: hasOverdue ? "Needs attention" : "All caught up",
-      // Green check when nothing is overdue, red alarm otherwise.
       icon: hasOverdue ? AlarmClock : CircleCheck,
       tone: hasOverdue ? "destructive" : "success",
       href: "/tasks?overdue=true",
@@ -87,7 +110,7 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {kpis.map((kpi) => {
         const tone = TONES[kpi.tone];
         return (
@@ -99,7 +122,6 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
               tone.card,
             )}
           >
-            {/* Large faded icon as a background decoration. */}
             <kpi.icon
               aria-hidden
               className={cn(
@@ -118,7 +140,12 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
               </span>
               <span className="text-sm font-medium text-muted-foreground">{kpi.label}</span>
             </div>
-            <p className="text-3xl font-semibold tracking-tight tabular-nums">{kpi.value}</p>
+            <div>
+              <p className="text-3xl font-semibold tracking-tight tabular-nums">{kpi.value}</p>
+              {kpi.detail ? (
+                <p className="mt-1 text-sm text-muted-foreground">{kpi.detail}</p>
+              ) : null}
+            </div>
             <span className={cn("flex items-center gap-1 text-xs font-medium", tone.accent)}>
               {kpi.hint}
               <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

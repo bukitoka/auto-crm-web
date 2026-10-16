@@ -1,5 +1,6 @@
 import type { CompanyRef } from "@/features/companies/types";
 import type { UserRef } from "@/features/users/types";
+import type { SortParams } from "@/lib/types";
 
 export const CONTACT_STATUSES = ["lead", "prospect", "customer", "churned"] as const;
 export type ContactStatus = (typeof CONTACT_STATUSES)[number];
@@ -55,7 +56,7 @@ export type ContactPayload = {
   owner_id: string | null;
 };
 
-export type ContactFilters = {
+export type ContactFilters = SortParams & {
   page: number;
   size: number;
   search?: string;

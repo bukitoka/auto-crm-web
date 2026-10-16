@@ -48,16 +48,21 @@ export async function login(values: LoginValues, from?: string): Promise<ActionR
 }
 
 export async function register(values: RegisterValues): Promise<ActionResult> {
+  return createAccount("/auth/register", values);
+}
+
+/** Create the super admin of a new workspace (the one-time setup page). */
+export async function setUpWorkspace(values: RegisterValues): Promise<ActionResult> {
+  return createAccount("/auth/setup", values);
+}
+
+async function createAccount(path: string, values: RegisterValues): Promise<ActionResult> {
   const parsed = parseInput(registerSchema, values);
   if (!parsed.ok) return parsed;
 
   const { full_name, email, password } = parsed.data;
   const result = await runAction(async () => {
-    await apiFetch("/auth/register", {
-      method: "POST",
-      body: { full_name, email, password },
-      auth: false,
-    });
+    await apiFetch(path, { method: "POST", body: { full_name, email, password }, auth: false });
     await loginWithCredentials(email, password);
   });
   if (!result.ok) return result;
@@ -75,7 +80,6 @@ export async function requestPasswordReset(values: ForgotPasswordValues): Promis
   });
 }
 
-/** Set a new password with the token from the email, then go to the login page. */
 export async function resetPassword(
   token: string,
   values: ResetPasswordValues,

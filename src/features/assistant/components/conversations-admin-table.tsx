@@ -37,10 +37,6 @@ const DONE: Record<BulkConversationAction, string> = {
   delete: "Deleted",
 };
 
-/**
- * Admin view of everyone's AI chats: select rows (or use the row buttons) to archive,
- * restore or delete. "View" opens the chat read-only.
- */
 export function ConversationsAdminTable({
   conversations,
   archived,

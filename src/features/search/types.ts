@@ -8,7 +8,6 @@ export type SearchResults = {
   deals: Deal[];
 };
 
-/** One row in the header's quick-search dropdown. */
 export type QuickSearchItem = {
   id: string;
   kind: "contact" | "company" | "deal" | "all";

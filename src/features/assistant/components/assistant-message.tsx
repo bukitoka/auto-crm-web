@@ -13,7 +13,8 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { actionHref } from "../context";
-import type { AssistantAction } from "../types";
+import type { AssistantAction, ChatMessage } from "../types";
+import { AttachmentChip } from "./attachment-chip";
 
 const ACTION_ICONS: Record<AssistantAction["kind"], LucideIcon> = {
   created: ListPlus,
@@ -46,11 +47,18 @@ type MessageProps = {
   role: "user" | "assistant";
   content: string;
   actions?: AssistantAction[];
+  attachments?: ChatMessage["attachments"];
   onNavigate?: () => void;
 };
 
-/** One chat bubble. Assistant replies show what they changed as links. */
-export function AssistantMessage({ role, content, actions = [], onNavigate }: MessageProps) {
+/** Assistant replies link to the records they changed; user messages list their files. */
+export function AssistantMessage({
+  role,
+  content,
+  actions = [],
+  attachments = [],
+  onNavigate,
+}: MessageProps) {
   const isUser = role === "user";
   return (
     <div className={cn("flex gap-2.5", isUser && "justify-end")}>
@@ -60,16 +68,25 @@ export function AssistantMessage({ role, content, actions = [], onNavigate }: Me
         </span>
       )}
       <div className={cn("flex max-w-[85%] min-w-0 flex-col gap-2", isUser && "items-end")}>
-        <div
-          className={cn(
-            "rounded-lg px-3.5 py-2.5 text-sm break-words whitespace-pre-wrap",
-            isUser
-              ? "rounded-br-sm bg-primary text-primary-foreground"
-              : "rounded-tl-sm bg-muted text-foreground",
-          )}
-        >
-          {content}
-        </div>
+        {attachments.length > 0 ? (
+          <div className="flex flex-wrap justify-end gap-1.5">
+            {attachments.map((file) => (
+              <AttachmentChip key={file.name} name={file.name} />
+            ))}
+          </div>
+        ) : null}
+        {content ? (
+          <div
+            className={cn(
+              "rounded-lg px-3.5 py-2.5 text-sm break-words whitespace-pre-wrap",
+              isUser
+                ? "rounded-br-sm bg-primary text-primary-foreground"
+                : "rounded-tl-sm bg-muted text-foreground",
+            )}
+          >
+            {content}
+          </div>
+        ) : null}
         {actions.length > 0 ? (
           <div className="flex w-full flex-col gap-1.5">
             {actions.map((action) => (
@@ -86,7 +103,6 @@ export function AssistantMessage({ role, content, actions = [], onNavigate }: Me
   );
 }
 
-/** The "working on it" row while the assistant replies. */
 export function AssistantThinking() {
   return (
     <div className="flex items-center gap-2.5 text-sm text-muted-foreground">

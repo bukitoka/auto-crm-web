@@ -5,12 +5,11 @@ import { ComboboxSelect, type Option } from "./combobox-select";
 
 type ParamSelectProps = {
   param: string;
-  /** Placeholder shown when the filter is not set, e.g. "All statuses". */
   allLabel: string;
   options: Option[];
 };
 
-/** A searchable filter bound to a URL search param (e.g. `?status=lead`). Clearing it removes the param. */
+/** Clearing the selection removes the search param instead of setting it to `""`. */
 export function ParamSelect({ param, allLabel, options }: ParamSelectProps) {
   const { searchParams, setParams } = useSearchParamUpdater();
 

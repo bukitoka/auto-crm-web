@@ -1,5 +1,7 @@
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
+import { ExportButton } from "@/components/shared/export-button";
+import { ImportCsvDialog } from "@/components/shared/import-csv-dialog";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationBar } from "@/components/shared/pagination-bar";
 import { ParamSelect } from "@/components/shared/param-select";
@@ -7,6 +9,7 @@ import { SearchInput } from "@/components/shared/search-input";
 import { Button } from "@/components/ui/button";
 import { SmartCaptureDialog } from "@/features/ai/components/smart-capture-dialog";
 import { listCompanyOptions } from "@/features/companies/api";
+import { importContacts } from "@/features/contacts/actions";
 import { contactFiltersFromParams, listContacts } from "@/features/contacts/api";
 import { ContactFormDialog } from "@/features/contacts/components/contact-form-dialog";
 import { ContactsTable } from "@/features/contacts/components/contacts-table";
@@ -15,6 +18,18 @@ import { listUserOptions } from "@/features/users/api";
 import { enumOptions } from "@/lib/options";
 
 export const metadata: Metadata = { title: "Contacts" };
+
+const IMPORT_COLUMNS = [
+  "first_name",
+  "last_name",
+  "email",
+  "phone",
+  "job_title",
+  "status",
+  "source",
+  "tags",
+  "company",
+];
 
 export default async function ContactsPage({ searchParams }: PageProps<"/contacts">) {
   const params = await searchParams;
@@ -32,6 +47,13 @@ export default async function ContactsPage({ searchParams }: PageProps<"/contact
         description="People you're working with, from first touch to loyal customer."
         actions={
           <>
+            <ExportButton entity="contacts" />
+            <ImportCsvDialog
+              entity="contacts"
+              columns={IMPORT_COLUMNS}
+              note="Separate tags with semicolons. Companies are matched by name; rows with an existing email are skipped."
+              action={importContacts}
+            />
             <SmartCaptureDialog companies={companies} users={users} />
             <ContactFormDialog
               companies={companies}

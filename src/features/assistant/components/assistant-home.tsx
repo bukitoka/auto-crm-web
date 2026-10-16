@@ -27,7 +27,6 @@ type Idea = {
   tone: string;
 };
 
-/** Starter ideas across the CRM modules. Tones use the semantic status colors. */
 const IDEAS: Idea[] = [
   {
     title: "Plan my day",
@@ -84,10 +83,7 @@ type AssistantHomeProps = {
   snapshot: TodaySnapshot | null;
 };
 
-/**
- * The home page: "What are you going to do today?". Sending the first message starts a
- * saved conversation and moves to its page (/assistant/<id>).
- */
+/** Sending the first message creates a conversation and navigates to /assistant/<id>. */
 export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
   const router = useRouter();
   // The greeting depends on the viewer's clock, so it is computed in the browser.
@@ -120,7 +116,7 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
               <div className="flex flex-wrap justify-center gap-2">
                 <SnapshotChip
                   icon={AlarmClock}
-                  label={`${snapshot.overdueTasks} overdue tasks`}
+                  label={`${snapshot.overdueTasks} overdue ${snapshot.overdueTasks === 1 ? "task" : "tasks"}`}
                   alert={snapshot.overdueTasks > 0}
                   onClick={() => send("Which tasks are overdue, and what should I do about them?")}
                 />
@@ -131,7 +127,7 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
                 />
                 <SnapshotChip
                   icon={UserRoundPlus}
-                  label={`${snapshot.newLeads} new leads this month`}
+                  label={`${snapshot.newLeads} new ${snapshot.newLeads === 1 ? "lead" : "leads"} this month`}
                   onClick={() => send("Who are this month's new leads?")}
                 />
               </div>

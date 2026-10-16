@@ -23,10 +23,11 @@ export type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   actions: AssistantAction[];
+  /** Files the user attached (names only; the API keeps their text for the model). */
+  attachments: { name: string }[];
   created_at: string;
 };
 
-/** A saved chat (list item). */
 export type Conversation = {
   id: string;
   title: string;

@@ -8,7 +8,6 @@ import { toastResult } from "@/lib/toast-result";
 import { summarizeTimeline } from "../actions";
 import type { TimelineSummary as Summary } from "../types";
 
-/** "Summarize timeline" action: AI summary + suggested next actions. */
 export function TimelineSummary({ contactId, dealId }: { contactId?: string; dealId?: string }) {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [isPending, startTransition] = useTransition();

@@ -16,11 +16,7 @@ import {
 import type { Conversation } from "../types";
 import { ConversationMenu } from "./conversation-menu";
 
-/**
- * "Recent chats" in the app sidebar: the latest assistant conversations, each with a
- * ⋯ menu (rename / archive / delete), plus New chat and a link to the full history.
- * Hidden when the sidebar is collapsed to icons.
- */
+/** Hidden when the sidebar is collapsed to icons. */
 export function NavChats({ conversations }: { conversations: Conversation[] }) {
   const pathname = usePathname();
 

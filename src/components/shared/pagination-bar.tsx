@@ -21,7 +21,6 @@ function hrefForPage(pathname: string, searchParams: SearchParams, page: number)
   return query ? `${pathname}?${query}` : pathname;
 }
 
-/** Server-rendered prev/next pagination driven by `?page=`. */
 export function PaginationBar({ pathname, searchParams, page, size, total }: PaginationBarProps) {
   const pageCount = Math.max(1, Math.ceil(total / size));
   const from = total === 0 ? 0 : (page - 1) * size + 1;

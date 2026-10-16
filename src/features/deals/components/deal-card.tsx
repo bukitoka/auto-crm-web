@@ -12,11 +12,9 @@ type DealCardProps = {
   deal: Deal;
   /** Rendered inside the DragOverlay (the copy that follows the pointer). */
   isOverlay?: boolean;
-  /** Drag handle shown in the top-right corner. */
   handle?: React.ReactNode;
 };
 
-/** Presentational deal card on the canvas. */
 export function DealCard({ deal, isOverlay = false, handle }: DealCardProps) {
   const related = deal.contact ? personName(deal.contact) : deal.company?.name;
 
@@ -66,9 +64,8 @@ export function DealCard({ deal, isOverlay = false, handle }: DealCardProps) {
 }
 
 /**
- * A deal card you can drag between stage lanes.
- * Mouse/touch: drag the card from anywhere. Keyboard: focus the grip button,
- * press Space, move with the arrow keys, press Space again to drop.
+ * Mouse and touch drag from anywhere on the card. Keyboard users focus the grip
+ * button, press Space, move with the arrow keys and press Space again to drop.
  */
 export function DraggableDealCard({ deal }: { deal: Deal }) {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, isDragging } = useDraggable({

@@ -11,14 +11,14 @@ import { listConversations } from "@/features/assistant/api";
 import { ConversationsAdminTable } from "@/features/assistant/components/conversations-admin-table";
 import { getCurrentUser } from "@/features/auth/api";
 import { listUserOptions } from "@/features/users/api";
+import { isAdmin } from "@/features/users/roles";
 import { getListParams, getParam } from "@/lib/search-params";
 
 export const metadata: Metadata = { title: "AI chats" };
 
-/** Admin: every user's assistant conversations — review, archive, restore, delete. */
 export default async function AiChatsPage({ searchParams }: PageProps<"/ai-chats">) {
   const user = await getCurrentUser();
-  if (user.role !== "admin") {
+  if (!isAdmin(user)) {
     return (
       <EmptyState
         icon={ShieldAlert}

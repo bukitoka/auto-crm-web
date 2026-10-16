@@ -2,6 +2,7 @@ import { Handshake } from "lucide-react";
 import Link from "next/link";
 import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
+import { SortableHeader } from "@/components/shared/sortable-header";
 import {
   Table,
   TableBody,
@@ -10,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatCurrency, formatDate, personName } from "@/lib/format";
+import { formatCurrency, formatDate, formatDateTime, personName } from "@/lib/format";
 import { deleteDeal } from "../actions";
 import type { Deal } from "../types";
 import { DealStageBadge } from "./deal-stage-badge";
@@ -31,12 +32,19 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Deal</TableHead>
-            <TableHead className="text-right">Value</TableHead>
-            <TableHead>Stage</TableHead>
+            <SortableHeader field="title">Deal</SortableHeader>
+            <SortableHeader field="value" className="text-right">
+              Value
+            </SortableHeader>
+            <SortableHeader field="stage">Stage</SortableHeader>
             <TableHead className="hidden md:table-cell">Contact / company</TableHead>
-            <TableHead className="hidden lg:table-cell">Expected close</TableHead>
+            <SortableHeader field="expected_close_date" className="hidden lg:table-cell">
+              Expected close
+            </SortableHeader>
             <TableHead className="hidden lg:table-cell">Owner</TableHead>
+            <SortableHeader field="created_at" firstOrder="desc" className="hidden xl:table-cell">
+              Added
+            </SortableHeader>
             <TableHead className="w-12">
               <span className="sr-only">Actions</span>
             </TableHead>
@@ -66,6 +74,11 @@ export function DealsTable({ deals }: { deals: Deal[] }) {
               </TableCell>
               <TableCell className="hidden text-muted-foreground lg:table-cell">
                 {deal.owner?.full_name ?? "—"}
+              </TableCell>
+              <TableCell className="hidden text-muted-foreground xl:table-cell">
+                <time dateTime={deal.created_at} title={formatDateTime(deal.created_at)}>
+                  {formatDate(deal.created_at)}
+                </time>
               </TableCell>
               <TableCell>
                 <ConfirmDeleteButton

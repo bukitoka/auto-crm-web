@@ -8,12 +8,13 @@ import { listWebhookEvents, listWebhooks } from "@/features/automations/api";
 import { N8nGuide } from "@/features/automations/components/n8n-guide";
 import { WebhookFormDialog } from "@/features/automations/components/webhook-form-dialog";
 import { WebhooksTable } from "@/features/automations/components/webhooks-table";
+import { isAdmin } from "@/features/users/roles";
 
 export const metadata: Metadata = { title: "Automations" };
 
 export default async function AutomationsPage() {
   const user = await getCurrentUser();
-  if (user.role !== "admin") {
+  if (!isAdmin(user)) {
     return (
       <EmptyState
         icon={ShieldAlert}

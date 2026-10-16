@@ -3,7 +3,14 @@ import { describe, expect, it, vi } from "vitest";
 import { ApiError, apiFetch } from "@/lib/api-client";
 import { SESSION_COOKIE } from "@/lib/constants";
 import { cookieStore, setCookie } from "@/test/next-mocks";
-import { login, logout, register, requestPasswordReset, resetPassword } from "./actions";
+import {
+  login,
+  logout,
+  register,
+  requestPasswordReset,
+  resetPassword,
+  setUpWorkspace,
+} from "./actions";
 
 vi.mock("@/lib/api-client", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/api-client")>()),
@@ -75,6 +82,34 @@ describe("login", () => {
       status: 422,
     });
     expect(apiFetchMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("setUpWorkspace", () => {
+  const values = { full_name: "Owner", ...credentials, confirm_password: credentials.password };
+
+  it("creates the super admin, logs in and redirects home", async () => {
+    apiFetchMock.mockResolvedValueOnce({ id: "u1" }); // setup
+    apiFetchMock.mockResolvedValueOnce(token); // login
+
+    await expect(setUpWorkspace(values)).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(apiFetchMock).toHaveBeenNthCalledWith(1, "/auth/setup", {
+      method: "POST",
+      body: { full_name: "Owner", ...credentials },
+      auth: false,
+    });
+    expect(redirect).toHaveBeenCalledWith("/assistant");
+  });
+
+  it("returns the API error when the workspace is already set up", async () => {
+    apiFetchMock.mockRejectedValue(new ApiError(409, "The workspace is already set up"));
+
+    expect(await setUpWorkspace(values)).toEqual({
+      ok: false,
+      error: "The workspace is already set up",
+      status: 409,
+    });
   });
 });
 

@@ -2,7 +2,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { getSessionToken } from "./session";
 
-const API_URL = process.env.API_URL ?? "http://localhost:8000/api/v1";
+export const API_URL = process.env.API_URL ?? "http://localhost:8000/api/v1";
 
 /** Error thrown for any non-2xx response from the FastAPI backend. */
 export class ApiError extends Error {

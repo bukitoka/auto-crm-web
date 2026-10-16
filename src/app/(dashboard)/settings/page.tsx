@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getCurrentUser } from "@/features/auth/api";
 import { ThemeSettings } from "@/features/settings/components/theme-settings";
 import { removeMyAvatar, uploadMyAvatar } from "@/features/users/actions";
+import { isAdmin, roleLabel } from "@/features/users/roles";
 import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -46,11 +47,8 @@ export default async function SettingsPage() {
             />
             <div className="divide-y">
               <Detail label="Role">
-                <Badge
-                  variant={user.role === "admin" ? "default" : "secondary"}
-                  className="capitalize"
-                >
-                  {user.role}
+                <Badge variant={isAdmin(user) ? "default" : "secondary"} className="capitalize">
+                  {roleLabel(user)}
                 </Badge>
               </Detail>
               <Detail label="Status">{user.is_active ? "Active" : "Inactive"}</Detail>

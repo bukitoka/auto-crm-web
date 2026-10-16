@@ -28,10 +28,7 @@ type ComboboxSelectProps = {
   className?: string;
 };
 
-/**
- * Searchable single-select built on the shadcn Combobox.
- * Works with plain string values so forms and URL params stay simple.
- */
+/** Works with plain string values so forms and URL params stay simple. */
 export function ComboboxSelect({
   options,
   value,

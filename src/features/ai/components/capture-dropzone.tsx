@@ -24,10 +24,7 @@ function FileIcon({ file }: { file: File }) {
   return <FileText />;
 }
 
-/**
- * Drop, browse or paste (⌘/Ctrl+V, handled by the dialog) a file for smart capture.
- * Shows a preview for images and the file name for documents.
- */
+/** Pasting (⌘/Ctrl+V) is handled by the surrounding dialog, not here. */
 export function CaptureDropzone({ file, onFileChange, disabled }: CaptureDropzoneProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);

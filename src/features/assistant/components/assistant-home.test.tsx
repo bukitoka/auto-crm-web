@@ -34,6 +34,7 @@ describe("AssistantHome", () => {
     expect(startConversation).toHaveBeenCalledWith(
       "What should I focus on today? Check my overdue and upcoming tasks.",
       null,
+      undefined, // no attached files
     );
     await waitFor(() => expect(router.replace).toHaveBeenCalledWith("/assistant/c9"));
   });
@@ -53,6 +54,10 @@ describe("AssistantHome", () => {
 
     await user.click(screen.getByRole("button", { name: /open pipeline/ }));
 
-    expect(startConversation).toHaveBeenCalledWith("Summarize my open pipeline by stage.", null);
+    expect(startConversation).toHaveBeenCalledWith(
+      "Summarize my open pipeline by stage.",
+      null,
+      undefined,
+    );
   });
 });

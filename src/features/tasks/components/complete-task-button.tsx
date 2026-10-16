@@ -9,7 +9,6 @@ import { toastResult } from "@/lib/toast-result";
 import { setTaskStatus } from "../actions";
 import type { TaskStatus } from "../types";
 
-/** Quick complete / reopen toggle. */
 export function CompleteTaskButton({ taskId, status }: { taskId: string; status: TaskStatus }) {
   const [isPending, startTransition] = useTransition();
   const isDone = status === "done";

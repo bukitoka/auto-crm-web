@@ -2,13 +2,16 @@ import "server-only";
 import { cache } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { PICKER_PAGE_SIZE } from "@/lib/constants";
-import { getListParams, getParam } from "@/lib/search-params";
+import { getListParams, getParam, getSortParams } from "@/lib/search-params";
 import type { Paginated, SearchParams } from "@/lib/types";
 import type { Contact, ContactFilters, ContactRef } from "./types";
 
-/** Filters for the contacts list page, read from its URL. */
 export function contactFiltersFromParams(params: SearchParams): ContactFilters {
-  return { ...getListParams(params), status: getParam(params, "status") };
+  return {
+    ...getListParams(params),
+    ...getSortParams(params),
+    status: getParam(params, "status"),
+  };
 }
 
 export function listContacts(filters: ContactFilters) {
