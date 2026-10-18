@@ -3,17 +3,15 @@ import { toast } from "sonner";
 import { describe, expect, it, vi } from "vitest";
 import type { ActionResult } from "@/lib/action-result";
 import { deferred } from "@/test/deferred";
-import { removeMicrophone, stubMicrophone } from "@/test/microphone";
 import { router } from "@/test/next-mocks";
 import { renderWithUser } from "@/test/render";
-import { sendMessage, startConversation, transcribeRecording } from "../actions";
+import { sendMessage, startConversation } from "../actions";
 import type { ChatMessage, ChatTurn } from "../types";
 import { ChatThread } from "./chat-thread";
 
 vi.mock("../actions", () => ({
   startConversation: vi.fn(),
   sendMessage: vi.fn(),
-  transcribeRecording: vi.fn(),
 }));
 
 const contactId = "01a133fe-b59b-7501-8708-5e2e01a850be";
@@ -176,25 +174,6 @@ describe("ChatThread", () => {
     );
     // Failed: the file is back in the composer.
     expect(screen.getByRole("button", { name: "Remove card.png" })).toBeInTheDocument();
-  });
-
-  it("adds a voice message to the box", async () => {
-    stubMicrophone();
-    vi.mocked(transcribeRecording).mockResolvedValue({ ok: true, data: { text: "call Jane" } });
-    const { user } = renderWithUser(<ChatThread conversationId="c1" />);
-    const input = screen.getByLabelText("Message the assistant");
-    await user.type(input, "Note:");
-
-    await user.click(screen.getByRole("button", { name: "Record voice message" }));
-    await user.click(screen.getByRole("button", { name: "Stop recording" }));
-
-    await waitFor(() => expect(input).toHaveValue("Note: call Jane"));
-    removeMicrophone();
-  });
-
-  it("hides the mic when the browser cannot record", () => {
-    renderWithUser(<ChatThread conversationId="c1" />);
-    expect(screen.queryByRole("button", { name: "Record voice message" })).not.toBeInTheDocument();
   });
 
   it("is read-only for admins viewing someone else's chat", () => {

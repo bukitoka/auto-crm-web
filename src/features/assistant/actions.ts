@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { type ActionResult, runAction } from "@/lib/action-result";
 import { apiFetch } from "@/lib/api-client";
-import { MAX_ATTACHMENTS, MAX_RECORDING_BYTES, MAX_UPLOAD_BYTES } from "@/lib/constants";
+import { MAX_ATTACHMENTS, MAX_UPLOAD_BYTES } from "@/lib/constants";
 import type { Paginated } from "@/lib/types";
 import type {
   BulkConversationAction,
@@ -84,24 +84,6 @@ export async function sendMessage(
   );
   if (result.ok) revalidateAfter(result.data);
   return result;
-}
-
-/** Speech to text for a voice message (`audio` entry). `text` is empty when nobody spoke. */
-export async function transcribeRecording(
-  formData: FormData,
-): Promise<ActionResult<{ text: string }>> {
-  const audio = formData.get("audio");
-  if (!(audio instanceof File) || audio.size === 0) {
-    return { ok: false, error: "The recording is empty", status: 422 };
-  }
-  if (audio.size > MAX_RECORDING_BYTES) {
-    return { ok: false, error: "Recordings can be at most 10 MB", status: 413 };
-  }
-  const body = new FormData();
-  body.set("audio", audio);
-  return runAction(() =>
-    apiFetch<{ text: string }>("/assistant/transcribe", { method: "POST", body }),
-  );
 }
 
 export async function searchConversations(

@@ -9,7 +9,6 @@ import {
   sendMessage,
   setConversationArchived,
   startConversation,
-  transcribeRecording,
 } from "./actions";
 import type { ChatTurn } from "./types";
 
@@ -172,48 +171,5 @@ describe("managing chats", () => {
       body: { ids: ["a", "b"], action: "archive" },
     });
     expect(await bulkConversations([], "delete")).toMatchObject({ ok: false, status: 422 });
-  });
-});
-
-describe("transcribeRecording", () => {
-  function recording(size = 5) {
-    const formData = new FormData();
-    formData.set("audio", new File(["x".repeat(size)], "voice.webm", { type: "audio/webm" }));
-    return formData;
-  }
-
-  it("sends the audio to the API and returns the text", async () => {
-    apiFetchMock.mockResolvedValue({ text: "Call Jane" });
-
-    const result = await transcribeRecording(recording());
-
-    expect(result).toEqual({ ok: true, data: { text: "Call Jane" } });
-    const [path, init] = apiFetchMock.mock.calls[0];
-    expect(path).toBe("/assistant/transcribe");
-    expect(init?.method).toBe("POST");
-    const body = init?.body as FormData;
-    const audio = body.get("audio") as File;
-    expect(audio.name).toBe("voice.webm");
-    expect(audio.size).toBe(5);
-  });
-
-  it("rejects empty or oversized recordings without calling the API", async () => {
-    expect(await transcribeRecording(new FormData())).toMatchObject({ ok: false, status: 422 });
-    expect(await transcribeRecording(recording(0))).toMatchObject({ ok: false, status: 422 });
-    expect(await transcribeRecording(recording(10 * 1024 * 1024 + 1))).toMatchObject({
-      ok: false,
-      status: 413,
-    });
-    expect(apiFetchMock).not.toHaveBeenCalled();
-  });
-
-  it("passes on the API's error", async () => {
-    apiFetchMock.mockRejectedValue(new ApiError(400, "The recording could not be read"));
-
-    expect(await transcribeRecording(recording())).toEqual({
-      ok: false,
-      error: "The recording could not be read",
-      status: 400,
-    });
   });
 });

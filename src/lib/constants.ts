@@ -23,8 +23,5 @@ export const CAPTURE_ACCEPT = "image/*,.pdf,.docx,.eml,.txt,.csv,.md,.vcf";
 /** Files per assistant message (each read like smart capture). Mirrors the API's limit. */
 export const MAX_ATTACHMENTS = 3;
 
-/** Voice messages for the assistant. Mirrors the API's limit. */
-export const MAX_RECORDING_BYTES = 10 * 1024 * 1024;
-
 /** CSV imports (contacts, companies). Mirrors the API's limit. */
 export const MAX_IMPORT_BYTES = 2 * 1024 * 1024;

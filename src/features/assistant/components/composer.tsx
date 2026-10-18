@@ -8,7 +8,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { CAPTURE_ACCEPT, MAX_ATTACHMENTS, MAX_UPLOAD_BYTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { AttachmentChip } from "./attachment-chip";
-import { VoiceRecorderButton } from "./voice-recorder-button";
 
 type ComposerProps = {
   value: string;
@@ -154,7 +153,6 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
             />
           </>
         ) : null}
-        <VoiceRecorderButton value={value} onChange={onChange} disabled={isPending} />
         <Button
           type="submit"
           size="icon"
