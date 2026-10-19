@@ -85,6 +85,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
   return (
     <style
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: the CSS is built from the chart config in code and theme tokens, never from user input
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(
@@ -182,6 +183,7 @@ function ChartTooltipContent({
 
             return (
               <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: tooltip payload items have no id and are rebuilt on every render
                 key={index}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
@@ -198,7 +200,7 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 rounded-[2px] border-(--indicator-color) bg-(--indicator-color)",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
@@ -209,8 +211,7 @@ function ChartTooltipContent({
                           )}
                           style={
                             {
-                              "--color-bg": indicatorColor,
-                              "--color-border": indicatorColor,
+                              "--indicator-color": indicatorColor,
                             } as React.CSSProperties
                           }
                         />
@@ -280,6 +281,7 @@ function ChartLegendContent({
 
           return (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: legend payload items have no id and are rebuilt on every render
               key={index}
               className={cn(
                 "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground",

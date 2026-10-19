@@ -3,7 +3,7 @@
 import { cn } from "cn";
 import { XIcon } from "lucide-react";
 import { Dialog as SheetPrimitive } from "radix-ui";
-import * as React from "react";
+import type * as React from "react";
 import { Button } from "@/components/ui/button";
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {

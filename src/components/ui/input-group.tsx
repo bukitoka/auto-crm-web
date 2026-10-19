@@ -2,7 +2,7 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
-import * as React from "react";
+import type * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: a div keeps the flex layout; a fieldset brings its own min-width and legend rules
     <div
       data-slot="input-group"
       role="group"
@@ -47,6 +48,8 @@ function InputGroupAddon({
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: a div keeps the flex layout; a fieldset brings its own min-width and legend rules
+    // biome-ignore lint/a11y/useKeyWithClickEvents: a mouse shortcut only; the input inside the group stays reachable by keyboard
     <div
       role="group"
       data-slot="input-group-addon"

@@ -2,7 +2,7 @@
 
 import { cn } from "cn";
 import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
-import * as React from "react";
+import type * as React from "react";
 
 type ScrollAreaProps = React.ComponentProps<typeof ScrollAreaPrimitive.Root> & {
   /** Which custom scrollbars to render. Default: vertical. */
