@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import { ExportButton } from "@/components/shared/export-button";
-import { ImportCsvDialog } from "@/components/shared/import-csv-dialog";
+import { ImportCsvDialog, type ImportField } from "@/components/shared/import-csv-dialog";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationBar } from "@/components/shared/pagination-bar";
 import { SearchInput } from "@/components/shared/search-input";
@@ -13,6 +13,20 @@ import { CompaniesTable } from "@/features/companies/components/companies-table"
 import { CompanyFormDialog } from "@/features/companies/components/company-form-dialog";
 import { canWriteCrm } from "@/features/users/roles";
 import { getListParams, getSortParams } from "@/lib/search-params";
+
+const IMPORT_FIELDS: ImportField[] = [
+  { name: "name", required: true, format: "Text, up to 200 characters.", example: "Acme" },
+  { name: "domain", format: "Text, up to 255 characters.", example: "acme.com" },
+  { name: "industry", format: "Text, up to 100 characters.", example: "Logistics" },
+  { name: "size", format: "Text, up to 50 characters.", example: "11-50" },
+  { name: "website", format: "Text, up to 255 characters.", example: "https://acme.com" },
+  { name: "notes", format: "Free text." },
+];
+
+const IMPORT_RULES = [
+  "A row whose name already exists is skipped.",
+  "Imported companies are assigned to you.",
+];
 
 export const metadata: Metadata = { title: "Companies" };
 
@@ -36,8 +50,8 @@ export default async function CompaniesPage({ searchParams }: PageProps<"/compan
               <>
                 <ImportCsvDialog
                   entity="companies"
-                  columns={["name", "domain", "industry", "size", "website", "notes"]}
-                  note="Names that already exist are skipped."
+                  fields={IMPORT_FIELDS}
+                  rules={IMPORT_RULES}
                   action={importCompanies}
                 />
                 <CompanyFormDialog

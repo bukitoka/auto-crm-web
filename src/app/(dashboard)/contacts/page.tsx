@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import { ExportButton } from "@/components/shared/export-button";
-import { ImportCsvDialog } from "@/components/shared/import-csv-dialog";
+import { ImportCsvDialog, type ImportField } from "@/components/shared/import-csv-dialog";
 import { PageHeader } from "@/components/shared/page-header";
 import { PaginationBar } from "@/components/shared/pagination-bar";
 import { ParamSelect } from "@/components/shared/param-select";
@@ -20,16 +20,26 @@ import { enumOptions } from "@/lib/options";
 
 export const metadata: Metadata = { title: "Contacts" };
 
-const IMPORT_COLUMNS = [
-  "first_name",
-  "last_name",
-  "email",
-  "phone",
-  "job_title",
-  "status",
-  "source",
-  "tags",
-  "company",
+const IMPORT_FIELDS: ImportField[] = [
+  { name: "first_name", required: true, format: "Text, up to 100 characters.", example: "Maya" },
+  { name: "last_name", format: "Text, up to 100 characters.", example: "Santoso" },
+  { name: "email", format: "A valid email address.", example: "maya@example.com" },
+  { name: "phone", format: "Text, up to 50 characters.", example: "+62 812 3456 7890" },
+  { name: "job_title", format: "Text, up to 150 characters.", example: "Head of Sales" },
+  {
+    name: "status",
+    format: "One of lead, prospect, customer, churned. Blank means lead.",
+    example: "prospect",
+  },
+  { name: "source", format: "Text, up to 50 characters. Blank means manual.", example: "webinar" },
+  { name: "tags", format: "Separate tags with semicolons.", example: "vip; newsletter" },
+  { name: "company", format: "The exact name of a company already in the CRM.", example: "Acme" },
+];
+
+const IMPORT_RULES = [
+  "A row whose email already exists is skipped.",
+  "A company name that is not found leaves the contact without a company.",
+  "Imported contacts are assigned to you.",
 ];
 
 export default async function ContactsPage({ searchParams }: PageProps<"/contacts">) {
@@ -54,8 +64,8 @@ export default async function ContactsPage({ searchParams }: PageProps<"/contact
               <>
                 <ImportCsvDialog
                   entity="contacts"
-                  columns={IMPORT_COLUMNS}
-                  note="Separate tags with semicolons. Companies are matched by name; rows with an existing email are skipped."
+                  fields={IMPORT_FIELDS}
+                  rules={IMPORT_RULES}
                   action={importContacts}
                 />
                 <SmartCaptureDialog companies={companies} />

@@ -23,6 +23,8 @@ type FormDialogProps = {
   formId: string;
   submitLabel: string;
   isPending: boolean;
+  /** Keeps Submit off until the form is ready (the dialog still closes with Cancel). */
+  submitDisabled?: boolean;
   children: ReactNode;
 };
 
@@ -35,6 +37,7 @@ export function FormDialog({
   formId,
   submitLabel,
   isPending,
+  submitDisabled = false,
   children,
 }: FormDialogProps) {
   return (
@@ -52,7 +55,7 @@ export function FormDialog({
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit" form={formId} disabled={isPending}>
+          <Button type="submit" form={formId} disabled={isPending || submitDisabled}>
             {isPending ? <Spinner /> : null}
             {submitLabel}
           </Button>
