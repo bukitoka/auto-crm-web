@@ -4,18 +4,16 @@ import { Handshake, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { Button } from "@/components/ui/button";
 import {
-  Combobox,
-  ComboboxCollection,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxLabel,
-  ComboboxList,
-} from "@/components/ui/combobox";
-import { InputGroupAddon } from "@/components/ui/input-group";
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Spinner } from "@/components/ui/spinner";
 import { quickSearch } from "@/features/search/actions";
 import type { QuickSearchGroup, QuickSearchItem } from "@/features/search/types";
@@ -41,10 +39,10 @@ function ItemIcon({ item }: { item: QuickSearchItem }) {
   );
 }
 
-/** ⌘K / Ctrl+K focuses the input from anywhere. */
+/** The trigger sits in the header; the search itself is a command dialog. ⌘K / Ctrl+K opens it. */
 export function HeaderSearch() {
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [groups, setGroups] = useState<QuickSearchGroup[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -71,83 +69,90 @@ export function HeaderSearch() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        inputRef.current?.focus();
+        setOpen((current) => !current);
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  function open(item: QuickSearchItem | null) {
-    if (!item) return;
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (!next) {
+      setQuery("");
+      setGroups([]);
+    }
+  }
+
+  function openItem(item: QuickSearchItem) {
     router.push(item.href);
-    setQuery("");
-    inputRef.current?.blur();
+    handleOpenChange(false);
   }
 
   const hasQuery = query.trim().length >= 2;
 
   return (
-    <div className="hidden w-full max-w-sm md:block">
-      <Combobox
-        items={groups}
-        value={null}
-        onValueChange={(item: QuickSearchItem | null) => open(item)}
-        inputValue={query}
-        onInputValueChange={setQuery}
-        filter={null}
-        itemToStringLabel={(item: QuickSearchItem) => item.title}
-        isItemEqualToValue={(a: QuickSearchItem, b: QuickSearchItem) => a.href === b.href}
-        autoHighlight
+    <>
+      <Button
+        variant="outline"
+        className="px-0 font-normal text-muted-foreground max-md:size-10 md:w-64 md:justify-start md:px-4"
+        onClick={() => setOpen(true)}
+        aria-label="Search"
       >
-        <ComboboxInput
-          ref={inputRef}
-          placeholder="Search contacts, companies, deals…"
-          aria-label="Search"
-          showTrigger={false}
-          className="w-full"
-        >
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-          <InputGroupAddon align="inline-end">
-            {isPending ? (
-              <Spinner />
+        <Search />
+        <span className="hidden flex-1 text-left md:inline">Search…</span>
+        <kbd className="pointer-events-none hidden rounded-sm border bg-muted px-1.5 font-sans text-[0.6875rem] lg:inline">
+          ⌘K
+        </kbd>
+      </Button>
+      <CommandDialog
+        open={open}
+        onOpenChange={handleOpenChange}
+        title="Search"
+        description="Search contacts, companies and deals."
+      >
+        <Command shouldFilter={false}>
+          <CommandInput
+            value={query}
+            onValueChange={setQuery}
+            placeholder="Search contacts, companies, deals…"
+            aria-label="Search contacts, companies and deals"
+          />
+          <CommandList>
+            {hasQuery ? (
+              <CommandEmpty>
+                {isPending ? <Spinner className="mx-auto" /> : "No results."}
+              </CommandEmpty>
             ) : (
-              <kbd className="pointer-events-none hidden rounded-sm border bg-muted px-1.5 font-sans text-[0.6875rem] text-muted-foreground lg:inline">
-                ⌘K
-              </kbd>
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                Type at least 2 characters to search contacts, companies and deals.
+              </p>
             )}
-          </InputGroupAddon>
-        </ComboboxInput>
-        {hasQuery ? (
-          <ComboboxContent className="w-[min(26rem,calc(100vw-2rem))]" align="end">
-            <ComboboxEmpty>{isPending ? "Searching…" : "No results."}</ComboboxEmpty>
-            <ComboboxList>
-              {(group: QuickSearchGroup) => (
-                <ComboboxGroup key={group.label} items={group.items}>
-                  <ComboboxLabel>{group.label}</ComboboxLabel>
-                  <ComboboxCollection>
-                    {(item: QuickSearchItem) => (
-                      <ComboboxItem key={item.href} value={item} className="gap-3">
-                        <ItemIcon item={item} />
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate">{item.title}</span>
-                          {item.subtitle ? (
-                            <span className="block truncate text-xs text-muted-foreground">
-                              {item.subtitle}
-                            </span>
-                          ) : null}
+            {groups.map((group) => (
+              <CommandGroup key={group.label} heading={group.label}>
+                {group.items.map((item) => (
+                  <CommandItem
+                    key={item.href}
+                    value={`${item.kind}-${item.id}`}
+                    onSelect={() => openItem(item)}
+                    className="gap-3"
+                  >
+                    <ItemIcon item={item} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate">{item.title}</span>
+                      {item.subtitle ? (
+                        <span className="block truncate text-xs text-muted-foreground">
+                          {item.subtitle}
                         </span>
-                      </ComboboxItem>
-                    )}
-                  </ComboboxCollection>
-                </ComboboxGroup>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        ) : null}
-      </Combobox>
-    </div>
+                      ) : null}
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+          </CommandList>
+        </Command>
+      </CommandDialog>
+    </>
   );
 }
