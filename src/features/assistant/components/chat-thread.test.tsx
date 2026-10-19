@@ -22,6 +22,7 @@ function msg(role: ChatMessage["role"], content: string, extra: Partial<ChatMess
     role,
     content,
     actions: [],
+    blocks: [],
     attachments: [],
     created_at: "",
     ...extra,

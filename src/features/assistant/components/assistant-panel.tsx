@@ -30,7 +30,7 @@ const SUGGESTIONS: Record<PageContext["type"] | "none", string[]> = {
   ],
   company: ["Who are the contacts at this company?", "Create a deal for this company"],
   deal: ["Move this deal to Negotiation", "Add a task to send the contract by Friday"],
-  none: ["Which of my tasks are overdue?", "How is my pipeline this month?"],
+  none: ["Which of my tasks are overdue?", "Chart my won deals over the last 6 months"],
 };
 
 function loadChat(): PanelChat {
@@ -93,7 +93,12 @@ export function AssistantPanel() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5" title="AI assistant (⌘J)">
+        <Button
+          variant="outline"
+          className="max-sm:size-10 max-sm:px-0"
+          title="AI assistant (⌘J)"
+          aria-label="Ask AI"
+        >
           <Sparkles className="text-primary" />
           <span className="hidden sm:inline">Ask AI</span>
         </Button>

@@ -13,7 +13,8 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { actionHref } from "../context";
-import type { AssistantAction, ChatMessage } from "../types";
+import type { AssistantAction, AssistantBlock, ChatMessage } from "../types";
+import { AssistantBlocks } from "./assistant-blocks";
 import { AttachmentChip } from "./attachment-chip";
 
 const ACTION_ICONS: Record<AssistantAction["kind"], LucideIcon> = {
@@ -47,15 +48,17 @@ type MessageProps = {
   role: "user" | "assistant";
   content: string;
   actions?: AssistantAction[];
+  blocks?: AssistantBlock[];
   attachments?: ChatMessage["attachments"];
   onNavigate?: () => void;
 };
 
-/** Assistant replies link to the records they changed; user messages list their files. */
+/** Assistant replies show charts and tables and link to the records they changed. */
 export function AssistantMessage({
   role,
   content,
   actions = [],
+  blocks = [],
   attachments = [],
   onNavigate,
 }: MessageProps) {
@@ -78,7 +81,7 @@ export function AssistantMessage({
         {content ? (
           <div
             className={cn(
-              "rounded-lg px-3.5 py-2.5 text-sm break-words whitespace-pre-wrap",
+              "rounded-lg px-3.5 py-2.5 text-sm wrap-break-word whitespace-pre-wrap",
               isUser
                 ? "rounded-br-sm bg-primary text-primary-foreground"
                 : "rounded-tl-sm bg-muted text-foreground",
@@ -87,6 +90,7 @@ export function AssistantMessage({
             {content}
           </div>
         ) : null}
+        {blocks.length > 0 ? <AssistantBlocks blocks={blocks} onNavigate={onNavigate} /> : null}
         {actions.length > 0 ? (
           <div className="flex w-full flex-col gap-1.5">
             {actions.map((action) => (

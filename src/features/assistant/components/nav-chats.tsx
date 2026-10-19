@@ -32,7 +32,7 @@ export function NavChats({ conversations }: { conversations: Conversation[] }) {
       <SidebarGroupContent>
         <SidebarMenu>
           {conversations.length === 0 ? (
-            <p className="px-2 py-1.5 text-xs text-sidebar-foreground/60">
+            <p className="px-3 py-1.5 text-xs text-sidebar-foreground/60">
               Your chats with the assistant show up here.
             </p>
           ) : (

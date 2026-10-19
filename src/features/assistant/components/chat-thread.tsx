@@ -71,6 +71,7 @@ export function ChatThread({
       role: "user",
       content,
       actions: [],
+      blocks: [],
       attachments: sentFiles.map((file) => ({ name: file.name })),
       created_at: new Date().toISOString(),
     };
@@ -138,6 +139,7 @@ export function ChatThread({
               role={message.role}
               content={message.content}
               actions={message.actions}
+              blocks={message.blocks}
               attachments={message.attachments}
               onNavigate={onNavigate}
             />

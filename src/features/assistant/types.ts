@@ -18,11 +18,39 @@ export type AssistantAction = {
   link_id: string | null;
 };
 
+export type ChartBlock = {
+  type: "chart";
+  kind: "bar" | "line" | "pie";
+  /** The question the chart answers. */
+  title: string;
+  unit: "number" | "currency" | "percent";
+  categories: string[];
+  series: { name: string; values: number[] }[];
+};
+
+export type MetricsBlock = {
+  type: "metrics";
+  title: string | null;
+  items: { label: string; value: string; hint: string | null }[];
+};
+
+export type TableBlock = {
+  type: "table";
+  title: string;
+  columns: string[];
+  rows: (string | number | null)[][];
+  row_links: ({ entity: "contact" | "company" | "deal"; id: string } | null)[] | null;
+};
+
+/** Charts, metric cards and tables the assistant draws under its reply. */
+export type AssistantBlock = ChartBlock | MetricsBlock | TableBlock;
+
 export type ChatMessage = {
   id: string;
   role: "user" | "assistant";
   content: string;
   actions: AssistantAction[];
+  blocks: AssistantBlock[];
   /** Files the user attached (names only; the API keeps their text for the model). */
   attachments: { name: string }[];
   created_at: string;

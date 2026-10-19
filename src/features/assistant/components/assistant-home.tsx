@@ -37,7 +37,8 @@ const IDEAS: Idea[] = [
   },
   {
     title: "Pipeline check",
-    prompt: "How is my pipeline looking this month? Which deals need attention?",
+    prompt:
+      "Chart my pipeline by stage and my won deals over the last 6 months. Which deals need attention?",
     icon: TrendingUp,
     mode: "send",
     tone: "bg-success/10 text-success",

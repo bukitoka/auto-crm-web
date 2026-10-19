@@ -14,8 +14,24 @@ function turn(reply: string): ChatTurn {
   return {
     conversation: { id: "c7" } as ChatTurn["conversation"],
     messages: [
-      { id: "u", role: "user", content: "q", actions: [], attachments: [], created_at: "" },
-      { id: "a", role: "assistant", content: reply, actions: [], attachments: [], created_at: "" },
+      {
+        id: "u",
+        role: "user",
+        content: "q",
+        actions: [],
+        blocks: [],
+        attachments: [],
+        created_at: "",
+      },
+      {
+        id: "a",
+        role: "assistant",
+        content: reply,
+        actions: [],
+        blocks: [],
+        attachments: [],
+        created_at: "",
+      },
     ],
   };
 }

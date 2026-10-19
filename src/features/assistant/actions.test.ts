@@ -23,12 +23,21 @@ function turn(withActions = false): ChatTurn {
   return {
     conversation: { id: "c1" } as ChatTurn["conversation"],
     messages: [
-      { id: "m1", role: "user", content: "Hi", actions: [], attachments: [], created_at: "" },
+      {
+        id: "m1",
+        role: "user",
+        content: "Hi",
+        actions: [],
+        blocks: [],
+        attachments: [],
+        created_at: "",
+      },
       {
         id: "m2",
         role: "assistant",
         content: "Done",
         actions: withActions ? [{ kind: "created" } as never] : [],
+        blocks: [],
         attachments: [],
         created_at: "",
       },
