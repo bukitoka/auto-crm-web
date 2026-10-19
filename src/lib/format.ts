@@ -14,12 +14,26 @@ export function formatCurrency(value: number | string | null | undefined, curren
 }
 
 export function formatCompactCurrency(value: number | string, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
+  const parts = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     notation: "compact",
     maximumFractionDigits: 1,
-  }).format(Number(value));
+  }).formatToParts(Number(value));
+
+  // ICU versions disagree on trailing zeros: some render 15000 as "$15.0K". Drop a
+  // zero fraction (and its decimal separator) so the output is the same everywhere.
+  return parts
+    .filter((part, index) => {
+      const next = parts[index + 1];
+      if (part.type === "fraction" && Number(part.value) === 0) return false;
+      if (part.type === "decimal" && next?.type === "fraction" && Number(next.value) === 0) {
+        return false;
+      }
+      return true;
+    })
+    .map((part) => part.value)
+    .join("");
 }
 
 export function formatDate(value: string | null | undefined) {
