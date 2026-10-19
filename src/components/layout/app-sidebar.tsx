@@ -20,13 +20,16 @@ import {
 import { NavChats } from "@/features/assistant/components/nav-chats";
 import type { Conversation } from "@/features/assistant/types";
 import type { User } from "@/features/users/types";
+import type { VersionInfo } from "@/lib/app-version";
 import { HOME_PATH } from "@/lib/constants";
 import { mainNav, type NavItem, secondaryNav, visibleNav } from "./nav-items";
 import { NavUser } from "./nav-user";
+import { VersionLabel } from "./version-label";
 
 type AppSidebarProps = ComponentProps<typeof Sidebar> & {
   user: User;
   recentChats: Conversation[];
+  versions: { web: VersionInfo; api: VersionInfo | null };
 };
 
 function NavGroup({ label, items }: { label: string; items: NavItem[] }) {
@@ -56,7 +59,7 @@ function NavGroup({ label, items }: { label: string; items: NavItem[] }) {
   );
 }
 
-export function AppSidebar({ user, recentChats, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, recentChats, versions, ...props }: AppSidebarProps) {
   const workspaceItems = visibleNav(secondaryNav, user);
 
   return (
@@ -85,6 +88,7 @@ export function AppSidebar({ user, recentChats, ...props }: AppSidebarProps) {
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />
+        <VersionLabel web={versions.web} api={versions.api} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

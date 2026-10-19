@@ -10,8 +10,17 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
 ];
 
+// Every production build on Vercel is a release: the version is the UTC build date, and the
+// commit tells two builds on the same day apart. Anything else shows as "dev".
+const isRelease = process.env.VERCEL_ENV === "production";
+const appVersion = isRelease ? new Date().toISOString().slice(0, 10).replaceAll("-", ".") : "dev";
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  env: {
+    NEXT_PUBLIC_APP_VERSION: appVersion,
+    NEXT_PUBLIC_GIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "",
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

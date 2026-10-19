@@ -6,15 +6,17 @@ import { SIDEBAR_DEFAULT_WIDTH, SidebarInset, SidebarProvider } from "@/componen
 import { listConversations } from "@/features/assistant/api";
 import { getCurrentUser } from "@/features/auth/api";
 import { canWriteCrm } from "@/features/users/roles";
+import { getApiVersion, webVersion } from "@/lib/app-version";
 
 export default async function DashboardLayout({ children }: LayoutProps<"/">) {
-  const [user, cookieStore, recentChats] = await Promise.all([
+  const [user, cookieStore, recentChats, apiVersion] = await Promise.all([
     getCurrentUser(),
     cookies(),
     // The sidebar's "Recent chats" are optional: never break every page over them.
     listConversations({ size: 8 })
       .then((page) => page.items)
       .catch(() => []),
+    getApiVersion(),
   ]);
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
   // Width chosen by dragging the sidebar edge (saved by SidebarRail); clamped by the provider.
@@ -22,7 +24,11 @@ export default async function DashboardLayout({ children }: LayoutProps<"/">) {
 
   return (
     <SidebarProvider defaultOpen={defaultOpen} defaultWidth={defaultWidth}>
-      <AppSidebar user={user} recentChats={recentChats} />
+      <AppSidebar
+        user={user}
+        recentChats={recentChats}
+        versions={{ web: webVersion, api: apiVersion }}
+      />
       {/* min-w-0 lets wide content (e.g. the deals canvas) scroll instead of stretching the page. */}
       <SidebarInset className="min-w-0">
         <SiteHeader />
