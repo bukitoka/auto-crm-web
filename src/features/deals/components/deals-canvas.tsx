@@ -102,7 +102,7 @@ export function DealsCanvas({
         type="auto"
         scrollbars="both"
         viewportRef={canvasRef}
-        className="bg-canvas-dots -mx-4 h-[calc(100svh-14rem)] min-h-[28rem] cursor-grab border-y has-data-[panning=true]:cursor-grabbing has-data-[panning=true]:select-none md:mx-0 md:rounded-lg md:border"
+        className="bg-canvas-dots -mx-4 h-[calc(100svh-14rem)] min-h-112 cursor-grab border-y has-data-[panning=true]:cursor-grabbing has-data-[panning=true]:select-none md:mx-0 md:rounded-lg md:border"
       >
         <div className="flex min-w-max items-start gap-5 p-5 md:p-6">
           {columns.map((column) => (
