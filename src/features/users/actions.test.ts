@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { describe, expect, it, vi } from "vitest";
 import { ApiError, apiFetch } from "@/lib/api-client";
-import { createAdmin, removeMyAvatar, updateUser, uploadMyAvatar } from "./actions";
+import { createAdmin, removeMyAvatar, updateAdmin, updateUser, uploadMyAvatar } from "./actions";
 
 vi.mock("@/lib/api-client", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/api-client")>()),
@@ -110,5 +110,38 @@ describe("updateUser", () => {
       status: 403,
     });
     expect(revalidatePath).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateAdmin", () => {
+  const values = { full_name: "Jane Doe", email: "jane@acme.com", password: "" };
+
+  it("sends the profile and leaves the password out when it is blank", async () => {
+    apiFetchMock.mockResolvedValue({ id: "user-2" });
+
+    expect((await updateAdmin("user-2", values)).ok).toBe(true);
+    expect(apiFetchMock).toHaveBeenCalledWith("/users/user-2", {
+      method: "PATCH",
+      body: { full_name: "Jane Doe", email: "jane@acme.com" },
+    });
+    expect(revalidatePath).toHaveBeenCalledWith("/team");
+  });
+
+  it("includes a new password", async () => {
+    apiFetchMock.mockResolvedValue({ id: "user-2" });
+
+    await updateAdmin("user-2", { ...values, password: "n3w-password" });
+
+    expect(apiFetchMock).toHaveBeenCalledWith("/users/user-2", {
+      method: "PATCH",
+      body: { full_name: "Jane Doe", email: "jane@acme.com", password: "n3w-password" },
+    });
+  });
+
+  it("validates before calling the API", async () => {
+    const result = await updateAdmin("user-2", { ...values, password: "short" });
+
+    expect(result).toMatchObject({ ok: false, error: "At least 8 characters" });
+    expect(apiFetchMock).not.toHaveBeenCalled();
   });
 });

@@ -4,7 +4,12 @@ import { revalidatePath } from "next/cache";
 import { type ActionResult, parseInput, runAction } from "@/lib/action-result";
 import { apiFetch } from "@/lib/api-client";
 import { parseImageUpload } from "@/lib/uploads";
-import { type AdminCreateValues, adminCreateSchema } from "./schemas";
+import {
+  type AdminCreateValues,
+  type AdminEditValues,
+  adminCreateSchema,
+  adminEditSchema,
+} from "./schemas";
 import type { User } from "./types";
 
 export async function uploadMyAvatar(formData: FormData): Promise<ActionResult<User>> {
@@ -37,14 +42,26 @@ export async function createAdmin(values: AdminCreateValues): Promise<ActionResu
   return result;
 }
 
-/** Super admin: rename an admin or switch the account on or off. */
+/** Super admin: change an admin's name, email, password or on/off switch. */
 export async function updateUser(
   id: string,
-  changes: { full_name?: string; is_active?: boolean },
+  changes: { full_name?: string; email?: string; password?: string; is_active?: boolean },
 ): Promise<ActionResult<User>> {
   const result = await runAction(() =>
     apiFetch<User>(`/users/${id}`, { method: "PATCH", body: changes }),
   );
   if (result.ok) revalidatePath("/team");
   return result;
+}
+
+/** Super admin: save the edit form. A blank password leaves the current one in place. */
+export async function updateAdmin(
+  id: string,
+  values: AdminEditValues,
+): Promise<ActionResult<User>> {
+  const parsed = parseInput(adminEditSchema, values);
+  if (!parsed.ok) return parsed;
+
+  const { password, ...profile } = parsed.data;
+  return updateUser(id, password ? { ...profile, password } : profile);
 }

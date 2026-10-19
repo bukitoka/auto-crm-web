@@ -23,7 +23,7 @@ export default async function TeamPage() {
     <>
       <PageHeader
         title="Admins"
-        description="Create admin accounts and switch them on or off. Each admin works on their own records."
+        description="Create admin accounts, edit their details and reset passwords, or switch them on or off. Each admin works on their own records."
         actions={
           <AdminFormDialog
             trigger={
