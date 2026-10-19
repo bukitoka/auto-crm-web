@@ -29,7 +29,8 @@ const SIDEBAR_MAX_WIDTH = 400;
 // Dragging this far below the minimum collapses the sidebar.
 const SIDEBAR_COLLAPSE_DISTANCE = 64;
 const SIDEBAR_WIDTH_MOBILE = "18rem";
-const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_WIDTH_ICON_PX = 56;
+const SIDEBAR_WIDTH_ICON = `${SIDEBAR_WIDTH_ICON_PX / 16}rem`;
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContextProps = {
@@ -307,8 +308,12 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   function handlePointerDown(event: React.PointerEvent<HTMLButtonElement>) {
     if (event.button !== 0) return;
     event.currentTarget.setPointerCapture(event.pointerId);
-    // A collapsed sidebar is the 3rem (48px) icon rail; dragging grows it from there.
-    drag.current = { startX: event.clientX, startWidth: open ? width : 48, moved: false };
+    // A collapsed sidebar is the icon rail; dragging grows it from there.
+    drag.current = {
+      startX: event.clientX,
+      startWidth: open ? width : SIDEBAR_WIDTH_ICON_PX,
+      moved: false,
+    };
   }
 
   function handlePointerMove(event: React.PointerEvent<HTMLButtonElement>) {
