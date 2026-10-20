@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           <TooltipProvider>{children}</TooltipProvider>
-          <Toaster richColors closeButton />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
