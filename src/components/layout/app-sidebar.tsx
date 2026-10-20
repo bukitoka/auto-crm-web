@@ -17,6 +17,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import type { Changelog } from "@/features/about/data";
 import { NavChats } from "@/features/assistant/components/nav-chats";
 import type { Conversation } from "@/features/assistant/types";
 import type { User } from "@/features/users/types";
@@ -24,12 +25,12 @@ import type { VersionInfo } from "@/lib/app-version";
 import { HOME_PATH } from "@/lib/constants";
 import { mainNav, type NavItem, secondaryNav, visibleNav } from "./nav-items";
 import { NavUser } from "./nav-user";
-import { VersionLabel } from "./version-label";
 
 type AppSidebarProps = ComponentProps<typeof Sidebar> & {
   user: User;
   recentChats: Conversation[];
   versions: { web: VersionInfo; api: VersionInfo | null };
+  changelog: Changelog;
 };
 
 function NavGroup({ label, items }: { label: string; items: NavItem[] }) {
@@ -59,7 +60,7 @@ function NavGroup({ label, items }: { label: string; items: NavItem[] }) {
   );
 }
 
-export function AppSidebar({ user, recentChats, versions, ...props }: AppSidebarProps) {
+export function AppSidebar({ user, recentChats, versions, changelog, ...props }: AppSidebarProps) {
   const workspaceItems = visibleNav(secondaryNav, user);
 
   return (
@@ -87,8 +88,7 @@ export function AppSidebar({ user, recentChats, versions, ...props }: AppSidebar
         <NavGroup label="Workspace" items={workspaceItems} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
-        <VersionLabel web={versions.web} api={versions.api} />
+        <NavUser user={user} versions={versions} changelog={changelog} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

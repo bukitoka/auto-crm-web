@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
+import { ChevronsUpDown, Info, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
 import {
   DropdownMenu,
@@ -18,8 +19,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { AboutDialog } from "@/features/about/components/about-dialog";
+import type { Changelog } from "@/features/about/data";
 import { logout } from "@/features/auth/actions";
 import type { User } from "@/features/users/types";
+import type { VersionInfo } from "@/lib/app-version";
 
 function UserSummary({ user }: { user: User }) {
   return (
@@ -38,8 +42,17 @@ function UserSummary({ user }: { user: User }) {
   );
 }
 
-export function NavUser({ user }: { user: User }) {
+export function NavUser({
+  user,
+  versions,
+  changelog,
+}: {
+  user: User;
+  versions: { web: VersionInfo; api: VersionInfo | null };
+  changelog: Changelog;
+}) {
   const { isMobile } = useSidebar();
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   return (
     <SidebarMenu>
@@ -73,6 +86,10 @@ export function NavUser({ user }: { user: User }) {
                   Settings
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setAboutOpen(true)}>
+                <Info />
+                About Auto CRM
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => logout()}>
@@ -81,6 +98,12 @@ export function NavUser({ user }: { user: User }) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <AboutDialog
+          open={aboutOpen}
+          onOpenChange={setAboutOpen}
+          versions={versions}
+          changelog={changelog}
+        />
       </SidebarMenuItem>
     </SidebarMenu>
   );

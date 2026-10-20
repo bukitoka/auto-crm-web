@@ -3,13 +3,14 @@ import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ReadOnlyBanner } from "@/components/shared/read-only-banner";
 import { SIDEBAR_DEFAULT_WIDTH, SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { getChangelog } from "@/features/about/changelog";
 import { listConversations } from "@/features/assistant/api";
 import { getCurrentUser } from "@/features/auth/api";
 import { canWriteCrm } from "@/features/users/roles";
 import { getApiVersion, webVersion } from "@/lib/app-version";
 
 export default async function DashboardLayout({ children }: LayoutProps<"/">) {
-  const [user, cookieStore, recentChats, apiVersion] = await Promise.all([
+  const [user, cookieStore, recentChats, apiVersion, changelog] = await Promise.all([
     getCurrentUser(),
     cookies(),
     // The sidebar's "Recent chats" are optional: never break every page over them.
@@ -17,6 +18,7 @@ export default async function DashboardLayout({ children }: LayoutProps<"/">) {
       .then((page) => page.items)
       .catch(() => []),
     getApiVersion(),
+    getChangelog(),
   ]);
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
   // Width chosen by dragging the sidebar edge (saved by SidebarRail); clamped by the provider.
@@ -28,6 +30,7 @@ export default async function DashboardLayout({ children }: LayoutProps<"/">) {
         user={user}
         recentChats={recentChats}
         versions={{ web: webVersion, api: apiVersion }}
+        changelog={changelog}
       />
       {/* min-w-0 lets wide content (e.g. the deals canvas) scroll instead of stretching the page. */}
       <SidebarInset className="min-w-0">
