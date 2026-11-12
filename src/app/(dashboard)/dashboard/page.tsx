@@ -165,11 +165,11 @@ export default async function DashboardPage() {
         <DashboardCard
           title="Recent activity"
           description="The 5 most recent conversations and updates"
-          className="lg:[contain:size]"
-          contentClassName="min-h-0 flex-1"
+          className="min-h-64 max-h-96 lg:[contain:size]"
+          contentClassName="flex min-h-0 flex-1 flex-col"
         >
           <section
-            className="max-h-80 overflow-y-auto rounded-sm pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring lg:h-full lg:max-h-none"
+            className="min-h-0 flex-1 overflow-y-auto rounded-sm pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
             // biome-ignore lint/a11y/noNoninteractiveTabindex: scrollable region needs keyboard focus
             tabIndex={0}
             aria-label="Recent activity updates"

@@ -85,8 +85,9 @@ not need the model provider's credentials.
 | `/team`, `/automations`, `/ai-chats` | Super admin workspace controls and conversation oversight                                          |
 | `/settings`                          | Account and appearance settings                                                                    |
 
-Recent activity shows five entries with expandable notes. On desktop, its panel follows
-the Closing soon card's height and scrolls internally.
+Recent activity shows five entries with expandable notes. Its card stays between 256px and
+384px tall and scrolls internally. On desktop, it follows the Closing soon card's height
+within those bounds.
 
 | Shortcut                | Action                                                          |
 | ----------------------- | --------------------------------------------------------------- |
