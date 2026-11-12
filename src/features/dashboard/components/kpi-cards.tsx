@@ -8,11 +8,11 @@ import {
   Scale,
   Trophy,
   UserRoundPlus,
-} from "lucide-react";
-import Link from "next/link";
-import { formatCurrency } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import type { DashboardSummary } from "../types";
+} from "lucide-react"
+import Link from "next/link"
+import { formatCurrency } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import type { DashboardSummary } from "../types"
 
 /**
  * Color per card, built from the semantic tokens so light and dark mode both work.
@@ -39,21 +39,21 @@ const TONES = {
     icon: "bg-destructive text-destructive-foreground",
     accent: "text-destructive",
   },
-} as const;
+} as const
 
 type Kpi = {
-  label: string;
-  value: string;
+  label: string
+  value: string
   /** Optional context under the value, e.g. "3 won · 1 lost". */
-  detail?: string;
-  hint: string;
-  icon: LucideIcon;
-  tone: keyof typeof TONES;
-  href: string;
-};
+  detail?: string
+  hint: string
+  icon: LucideIcon
+  tone: keyof typeof TONES
+  href: string
+}
 
 export function KpiCards({ summary }: { summary: DashboardSummary }) {
-  const hasOverdue = summary.overdue_tasks > 0;
+  const hasOverdue = summary.overdue_tasks > 0
   const kpis: Kpi[] = [
     {
       label: "Open pipeline",
@@ -107,12 +107,12 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
       tone: hasOverdue ? "destructive" : "success",
       href: "/tasks?overdue=true",
     },
-  ];
+  ]
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {kpis.map((kpi) => {
-        const tone = TONES[kpi.tone];
+        const tone = TONES[kpi.tone]
         return (
           <Link
             key={kpi.label}
@@ -151,8 +151,8 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
               <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </span>
           </Link>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

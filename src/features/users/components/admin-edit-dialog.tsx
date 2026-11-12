@@ -1,39 +1,39 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type ReactNode, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { FormDialog } from "@/components/shared/form-dialog";
-import { TextField } from "@/components/shared/form-fields";
-import { FieldGroup } from "@/components/ui/field";
-import { toastResult } from "@/lib/toast-result";
-import { updateAdmin } from "../actions";
-import { type AdminEditValues, adminEditSchema } from "../schemas";
-import type { User } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { type ReactNode, useState, useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { FormDialog } from "@/components/shared/form-dialog"
+import { TextField } from "@/components/shared/form-fields"
+import { FieldGroup } from "@/components/ui/field"
+import { toastResult } from "@/lib/toast-result"
+import { updateAdmin } from "../actions"
+import { type AdminEditValues, adminEditSchema } from "../schemas"
+import type { User } from "../types"
 
 function valuesOf(user: User): AdminEditValues {
-  return { full_name: user.full_name, email: user.email, password: "" };
+  return { full_name: user.full_name, email: user.email, password: "" }
 }
 
 export function AdminEditDialog({ user, trigger }: { user: User; trigger: ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const { control, handleSubmit, reset } = useForm<AdminEditValues>({
     resolver: zodResolver(adminEditSchema),
     defaultValues: valuesOf(user),
-  });
+  })
 
   function handleOpenChange(next: boolean) {
     // Start from the saved values each time, so a cancelled edit does not linger.
-    if (next) reset(valuesOf(user));
-    setOpen(next);
+    if (next) reset(valuesOf(user))
+    setOpen(next)
   }
 
   function onSubmit(values: AdminEditValues) {
     startTransition(async () => {
-      const result = await updateAdmin(user.id, values);
-      if (toastResult(result, "Admin updated")) setOpen(false);
-    });
+      const result = await updateAdmin(user.id, values)
+      if (toastResult(result, "Admin updated")) setOpen(false)
+    })
   }
 
   return (
@@ -62,5 +62,5 @@ export function AdminEditDialog({ user, trigger }: { user: User; trigger: ReactN
         </FieldGroup>
       </form>
     </FormDialog>
-  );
+  )
 }

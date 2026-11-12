@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { type MouseEvent, useState, useTransition } from "react";
+import { Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { type MouseEvent, useState, useTransition } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,20 +13,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import type { ActionResult } from "@/lib/action-result";
-import { toastResult } from "@/lib/toast-result";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import type { ActionResult } from "@/lib/action-result"
+import { toastResult } from "@/lib/toast-result"
 
 type ConfirmDeleteButtonProps = {
   /** A Server Action with its arguments already bound, e.g. `deleteContact.bind(null, id)`. */
-  action: () => Promise<ActionResult>;
-  title: string;
-  description?: string;
-  redirectTo?: string;
-  variant?: "icon" | "button";
-};
+  action: () => Promise<ActionResult>
+  title: string
+  description?: string
+  redirectTo?: string
+  variant?: "icon" | "button"
+}
 
 export function ConfirmDeleteButton({
   action,
@@ -35,18 +35,18 @@ export function ConfirmDeleteButton({
   redirectTo,
   variant = "icon",
 }: ConfirmDeleteButtonProps) {
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   function handleConfirm(event: MouseEvent) {
-    event.preventDefault(); // keep the dialog open while the action runs
+    event.preventDefault() // keep the dialog open while the action runs
     startTransition(async () => {
-      const result = await action();
-      if (!toastResult(result, "Deleted")) return;
-      setOpen(false);
-      if (redirectTo) router.push(redirectTo);
-    });
+      const result = await action()
+      if (!toastResult(result, "Deleted")) return
+      setOpen(false)
+      if (redirectTo) router.push(redirectTo)
+    })
   }
 
   return (
@@ -77,5 +77,5 @@ export function ConfirmDeleteButton({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

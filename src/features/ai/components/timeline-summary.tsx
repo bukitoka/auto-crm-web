@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { ListChecks, Sparkles } from "lucide-react";
-import { useState, useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { summarizeTimeline } from "../actions";
-import type { TimelineSummary as Summary } from "../types";
+import { ListChecks, Sparkles } from "lucide-react"
+import { useState, useTransition } from "react"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { summarizeTimeline } from "../actions"
+import type { TimelineSummary as Summary } from "../types"
 
 export function TimelineSummary({ contactId, dealId }: { contactId?: string; dealId?: string }) {
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [summary, setSummary] = useState<Summary | null>(null)
+  const [isPending, startTransition] = useTransition()
 
   function handleSummarize() {
     startTransition(async () => {
-      const result = await summarizeTimeline({ contactId, dealId });
-      if (toastResult(result)) setSummary(result.data);
-    });
+      const result = await summarizeTimeline({ contactId, dealId })
+      if (toastResult(result)) setSummary(result.data)
+    })
   }
 
   return (
@@ -43,5 +43,5 @@ export function TimelineSummary({ contactId, dealId }: { contactId?: string; dea
         </div>
       ) : null}
     </div>
-  );
+  )
 }

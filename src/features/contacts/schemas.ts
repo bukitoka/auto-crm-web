@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { emptyToNull } from "@/lib/form";
-import { CONTACT_STATUSES, type Contact, type ContactPayload } from "./types";
+import { z } from "zod"
+import { emptyToNull } from "@/lib/form"
+import { CONTACT_STATUSES, type Contact, type ContactPayload } from "./types"
 
 export const contactFormSchema = z.object({
   first_name: z.string().trim().min(1, "First name is required").max(100),
@@ -13,8 +13,8 @@ export const contactFormSchema = z.object({
   /** Comma-separated in the form, `string[]` in the API. */
   tags: z.string(),
   company_id: z.string(),
-});
-export type ContactFormValues = z.infer<typeof contactFormSchema>;
+})
+export type ContactFormValues = z.infer<typeof contactFormSchema>
 
 export const emptyContactForm: ContactFormValues = {
   first_name: "",
@@ -26,7 +26,7 @@ export const emptyContactForm: ContactFormValues = {
   source: "manual",
   tags: "",
   company_id: "",
-};
+}
 
 export function contactToForm(contact: Contact): ContactFormValues {
   return {
@@ -39,14 +39,14 @@ export function contactToForm(contact: Contact): ContactFormValues {
     source: contact.source,
     tags: contact.tags.join(", "),
     company_id: contact.company_id ?? "",
-  };
+  }
 }
 
 export function toContactPayload(values: ContactFormValues): ContactPayload {
   const tags = values.tags
     .split(",")
     .map((tag) => tag.trim())
-    .filter(Boolean);
-  const source = values.source || "manual";
-  return { ...(emptyToNull(values) as Omit<ContactPayload, "tags" | "source">), source, tags };
+    .filter(Boolean)
+  const source = values.source || "manual"
+  return { ...(emptyToNull(values) as Omit<ContactPayload, "tags" | "source">), source, tags }
 }

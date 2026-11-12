@@ -1,6 +1,6 @@
-import Link from "next/link";
-import type { Deal } from "@/features/deals/types";
-import { formatCurrency, formatDate } from "@/lib/format";
+import Link from "next/link"
+import type { Deal } from "@/features/deals/types"
+import { formatCurrency, formatDate } from "@/lib/format"
 
 /** Open deals expected to close in the next 30 days, soonest first. */
 export function ClosingSoonList({ deals }: { deals: Deal[] }) {
@@ -9,7 +9,7 @@ export function ClosingSoonList({ deals }: { deals: Deal[] }) {
       <p className="py-6 text-center text-sm text-muted-foreground">
         No open deals expected to close in the next 30 days.
       </p>
-    );
+    )
   }
 
   return (
@@ -34,5 +34,5 @@ export function ClosingSoonList({ deals }: { deals: Deal[] }) {
         </li>
       ))}
     </ul>
-  );
+  )
 }

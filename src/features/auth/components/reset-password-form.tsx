@@ -1,34 +1,34 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { resetPassword } from "../actions";
-import { type ResetPasswordValues, resetPasswordSchema } from "../schemas";
+import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
+import { useTransition } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { resetPassword } from "../actions"
+import { type ResetPasswordValues, resetPasswordSchema } from "../schemas"
 
 export function ResetPasswordForm({ token }: { token: string }) {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
   const form = useForm<ResetPasswordValues>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: { password: "", confirm_password: "" },
-  });
+  })
 
   function onSubmit(values: ResetPasswordValues) {
     startTransition(async () => {
       // On success the action redirects to the login page.
-      toastResult(await resetPassword(token, values));
-    });
+      toastResult(await resetPassword(token, values))
+    })
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <div className="space-y-1 text-center">
+      <div className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">Choose a new password</h1>
         <p className="text-sm text-muted-foreground">Use at least 8 characters.</p>
       </div>
@@ -78,5 +78,5 @@ export function ResetPasswordForm({ token }: { token: string }) {
         </Field>
       </FieldGroup>
     </form>
-  );
+  )
 }

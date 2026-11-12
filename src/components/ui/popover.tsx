@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { cn } from "cn";
-import { Popover as PopoverPrimitive } from "radix-ui";
-import type * as React from "react";
+import { cn } from "cn"
+import { Popover as PopoverPrimitive } from "radix-ui"
+import type * as React from "react"
 
 function Popover({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />;
+  return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
 function PopoverTrigger({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
 function PopoverContent({
@@ -31,11 +31,11 @@ function PopoverContent({
         {...props}
       />
     </PopoverPrimitive.Portal>
-  );
+  )
 }
 
 function PopoverAnchor({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
-  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
+  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />
 }
 
 function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -45,11 +45,11 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex flex-col gap-0.5 text-sm", className)}
       {...props}
     />
-  );
+  )
 }
 
 function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
-  return <div data-slot="popover-title" className={cn("font-medium", className)} {...props} />;
+  return <div data-slot="popover-title" className={cn("font-medium", className)} {...props} />
 }
 
 function PopoverDescription({ className, ...props }: React.ComponentProps<"p">) {
@@ -59,7 +59,7 @@ function PopoverDescription({ className, ...props }: React.ComponentProps<"p">) 
       className={cn("text-muted-foreground", className)}
       {...props}
     />
-  );
+  )
 }
 
 export {
@@ -70,4 +70,4 @@ export {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-};
+}

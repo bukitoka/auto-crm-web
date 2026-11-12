@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { Check, RotateCcw } from "lucide-react";
-import { useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { toastResult } from "@/lib/toast-result";
-import { setTaskStatus } from "../actions";
-import type { TaskStatus } from "../types";
+import { Check, RotateCcw } from "lucide-react"
+import { useTransition } from "react"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { toastResult } from "@/lib/toast-result"
+import { setTaskStatus } from "../actions"
+import type { TaskStatus } from "../types"
 
 export function CompleteTaskButton({ taskId, status }: { taskId: string; status: TaskStatus }) {
-  const [isPending, startTransition] = useTransition();
-  const isDone = status === "done";
-  const label = isDone ? "Reopen task" : "Mark as done";
+  const [isPending, startTransition] = useTransition()
+  const isDone = status === "done"
+  const label = isDone ? "Reopen task" : "Mark as done"
 
   function toggle() {
     startTransition(async () => {
-      const result = await setTaskStatus(taskId, isDone ? "todo" : "done");
-      toastResult(result, isDone ? "Task reopened" : "Task completed");
-    });
+      const result = await setTaskStatus(taskId, isDone ? "todo" : "done")
+      toastResult(result, isDone ? "Task reopened" : "Task completed")
+    })
   }
 
   return (
@@ -36,5 +36,5 @@ export function CompleteTaskButton({ taskId, status }: { taskId: string; status:
       </TooltipTrigger>
       <TooltipContent>{label}</TooltipContent>
     </Tooltip>
-  );
+  )
 }

@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { setUpWorkspace } from "../actions";
-import { type SetupValues, setupSchema } from "../schemas";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTransition } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { setUpWorkspace } from "../actions"
+import { type SetupValues, setupSchema } from "../schemas"
 
 const fields = [
   { name: "full_name", label: "Full name", type: "text", autoComplete: "name" },
@@ -21,25 +21,25 @@ const fields = [
     type: "password",
     autoComplete: "new-password",
   },
-] as const;
+] as const
 
 /** The one-time first-run page; the API refuses it once a super admin exists. */
 export function SetupForm() {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
   const form = useForm<SetupValues>({
     resolver: zodResolver(setupSchema),
     defaultValues: { full_name: "", email: "", password: "", confirm_password: "" },
-  });
+  })
 
   function onSubmit(values: SetupValues) {
     startTransition(async () => {
-      toastResult(await setUpWorkspace(values));
-    });
+      toastResult(await setUpWorkspace(values))
+    })
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <div className="space-y-1 text-center">
+      <div className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">Set up your workspace</h1>
         <p className="text-sm text-muted-foreground">
           Create the super admin account. It oversees every admin and creates their accounts. You
@@ -75,5 +75,5 @@ export function SetupForm() {
         </Field>
       </FieldGroup>
     </form>
-  );
+  )
 }

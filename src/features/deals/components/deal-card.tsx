@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { useDraggable } from "@dnd-kit/core";
-import { CalendarDays, GripVertical } from "lucide-react";
-import Link from "next/link";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { formatCurrency, formatDate, personName } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import type { Deal } from "../types";
+import { useDraggable } from "@dnd-kit/core"
+import { CalendarDays, GripVertical } from "lucide-react"
+import Link from "next/link"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { formatCurrency, formatDate, personName } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import type { Deal } from "../types"
 
 type DealCardProps = {
-  deal: Deal;
+  deal: Deal
   /** Rendered inside the DragOverlay (the copy that follows the pointer). */
-  isOverlay?: boolean;
-  handle?: React.ReactNode;
+  isOverlay?: boolean
+  handle?: React.ReactNode
   /** No drag grip (the super admin cannot move deals). */
-  readOnly?: boolean;
-};
+  readOnly?: boolean
+}
 
 export function DealCard({ deal, isOverlay = false, handle, readOnly = false }: DealCardProps) {
-  const related = deal.contact ? personName(deal.contact) : deal.company?.name;
+  const related = deal.contact ? personName(deal.contact) : deal.company?.name
 
   return (
     <article
@@ -64,7 +64,7 @@ export function DealCard({ deal, isOverlay = false, handle, readOnly = false }: 
         ) : null}
       </div>
     </article>
-  );
+  )
 }
 
 /**
@@ -75,7 +75,7 @@ export function DraggableDealCard({ deal }: { deal: Deal }) {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, isDragging } = useDraggable({
     id: deal.id,
     data: { deal },
-  });
+  })
 
   const handle = (
     <button
@@ -87,7 +87,7 @@ export function DraggableDealCard({ deal }: { deal: Deal }) {
     >
       <GripVertical className="size-4" />
     </button>
-  );
+  )
 
   return (
     <div
@@ -98,5 +98,5 @@ export function DraggableDealCard({ deal }: { deal: Deal }) {
     >
       <DealCard deal={deal} handle={handle} />
     </div>
-  );
+  )
 }

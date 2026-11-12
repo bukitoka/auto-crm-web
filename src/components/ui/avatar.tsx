@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { cn } from "cn";
-import { Avatar as AvatarPrimitive } from "radix-ui";
-import type * as React from "react";
+import { cn } from "cn"
+import { Avatar as AvatarPrimitive } from "radix-ui"
+import type * as React from "react"
 
 function Avatar({
   className,
   size = "default",
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Root> & {
-  size?: "default" | "sm" | "lg";
+  size?: "default" | "sm" | "lg"
 }) {
   return (
     <AvatarPrimitive.Root
@@ -21,7 +21,7 @@ function Avatar({
       )}
       {...props}
     />
-  );
+  )
 }
 
 function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
@@ -31,7 +31,7 @@ function AvatarImage({ className, ...props }: React.ComponentProps<typeof Avatar
       className={cn("aspect-square size-full rounded-full object-cover", className)}
       {...props}
     />
-  );
+  )
 }
 
 function AvatarFallback({
@@ -47,7 +47,7 @@ function AvatarFallback({
       )}
       {...props}
     />
-  );
+  )
 }
 
 function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
@@ -63,7 +63,7 @@ function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
       )}
       {...props}
     />
-  );
+  )
 }
 
 function AvatarGroup({ className, ...props }: React.ComponentProps<"div">) {
@@ -76,7 +76,7 @@ function AvatarGroup({ className, ...props }: React.ComponentProps<"div">) {
       )}
       {...props}
     />
-  );
+  )
 }
 
 function AvatarGroupCount({ className, ...props }: React.ComponentProps<"div">) {
@@ -89,7 +89,7 @@ function AvatarGroupCount({ className, ...props }: React.ComponentProps<"div">) 
       )}
       {...props}
     />
-  );
+  )
 }
 
-export { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage };
+export { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage }

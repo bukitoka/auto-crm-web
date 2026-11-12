@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
-import { HOME_PATH } from "@/lib/constants";
+import { redirect } from "next/navigation"
+import { HOME_PATH } from "@/lib/constants"
 
 export default function Home() {
-  redirect(HOME_PATH);
+  redirect(HOME_PATH)
 }

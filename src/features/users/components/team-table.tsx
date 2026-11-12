@@ -1,8 +1,8 @@
-import { Pencil, Plus, UserCog } from "lucide-react";
-import { EmptyState } from "@/components/shared/empty-state";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Pencil, Plus, UserCog } from "lucide-react"
+import { EmptyState } from "@/components/shared/empty-state"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -10,12 +10,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDate } from "@/lib/format";
-import type { User } from "../types";
-import { AdminActiveSwitch } from "./admin-active-switch";
-import { AdminEditDialog } from "./admin-edit-dialog";
-import { AdminFormDialog } from "./admin-form-dialog";
+} from "@/components/ui/table"
+import { formatDate } from "@/lib/format"
+import type { User } from "../types"
+import { AdminActiveSwitch } from "./admin-active-switch"
+import { AdminEditDialog } from "./admin-edit-dialog"
+import { AdminFormDialog } from "./admin-form-dialog"
 
 export function TeamTable({ users }: { users: User[] }) {
   if (users.length === 0) {
@@ -35,7 +35,7 @@ export function TeamTable({ users }: { users: User[] }) {
           />
         }
       />
-    );
+    )
   }
 
   return (
@@ -90,5 +90,5 @@ export function TeamTable({ users }: { users: User[] }) {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

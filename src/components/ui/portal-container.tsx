@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { createContext, useContext } from "react";
+import { createContext, useContext } from "react"
 
 /**
  * Where floating UI (e.g. the Combobox popup) should be portaled.
@@ -8,10 +8,10 @@ import { createContext, useContext } from "react";
  * <body> would sit outside the dialog, where the dialog blocks clicks and
  * treats them as "click outside" (closing itself).
  */
-const PortalContainerContext = createContext<HTMLElement | null>(null);
+const PortalContainerContext = createContext<HTMLElement | null>(null)
 
-export const PortalContainerProvider = PortalContainerContext.Provider;
+export const PortalContainerProvider = PortalContainerContext.Provider
 
 export function usePortalContainer() {
-  return useContext(PortalContainerContext);
+  return useContext(PortalContainerContext)
 }

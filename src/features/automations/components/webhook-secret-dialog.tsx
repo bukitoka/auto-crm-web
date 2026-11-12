@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { Copy, KeyRound } from "lucide-react";
-import { toast } from "sonner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Copy, KeyRound } from "lucide-react"
+import { toast } from "sonner"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -11,19 +11,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 
 type WebhookSecretDialogProps = {
-  secret: string | null;
-  onClose: () => void;
-};
+  secret: string | null
+  onClose: () => void
+}
 
 /** Shown once right after a subscription is created. */
 export function WebhookSecretDialog({ secret, onClose }: WebhookSecretDialogProps) {
   async function copy() {
-    if (!secret) return;
-    await navigator.clipboard.writeText(secret);
-    toast.success("Secret copied");
+    if (!secret) return
+    await navigator.clipboard.writeText(secret)
+    toast.success("Secret copied")
   }
 
   return (
@@ -54,5 +54,5 @@ export function WebhookSecretDialog({ secret, onClose }: WebhookSecretDialogProp
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

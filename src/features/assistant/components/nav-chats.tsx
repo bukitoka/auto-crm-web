@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { History, MoreHorizontal, Plus } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { History, MoreHorizontal, Plus } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   SidebarGroup,
   SidebarGroupAction,
@@ -12,13 +12,13 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import type { Conversation } from "../types";
-import { ConversationMenu } from "./conversation-menu";
+} from "@/components/ui/sidebar"
+import type { Conversation } from "../types"
+import { ConversationMenu } from "./conversation-menu"
 
 /** Hidden when the sidebar is collapsed to icons. */
 export function NavChats({ conversations }: { conversations: Conversation[] }) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -72,5 +72,5 @@ export function NavChats({ conversations }: { conversations: Conversation[] }) {
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  );
+  )
 }

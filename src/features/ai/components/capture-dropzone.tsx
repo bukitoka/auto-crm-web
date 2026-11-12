@@ -1,45 +1,45 @@
-"use client";
+"use client"
 
-import { FileText, ImageIcon, Mail, UploadCloud, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { CAPTURE_ACCEPT } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { FileText, ImageIcon, Mail, UploadCloud, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { CAPTURE_ACCEPT } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 
 type CaptureDropzoneProps = {
-  file: File | null;
-  onFileChange: (file: File | null) => void;
-  disabled?: boolean;
-};
+  file: File | null
+  onFileChange: (file: File | null) => void
+  disabled?: boolean
+}
 
 function formatSize(bytes: number) {
   return bytes < 1024 * 1024
     ? `${Math.ceil(bytes / 1024)} KB`
-    : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    : `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
 
 function FileIcon({ file }: { file: File }) {
-  if (file.type.startsWith("image/")) return <ImageIcon />;
-  if (file.name.toLowerCase().endsWith(".eml")) return <Mail />;
-  return <FileText />;
+  if (file.type.startsWith("image/")) return <ImageIcon />
+  if (file.name.toLowerCase().endsWith(".eml")) return <Mail />
+  return <FileText />
 }
 
 /** Pasting (⌘/Ctrl+V) is handled by the surrounding dialog, not here. */
 export function CaptureDropzone({ file, onFileChange, disabled }: CaptureDropzoneProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [preview, setPreview] = useState<string | null>(null)
 
   // Object URL for image previews; revoked when the file changes.
   useEffect(() => {
     if (!file?.type.startsWith("image/")) {
-      setPreview(null);
-      return;
+      setPreview(null)
+      return
     }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    const url = URL.createObjectURL(file)
+    setPreview(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
 
   if (file) {
     return (
@@ -67,22 +67,22 @@ export function CaptureDropzone({ file, onFileChange, disabled }: CaptureDropzon
           <X />
         </Button>
       </div>
-    );
+    )
   }
 
   return (
     <section
       aria-label="Drop a file here"
       onDragOver={(event) => {
-        event.preventDefault();
-        setIsDragging(true);
+        event.preventDefault()
+        setIsDragging(true)
       }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={(event) => {
-        event.preventDefault();
-        setIsDragging(false);
-        const dropped = event.dataTransfer.files[0];
-        if (dropped) onFileChange(dropped);
+        event.preventDefault()
+        setIsDragging(false)
+        const dropped = event.dataTransfer.files[0]
+        if (dropped) onFileChange(dropped)
       }}
       className={cn(
         "flex flex-col items-center gap-2 rounded-md border border-dashed p-5 text-center transition-colors",
@@ -113,11 +113,11 @@ export function CaptureDropzone({ file, onFileChange, disabled }: CaptureDropzon
         tabIndex={-1}
         aria-label="Upload a file to capture"
         onChange={(event) => {
-          const chosen = event.target.files?.[0];
-          event.target.value = "";
-          if (chosen) onFileChange(chosen);
+          const chosen = event.target.files?.[0]
+          event.target.value = ""
+          if (chosen) onFileChange(chosen)
         }}
       />
     </section>
-  );
+  )
 }

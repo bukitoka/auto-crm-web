@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import type { ComponentProps } from "react";
-import { type Control, Controller, type FieldValues, type Path } from "react-hook-form";
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { DatePicker } from "./date-picker";
-import { type Option, OptionSelect } from "./option-select";
+import type { ComponentProps } from "react"
+import { type Control, Controller, type FieldValues, type Path } from "react-hook-form"
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { DatePicker } from "./date-picker"
+import { type Option, OptionSelect } from "./option-select"
 
 /**
  * Thin wrappers around shadcn `Field` + react-hook-form `Controller` so every
@@ -14,12 +14,12 @@ import { type Option, OptionSelect } from "./option-select";
  */
 
 type BaseFieldProps<T extends FieldValues> = {
-  control: Control<T>;
-  name: Path<T>;
-  label: string;
-  description?: string;
-  className?: string;
-};
+  control: Control<T>
+  name: Path<T>
+  label: string
+  description?: string
+  className?: string
+}
 
 export function TextField<T extends FieldValues>({
   control,
@@ -42,7 +42,7 @@ export function TextField<T extends FieldValues>({
         </Field>
       )}
     />
-  );
+  )
 }
 
 export function TextareaField<T extends FieldValues>({
@@ -66,7 +66,7 @@ export function TextareaField<T extends FieldValues>({
         </Field>
       )}
     />
-  );
+  )
 }
 
 export function SelectField<T extends FieldValues>({
@@ -79,9 +79,9 @@ export function SelectField<T extends FieldValues>({
   placeholder,
   allowNone,
 }: BaseFieldProps<T> & {
-  options: Option[];
-  placeholder?: string;
-  allowNone?: boolean;
+  options: Option[]
+  placeholder?: string
+  allowNone?: boolean
 }) {
   return (
     <Controller
@@ -104,7 +104,7 @@ export function SelectField<T extends FieldValues>({
         </Field>
       )}
     />
-  );
+  )
 }
 
 export function DateField<T extends FieldValues>({
@@ -127,5 +127,5 @@ export function DateField<T extends FieldValues>({
         </Field>
       )}
     />
-  );
+  )
 }

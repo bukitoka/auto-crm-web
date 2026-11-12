@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { ComboboxSelect, type Option } from "./combobox-select";
+import { ComboboxSelect, type Option } from "./combobox-select"
 
-export type { Option };
+export type { Option }
 
 type OptionSelectProps = {
-  id?: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Option[];
-  placeholder?: string;
+  id?: string
+  value: string
+  onChange: (value: string) => void
+  options: Option[]
+  placeholder?: string
   /** Optional relation: show an × button that clears the value to `""`. */
-  allowNone?: boolean;
-  invalid?: boolean;
-};
+  allowNone?: boolean
+  invalid?: boolean
+}
 
 /** `""` means nothing selected. */
 export function OptionSelect({
@@ -35,5 +35,5 @@ export function OptionSelect({
       clearable={allowNone}
       invalid={invalid}
     />
-  );
+  )
 }

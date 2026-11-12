@@ -1,45 +1,45 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { login } from "../actions";
-import { type LoginValues, loginSchema } from "../schemas";
+import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
+import { useTransition } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { login } from "../actions"
+import { type LoginValues, loginSchema } from "../schemas"
 
 type LoginFormProps = {
-  from?: string;
+  from?: string
   /** The session expired (redirected from /logout). */
-  expired?: boolean;
+  expired?: boolean
   /** The password was just reset. */
-  reset?: boolean;
-};
+  reset?: boolean
+}
 
 export function LoginForm({ from, expired, reset }: LoginFormProps) {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
-  });
+  })
 
   function onSubmit(values: LoginValues) {
     startTransition(async () => {
       // On success the action redirects; we only get a result back on failure.
-      const result = await login(values, from);
-      toastResult(result);
-    });
+      const result = await login(values, from)
+      toastResult(result)
+    })
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight">Log in</h1>
         <p className="text-sm text-muted-foreground">Log in to your workspace</p>
       </div>
       {expired ? (
@@ -107,5 +107,5 @@ export function LoginForm({ from, expired, reset }: LoginFormProps) {
         </Field>
       </FieldGroup>
     </form>
-  );
+  )
 }

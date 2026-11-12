@@ -1,28 +1,28 @@
-import { Plus } from "lucide-react";
-import type { Metadata } from "next";
-import { ExportButton } from "@/components/shared/export-button";
-import { PageHeader } from "@/components/shared/page-header";
-import { PaginationBar } from "@/components/shared/pagination-bar";
-import { ParamSelect } from "@/components/shared/param-select";
-import { SearchInput } from "@/components/shared/search-input";
-import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/features/auth/api";
-import { listCompanyOptions } from "@/features/companies/api";
-import { listContactOptions } from "@/features/contacts/api";
-import { dealsQueryFromParams, listDeals, listStages } from "@/features/deals/api";
-import { DealFormDialog } from "@/features/deals/components/deal-form-dialog";
-import { DealsCanvas } from "@/features/deals/components/deals-canvas";
-import { DealsTable } from "@/features/deals/components/deals-table";
-import { DealsViewToggle } from "@/features/deals/components/deals-view-toggle";
-import { PipelineEditor } from "@/features/deals/components/pipeline-editor";
-import { canManageWorkspace, canWriteCrm } from "@/features/users/roles";
-import { toOptions } from "@/lib/options";
+import { Plus } from "lucide-react"
+import type { Metadata } from "next"
+import { ExportButton } from "@/components/shared/export-button"
+import { PageHeader } from "@/components/shared/page-header"
+import { PaginationBar } from "@/components/shared/pagination-bar"
+import { ParamSelect } from "@/components/shared/param-select"
+import { SearchInput } from "@/components/shared/search-input"
+import { Button } from "@/components/ui/button"
+import { getCurrentUser } from "@/features/auth/api"
+import { listCompanyOptions } from "@/features/companies/api"
+import { listContactOptions } from "@/features/contacts/api"
+import { dealsQueryFromParams, listDeals, listStages } from "@/features/deals/api"
+import { DealFormDialog } from "@/features/deals/components/deal-form-dialog"
+import { DealsCanvas } from "@/features/deals/components/deals-canvas"
+import { DealsTable } from "@/features/deals/components/deals-table"
+import { DealsViewToggle } from "@/features/deals/components/deals-view-toggle"
+import { PipelineEditor } from "@/features/deals/components/pipeline-editor"
+import { canManageWorkspace, canWriteCrm } from "@/features/users/roles"
+import { toOptions } from "@/lib/options"
 
-export const metadata: Metadata = { title: "Deals" };
+export const metadata: Metadata = { title: "Deals" }
 
 export default async function DealsPage({ searchParams }: PageProps<"/deals">) {
-  const params = await searchParams;
-  const { view, filters } = dealsQueryFromParams(params);
+  const params = await searchParams
+  const { view, filters } = dealsQueryFromParams(params)
 
   const [user, deals, stages, companies, contacts] = await Promise.all([
     getCurrentUser(),
@@ -30,9 +30,9 @@ export default async function DealsPage({ searchParams }: PageProps<"/deals">) {
     listStages(),
     listCompanyOptions(),
     listContactOptions(),
-  ]);
-  const readOnly = !canWriteCrm(user);
-  const canEditPipeline = view === "board" && canManageWorkspace(user);
+  ])
+  const readOnly = !canWriteCrm(user)
+  const canEditPipeline = view === "board" && canManageWorkspace(user)
 
   return (
     <>
@@ -98,5 +98,5 @@ export default async function DealsPage({ searchParams }: PageProps<"/deals">) {
         </>
       )}
     </>
-  );
+  )
 }

@@ -1,27 +1,27 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { DateField, SelectField, TextField } from "@/components/shared/form-fields";
-import { FieldGroup } from "@/components/ui/field";
-import type { CompanyRef } from "@/features/companies/types";
-import type { ContactRef } from "@/features/contacts/types";
-import { personName } from "@/lib/format";
-import { toOptions } from "@/lib/options";
-import { type DealFormValues, dealFormSchema } from "../schemas";
-import type { PipelineStage } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { DateField, SelectField, TextField } from "@/components/shared/form-fields"
+import { FieldGroup } from "@/components/ui/field"
+import type { CompanyRef } from "@/features/companies/types"
+import type { ContactRef } from "@/features/contacts/types"
+import { personName } from "@/lib/format"
+import { toOptions } from "@/lib/options"
+import { type DealFormValues, dealFormSchema } from "../schemas"
+import type { PipelineStage } from "../types"
 
 export type DealFormOptions = {
-  stages: PipelineStage[];
-  companies: CompanyRef[];
-  contacts: ContactRef[];
-};
+  stages: PipelineStage[]
+  companies: CompanyRef[]
+  contacts: ContactRef[]
+}
 
 type DealFormProps = DealFormOptions & {
-  formId: string;
-  defaultValues: DealFormValues;
-  onSubmit: (values: DealFormValues) => void;
-};
+  formId: string
+  defaultValues: DealFormValues
+  onSubmit: (values: DealFormValues) => void
+}
 
 export function DealForm({
   formId,
@@ -34,7 +34,7 @@ export function DealForm({
   const { control, handleSubmit } = useForm<DealFormValues>({
     resolver: zodResolver(dealFormSchema),
     defaultValues,
-  });
+  })
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)}>
@@ -80,5 +80,5 @@ export function DealForm({
         />
       </FieldGroup>
     </form>
-  );
+  )
 }

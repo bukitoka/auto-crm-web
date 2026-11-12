@@ -1,9 +1,9 @@
-import type { WebhookSubscription } from "@/features/automations/types";
-import type { Company } from "@/features/companies/types";
-import type { Contact } from "@/features/contacts/types";
-import type { Deal, PipelineStage } from "@/features/deals/types";
-import type { Task } from "@/features/tasks/types";
-import type { Paginated } from "@/lib/types";
+import type { WebhookSubscription } from "@/features/automations/types"
+import type { Company } from "@/features/companies/types"
+import type { Contact } from "@/features/contacts/types"
+import type { Deal, PipelineStage } from "@/features/deals/types"
+import type { Task } from "@/features/tasks/types"
+import type { Paginated } from "@/lib/types"
 
 /**
  * Small builders for API objects. Pass only the fields a test cares about:
@@ -11,7 +11,7 @@ import type { Paginated } from "@/lib/types";
  *   makeContact({ status: "customer" })
  */
 
-const TIMESTAMP = "2026-01-15T10:00:00Z";
+const TIMESTAMP = "2026-01-15T10:00:00Z"
 
 export function makeCompany(overrides: Partial<Company> = {}): Company {
   return {
@@ -28,7 +28,7 @@ export function makeCompany(overrides: Partial<Company> = {}): Company {
     created_at: TIMESTAMP,
     updated_at: TIMESTAMP,
     ...overrides,
-  };
+  }
 }
 
 export function makeContact(overrides: Partial<Contact> = {}): Contact {
@@ -53,7 +53,7 @@ export function makeContact(overrides: Partial<Contact> = {}): Contact {
     created_at: TIMESTAMP,
     updated_at: TIMESTAMP,
     ...overrides,
-  };
+  }
 }
 
 export function makeStage(overrides: Partial<PipelineStage> = {}): PipelineStage {
@@ -66,7 +66,7 @@ export function makeStage(overrides: Partial<PipelineStage> = {}): PipelineStage
     is_lost: false,
     deal_count: 0,
     ...overrides,
-  };
+  }
 }
 
 export function makeDeal(overrides: Partial<Deal> = {}): Deal {
@@ -88,7 +88,7 @@ export function makeDeal(overrides: Partial<Deal> = {}): Deal {
     created_at: TIMESTAMP,
     updated_at: TIMESTAMP,
     ...overrides,
-  };
+  }
 }
 
 export function makeTask(overrides: Partial<Task> = {}): Task {
@@ -109,7 +109,7 @@ export function makeTask(overrides: Partial<Task> = {}): Task {
     created_at: TIMESTAMP,
     updated_at: TIMESTAMP,
     ...overrides,
-  };
+  }
 }
 
 export function makeWebhook(overrides: Partial<WebhookSubscription> = {}): WebhookSubscription {
@@ -122,9 +122,9 @@ export function makeWebhook(overrides: Partial<WebhookSubscription> = {}): Webho
     created_at: TIMESTAMP,
     updated_at: TIMESTAMP,
     ...overrides,
-  };
+  }
 }
 
 export function makePage<T>(items: T[], overrides: Partial<Paginated<T>> = {}): Paginated<T> {
-  return { items, total: items.length, page: 1, size: 20, ...overrides };
+  return { items, total: items.length, page: 1, size: 20, ...overrides }
 }

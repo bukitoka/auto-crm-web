@@ -1,38 +1,38 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { DatePicker } from "@/components/shared/date-picker";
-import { OptionSelect } from "@/components/shared/option-select";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { Textarea } from "@/components/ui/textarea";
-import { toastResult } from "@/lib/toast-result";
-import { createActivity } from "../actions";
-import { type ActivityFormValues, activityFormSchema, emptyActivityForm } from "../schemas";
-import { ACTIVITY_TYPES } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTransition } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { DatePicker } from "@/components/shared/date-picker"
+import { OptionSelect } from "@/components/shared/option-select"
+import { Button } from "@/components/ui/button"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { Textarea } from "@/components/ui/textarea"
+import { toastResult } from "@/lib/toast-result"
+import { createActivity } from "../actions"
+import { type ActivityFormValues, activityFormSchema, emptyActivityForm } from "../schemas"
+import { ACTIVITY_TYPES } from "../types"
 
 const typeOptions = ACTIVITY_TYPES.map((type) => ({
   value: type,
   label: type[0].toUpperCase() + type.slice(1),
-}));
+}))
 
 export function AddActivityForm({ contactId, dealId }: { contactId?: string; dealId?: string }) {
-  const [isPending, startTransition] = useTransition();
-  const defaults = emptyActivityForm({ contactId, dealId });
+  const [isPending, startTransition] = useTransition()
+  const defaults = emptyActivityForm({ contactId, dealId })
   const form = useForm<ActivityFormValues>({
     resolver: zodResolver(activityFormSchema),
     defaultValues: defaults,
-  });
+  })
 
   function onSubmit(values: ActivityFormValues) {
     startTransition(async () => {
-      const result = await createActivity(values);
-      if (toastResult(result, "Activity logged")) form.reset(defaults);
-    });
+      const result = await createActivity(values)
+      if (toastResult(result, "Activity logged")) form.reset(defaults)
+    })
   }
 
   return (
@@ -111,5 +111,5 @@ export function AddActivityForm({ contactId, dealId }: { contactId?: string; dea
         </div>
       </FieldGroup>
     </form>
-  );
+  )
 }

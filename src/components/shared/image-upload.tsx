@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import { Trash2, Upload } from "lucide-react";
-import { useRef, useTransition } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import type { ActionResult } from "@/lib/action-result";
-import { IMAGE_ACCEPT, MAX_IMAGE_BYTES } from "@/lib/constants";
-import { toastResult } from "@/lib/toast-result";
-import { cn } from "@/lib/utils";
-import { EntityAvatar } from "./entity-avatar";
+import { Trash2, Upload } from "lucide-react"
+import { useRef, useTransition } from "react"
+import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import type { ActionResult } from "@/lib/action-result"
+import { IMAGE_ACCEPT, MAX_IMAGE_BYTES } from "@/lib/constants"
+import { toastResult } from "@/lib/toast-result"
+import { cn } from "@/lib/utils"
+import { EntityAvatar } from "./entity-avatar"
 
 type ImageUploadProps = {
-  name: string;
-  src: string | null;
-  shape?: "circle" | "square";
+  name: string
+  src: string | null
+  shape?: "circle" | "square"
   /** What the picture is, for labels and toasts: "photo", "logo"… */
-  label?: string;
+  label?: string
   /** Server Action that uploads `formData.get("file")`. */
-  onUpload: (formData: FormData) => Promise<ActionResult<unknown>>;
-  onRemove: () => Promise<ActionResult<unknown>>;
+  onUpload: (formData: FormData) => Promise<ActionResult<unknown>>
+  onRemove: () => Promise<ActionResult<unknown>>
   /** Show the picture without the upload and remove buttons. */
-  readOnly?: boolean;
-  className?: string;
-};
+  readOnly?: boolean
+  className?: string
+}
 
 export function ImageUpload({
   name,
@@ -35,28 +35,28 @@ export function ImageUpload({
   readOnly = false,
   className,
 }: ImageUploadProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isPending, startTransition] = useTransition();
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [isPending, startTransition] = useTransition()
 
   function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = ""; // allow picking the same file again later
-    if (!file) return;
+    const file = event.target.files?.[0]
+    event.target.value = "" // allow picking the same file again later
+    if (!file) return
     if (file.size > MAX_IMAGE_BYTES) {
-      toast.error("Images can be at most 5 MB");
-      return;
+      toast.error("Images can be at most 5 MB")
+      return
     }
-    const formData = new FormData();
-    formData.set("file", file);
+    const formData = new FormData()
+    formData.set("file", file)
     startTransition(async () => {
-      toastResult(await onUpload(formData), `${capitalize(label)} updated`);
-    });
+      toastResult(await onUpload(formData), `${capitalize(label)} updated`)
+    })
   }
 
   function handleRemove() {
     startTransition(async () => {
-      toastResult(await onRemove(), `${capitalize(label)} removed`);
-    });
+      toastResult(await onRemove(), `${capitalize(label)} removed`)
+    })
   }
 
   if (readOnly) {
@@ -70,7 +70,7 @@ export function ImageUpload({
           fallbackClassName="text-lg"
         />
       </div>
-    );
+    )
   }
 
   return (
@@ -131,9 +131,9 @@ export function ImageUpload({
         onChange={handleFile}
       />
     </div>
-  );
+  )
 }
 
 function capitalize(text: string) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
+  return text.charAt(0).toUpperCase() + text.slice(1)
 }

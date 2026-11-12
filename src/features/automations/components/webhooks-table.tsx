@@ -1,8 +1,8 @@
-import { Pencil, Webhook } from "lucide-react";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { EmptyState } from "@/components/shared/empty-state";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Pencil, Webhook } from "lucide-react"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { EmptyState } from "@/components/shared/empty-state"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -10,17 +10,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDate } from "@/lib/format";
-import { deleteWebhook } from "../actions";
-import type { WebhookSubscription } from "../types";
-import { WebhookActiveSwitch } from "./webhook-active-switch";
-import { WebhookFormDialog } from "./webhook-form-dialog";
+} from "@/components/ui/table"
+import { formatDate } from "@/lib/format"
+import { deleteWebhook } from "../actions"
+import type { WebhookSubscription } from "../types"
+import { WebhookActiveSwitch } from "./webhook-active-switch"
+import { WebhookFormDialog } from "./webhook-form-dialog"
 
 type WebhooksTableProps = {
-  webhooks: WebhookSubscription[];
-  events: string[];
-};
+  webhooks: WebhookSubscription[]
+  events: string[]
+}
 
 export function WebhooksTable({ webhooks, events }: WebhooksTableProps) {
   if (webhooks.length === 0) {
@@ -30,7 +30,7 @@ export function WebhooksTable({ webhooks, events }: WebhooksTableProps) {
         title="No subscriptions yet"
         description="Create one to send CRM events to an n8n workflow."
       />
-    );
+    )
   }
 
   return (
@@ -87,5 +87,5 @@ export function WebhooksTable({ webhooks, events }: WebhooksTableProps) {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

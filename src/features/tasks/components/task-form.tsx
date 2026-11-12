@@ -1,33 +1,33 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { DateField, SelectField, TextareaField, TextField } from "@/components/shared/form-fields";
-import { FieldGroup } from "@/components/ui/field";
-import type { ContactRef } from "@/features/contacts/types";
-import type { DealRef } from "@/features/deals/types";
-import { personName } from "@/lib/format";
-import { enumOptions, toOptions } from "@/lib/options";
-import { type TaskFormValues, taskFormSchema } from "../schemas";
-import { TASK_PRIORITIES } from "../types";
-import { taskStatusOptions } from "./task-badges";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { DateField, SelectField, TextareaField, TextField } from "@/components/shared/form-fields"
+import { FieldGroup } from "@/components/ui/field"
+import type { ContactRef } from "@/features/contacts/types"
+import type { DealRef } from "@/features/deals/types"
+import { personName } from "@/lib/format"
+import { enumOptions, toOptions } from "@/lib/options"
+import { type TaskFormValues, taskFormSchema } from "../schemas"
+import { TASK_PRIORITIES } from "../types"
+import { taskStatusOptions } from "./task-badges"
 
 export type TaskFormOptions = {
-  contacts: ContactRef[];
-  deals: DealRef[];
-};
+  contacts: ContactRef[]
+  deals: DealRef[]
+}
 
 type TaskFormProps = TaskFormOptions & {
-  formId: string;
-  defaultValues: TaskFormValues;
-  onSubmit: (values: TaskFormValues) => void;
-};
+  formId: string
+  defaultValues: TaskFormValues
+  onSubmit: (values: TaskFormValues) => void
+}
 
 export function TaskForm({ formId, defaultValues, onSubmit, contacts, deals }: TaskFormProps) {
   const { control, handleSubmit } = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
     defaultValues,
-  });
+  })
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)}>
@@ -71,5 +71,5 @@ export function TaskForm({ formId, defaultValues, onSubmit, contacts, deals }: T
         />
       </FieldGroup>
     </form>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { Archive, ArchiveRestore, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { type ReactNode, useState, useTransition } from "react";
+import { Archive, ArchiveRestore, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { type ReactNode, useState, useTransition } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,8 +12,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -21,29 +21,29 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { deleteConversation, renameConversation, setConversationArchived } from "../actions";
-import type { Conversation } from "../types";
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { deleteConversation, renameConversation, setConversationArchived } from "../actions"
+import type { Conversation } from "../types"
 
 type ConversationMenuProps = {
-  conversation: Conversation;
+  conversation: Conversation
   /** The "⋯" button; defaults to a small ghost icon button. */
-  trigger?: ReactNode;
+  trigger?: ReactNode
   /** Called after archive/restore/delete (the chat leaves the current list). */
-  onRemoved?: () => void;
-  align?: "start" | "end";
-  side?: "right" | "bottom";
-};
+  onRemoved?: () => void
+  align?: "start" | "end"
+  side?: "right" | "bottom"
+}
 
 /** Archiving or deleting the chat that is currently open navigates back to /assistant. */
 export function ConversationMenu({
@@ -53,45 +53,45 @@ export function ConversationMenu({
   align = "end",
   side = "bottom",
 }: ConversationMenuProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [renaming, setRenaming] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [title, setTitle] = useState(conversation.title);
-  const [isPending, startTransition] = useTransition();
-  const isOpenChat = pathname === `/assistant/${conversation.id}`;
+  const router = useRouter()
+  const pathname = usePathname()
+  const [renaming, setRenaming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [title, setTitle] = useState(conversation.title)
+  const [isPending, startTransition] = useTransition()
+  const isOpenChat = pathname === `/assistant/${conversation.id}`
 
   function leaveIfOpen() {
-    onRemoved?.();
-    if (isOpenChat) router.push("/assistant");
+    onRemoved?.()
+    if (isOpenChat) router.push("/assistant")
   }
 
   function rename(event: React.FormEvent) {
-    event.preventDefault();
+    event.preventDefault()
     startTransition(async () => {
-      if (!toastResult(await renameConversation(conversation.id, title), "Chat renamed")) return;
-      setRenaming(false);
-      router.refresh();
-    });
+      if (!toastResult(await renameConversation(conversation.id, title), "Chat renamed")) return
+      setRenaming(false)
+      router.refresh()
+    })
   }
 
   function toggleArchived() {
-    const archive = !conversation.is_archived;
+    const archive = !conversation.is_archived
     startTransition(async () => {
-      const result = await setConversationArchived(conversation.id, archive);
-      if (!toastResult(result, archive ? "Chat archived" : "Chat restored")) return;
-      leaveIfOpen();
-      router.refresh();
-    });
+      const result = await setConversationArchived(conversation.id, archive)
+      if (!toastResult(result, archive ? "Chat archived" : "Chat restored")) return
+      leaveIfOpen()
+      router.refresh()
+    })
   }
 
   function remove() {
     startTransition(async () => {
-      if (!toastResult(await deleteConversation(conversation.id), "Chat deleted")) return;
-      setDeleting(false);
-      leaveIfOpen();
-      router.refresh();
-    });
+      if (!toastResult(await deleteConversation(conversation.id), "Chat deleted")) return
+      setDeleting(false)
+      leaveIfOpen()
+      router.refresh()
+    })
   }
 
   return (
@@ -107,8 +107,8 @@ export function ConversationMenu({
         <DropdownMenuContent align={align} side={side} className="w-44">
           <DropdownMenuItem
             onSelect={() => {
-              setTitle(conversation.title);
-              setRenaming(true);
+              setTitle(conversation.title)
+              setRenaming(true)
             }}
           >
             <Pencil />
@@ -172,8 +172,8 @@ export function ConversationMenu({
               variant="destructive"
               disabled={isPending}
               onClick={(event) => {
-                event.preventDefault();
-                remove();
+                event.preventDefault()
+                remove()
               }}
             >
               Delete
@@ -182,5 +182,5 @@ export function ConversationMenu({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }

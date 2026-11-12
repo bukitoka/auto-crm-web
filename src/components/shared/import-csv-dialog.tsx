@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { TriangleAlert, Upload } from "lucide-react";
-import { type ChangeEvent, type FormEvent, useId, useState, useTransition } from "react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { TriangleAlert, Upload } from "lucide-react"
+import { type ChangeEvent, type FormEvent, useId, useState, useTransition } from "react"
+import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -15,82 +15,82 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { ActionResult } from "@/lib/action-result";
-import { checkHeaders, type HeaderCheck, parseHeaderLine } from "@/lib/csv-header";
-import { toastResult } from "@/lib/toast-result";
-import type { ImportResult } from "@/lib/types";
-import { FormDialog } from "./form-dialog";
+} from "@/components/ui/table"
+import type { ActionResult } from "@/lib/action-result"
+import { checkHeaders, type HeaderCheck, parseHeaderLine } from "@/lib/csv-header"
+import { toastResult } from "@/lib/toast-result"
+import type { ImportResult } from "@/lib/types"
+import { FormDialog } from "./form-dialog"
 
 /** One CSV column the import reads. */
 export type ImportField = {
-  name: string;
-  required?: boolean;
+  name: string
+  required?: boolean
   /** What the cell may contain, e.g. "Text, up to 100 characters". */
-  format: string;
+  format: string
   /** A sample value, shown next to the format. */
-  example?: string;
-};
+  example?: string
+}
 
 type ImportCsvDialogProps = {
   /** Plural noun for the title and toasts: "contacts". */
-  entity: string;
-  fields: ImportField[];
+  entity: string
+  fields: ImportField[]
   /** What happens to rows that match existing records, and similar rules. */
-  rules?: string[];
+  rules?: string[]
   /** Server Action that imports `formData.get("file")`. */
-  action: (formData: FormData) => Promise<ActionResult<ImportResult>>;
-};
+  action: (formData: FormData) => Promise<ActionResult<ImportResult>>
+}
 
-const HEADER_PEEK_BYTES = 64 * 1024;
+const HEADER_PEEK_BYTES = 64 * 1024
 
 export function ImportCsvDialog({ entity, fields, rules = [], action }: ImportCsvDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [acknowledged, setAcknowledged] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [headerCheck, setHeaderCheck] = useState<HeaderCheck | null>(null);
-  const [result, setResult] = useState<ImportResult | null>(null);
-  const [isPending, startTransition] = useTransition();
-  const formId = useId();
+  const [open, setOpen] = useState(false)
+  const [acknowledged, setAcknowledged] = useState(false)
+  const [file, setFile] = useState<File | null>(null)
+  const [headerCheck, setHeaderCheck] = useState<HeaderCheck | null>(null)
+  const [result, setResult] = useState<ImportResult | null>(null)
+  const [isPending, startTransition] = useTransition()
+  const formId = useId()
 
-  const names = fields.map((field) => field.name);
-  const required = fields.filter((field) => field.required).map((field) => field.name);
-  const template = `data:text/csv;charset=utf-8,${encodeURIComponent(`${names.join(",")}\n`)}`;
+  const names = fields.map((field) => field.name)
+  const required = fields.filter((field) => field.required).map((field) => field.name)
+  const template = `data:text/csv;charset=utf-8,${encodeURIComponent(`${names.join(",")}\n`)}`
   const ready =
-    acknowledged && file !== null && headerCheck !== null && headerCheck.missing.length === 0;
+    acknowledged && file !== null && headerCheck !== null && headerCheck.missing.length === 0
 
   function handleOpenChange(next: boolean) {
-    setOpen(next);
+    setOpen(next)
     if (!next) {
-      setAcknowledged(false);
-      setFile(null);
-      setHeaderCheck(null);
-      setResult(null);
+      setAcknowledged(false)
+      setFile(null)
+      setHeaderCheck(null)
+      setResult(null)
     }
   }
 
   async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const chosen = event.target.files?.[0] ?? null;
-    setFile(chosen);
-    setResult(null);
+    const chosen = event.target.files?.[0] ?? null
+    setFile(chosen)
+    setResult(null)
     if (!chosen) {
-      setHeaderCheck(null);
-      return;
+      setHeaderCheck(null)
+      return
     }
-    const head = await chosen.slice(0, HEADER_PEEK_BYTES).text();
-    setHeaderCheck(checkHeaders(parseHeaderLine(head), names, required));
+    const head = await chosen.slice(0, HEADER_PEEK_BYTES).text()
+    setHeaderCheck(checkHeaders(parseHeaderLine(head), names, required))
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!ready) return;
-    const formData = new FormData(event.currentTarget);
+    event.preventDefault()
+    if (!ready) return
+    const formData = new FormData(event.currentTarget)
     startTransition(async () => {
-      const response = await action(formData);
-      if (!toastResult(response)) return;
-      setResult(response.data);
-      toast.success(`Imported ${response.data.created} ${entity}`);
-    });
+      const response = await action(formData)
+      if (!toastResult(response)) return
+      setResult(response.data)
+      toast.success(`Imported ${response.data.created} ${entity}`)
+    })
   }
 
   return (
@@ -214,7 +214,7 @@ export function ImportCsvDialog({ entity, fields, rules = [], action }: ImportCs
         </div>
       ) : null}
     </FormDialog>
-  );
+  )
 }
 
 function HeaderReport({ check }: { check: HeaderCheck }) {
@@ -230,7 +230,7 @@ function HeaderReport({ check }: { check: HeaderCheck }) {
           {check.missing.join(", ")}. Fix the file and choose it again.
         </p>
       </div>
-    );
+    )
   }
   return (
     <p className="text-sm text-muted-foreground">
@@ -238,5 +238,5 @@ function HeaderReport({ check }: { check: HeaderCheck }) {
       {check.recognized.length === 1 ? "" : "s"} will be read
       {check.ignored.length > 0 ? `, ${check.ignored.join(", ")} will be ignored` : ""}.
     </p>
-  );
+  )
 }

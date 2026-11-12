@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { formatDate, isOverdue, personName } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import type { Task } from "../types";
-import { CompleteTaskButton } from "./complete-task-button";
-import { TaskPriorityBadge } from "./task-badges";
+import Link from "next/link"
+import { formatDate, isOverdue, personName } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import type { Task } from "../types"
+import { CompleteTaskButton } from "./complete-task-button"
+import { TaskPriorityBadge } from "./task-badges"
 
 export function TaskList({
   tasks,
@@ -11,21 +11,21 @@ export function TaskList({
   showAssignee = false,
   readOnly = false,
 }: {
-  tasks: Task[];
-  emptyText?: string;
+  tasks: Task[]
+  emptyText?: string
   /** Show who the task is assigned to (team-wide lists). */
-  showAssignee?: boolean;
+  showAssignee?: boolean
   /** No complete button (the super admin cannot change tasks). */
-  readOnly?: boolean;
+  readOnly?: boolean
 }) {
   if (tasks.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">{emptyText}</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">{emptyText}</p>
   }
 
   return (
     <ul className="divide-y">
       {tasks.map((task) => {
-        const overdue = task.status !== "done" && isOverdue(task.due_date);
+        const overdue = task.status !== "done" && isOverdue(task.due_date)
         return (
           <li key={task.id} className="flex items-center gap-3 py-2.5">
             {readOnly ? null : <CompleteTaskButton taskId={task.id} status={task.status} />}
@@ -63,8 +63,8 @@ export function TaskList({
             </div>
             <TaskPriorityBadge priority={task.priority} />
           </li>
-        );
+        )
       })}
     </ul>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const loginSchema = z.object({
   email: z.email("Enter a valid email"),
   password: z.string().min(1, "Password is required"),
-});
-export type LoginValues = z.infer<typeof loginSchema>;
+})
+export type LoginValues = z.infer<typeof loginSchema>
 
 export const setupSchema = z
   .object({
@@ -16,13 +16,13 @@ export const setupSchema = z
   .refine((values) => values.password === values.confirm_password, {
     message: "Passwords do not match",
     path: ["confirm_password"],
-  });
-export type SetupValues = z.infer<typeof setupSchema>;
+  })
+export type SetupValues = z.infer<typeof setupSchema>
 
 export const forgotPasswordSchema = z.object({
   email: z.email("Enter a valid email"),
-});
-export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
+})
+export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>
 
 export const resetPasswordSchema = z
   .object({
@@ -32,5 +32,5 @@ export const resetPasswordSchema = z
   .refine((values) => values.password === values.confirm_password, {
     message: "Passwords do not match",
     path: ["confirm_password"],
-  });
-export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
+  })
+export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>

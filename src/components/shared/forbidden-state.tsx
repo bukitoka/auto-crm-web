@@ -1,8 +1,8 @@
-import { ShieldAlert } from "lucide-react";
-import Link from "next/link";
-import { EmptyState } from "@/components/shared/empty-state";
-import { Button } from "@/components/ui/button";
-import { HOME_PATH } from "@/lib/constants";
+import { ShieldAlert } from "lucide-react"
+import Link from "next/link"
+import { EmptyState } from "@/components/shared/empty-state"
+import { Button } from "@/components/ui/button"
+import { HOME_PATH } from "@/lib/constants"
 
 /** Shown in place of a page the current role cannot open. */
 export function ForbiddenState({ description }: { description: string }) {
@@ -17,5 +17,5 @@ export function ForbiddenState({ description }: { description: string }) {
         </Button>
       }
     />
-  );
+  )
 }

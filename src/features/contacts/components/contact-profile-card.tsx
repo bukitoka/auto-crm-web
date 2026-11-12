@@ -1,12 +1,12 @@
-import { Building2, Mail, Phone, Tag, UserRound } from "lucide-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import { ImageUpload } from "@/components/shared/image-upload";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate, personName } from "@/lib/format";
-import { removeContactAvatar, uploadContactAvatar } from "../actions";
-import type { Contact } from "../types";
+import { Building2, Mail, Phone, Tag, UserRound } from "lucide-react"
+import Link from "next/link"
+import type { ReactNode } from "react"
+import { ImageUpload } from "@/components/shared/image-upload"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { formatDate, personName } from "@/lib/format"
+import { removeContactAvatar, uploadContactAvatar } from "../actions"
+import type { Contact } from "../types"
 
 function Row({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   return (
@@ -14,15 +14,15 @@ function Row({ icon, children }: { icon: ReactNode; children: ReactNode }) {
       {icon}
       <div className="min-w-0 truncate">{children}</div>
     </div>
-  );
+  )
 }
 
 export function ContactProfileCard({
   contact,
   readOnly = false,
 }: {
-  contact: Contact;
-  readOnly?: boolean;
+  contact: Contact
+  readOnly?: boolean
 }) {
   return (
     <Card>
@@ -78,5 +78,5 @@ export function ContactProfileCard({
         </p>
       </CardContent>
     </Card>
-  );
+  )
 }

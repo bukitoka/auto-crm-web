@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import { ImageUpload } from "@/components/shared/image-upload";
-import { PageHeader } from "@/components/shared/page-header";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCurrentUser } from "@/features/auth/api";
-import { ThemeSettings } from "@/features/settings/components/theme-settings";
-import { removeMyAvatar, uploadMyAvatar } from "@/features/users/actions";
-import { isSuperAdmin, roleLabel } from "@/features/users/roles";
-import { formatDate } from "@/lib/format";
+import type { Metadata } from "next"
+import type { ReactNode } from "react"
+import { ImageUpload } from "@/components/shared/image-upload"
+import { PageHeader } from "@/components/shared/page-header"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getCurrentUser } from "@/features/auth/api"
+import { ThemeSettings } from "@/features/settings/components/theme-settings"
+import { removeMyAvatar, uploadMyAvatar } from "@/features/users/actions"
+import { isSuperAdmin, roleLabel } from "@/features/users/roles"
+import { formatDate } from "@/lib/format"
 
-export const metadata: Metadata = { title: "Settings" };
+export const metadata: Metadata = { title: "Settings" }
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -18,11 +18,11 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
       <span className="text-muted-foreground">{label}</span>
       <span className="font-medium">{children}</span>
     </div>
-  );
+  )
 }
 
 export default async function SettingsPage() {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser()
 
   return (
     <>
@@ -74,5 +74,5 @@ export default async function SettingsPage() {
         </Card>
       </div>
     </>
-  );
+  )
 }

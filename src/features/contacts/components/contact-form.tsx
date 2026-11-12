@@ -1,20 +1,20 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { SelectField, TextField } from "@/components/shared/form-fields";
-import { FieldGroup } from "@/components/ui/field";
-import type { CompanyRef } from "@/features/companies/types";
-import { enumOptions, toOptions } from "@/lib/options";
-import { type ContactFormValues, contactFormSchema } from "../schemas";
-import { CONTACT_SOURCES, CONTACT_STATUSES } from "../types";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { SelectField, TextField } from "@/components/shared/form-fields"
+import { FieldGroup } from "@/components/ui/field"
+import type { CompanyRef } from "@/features/companies/types"
+import { enumOptions, toOptions } from "@/lib/options"
+import { type ContactFormValues, contactFormSchema } from "../schemas"
+import { CONTACT_SOURCES, CONTACT_STATUSES } from "../types"
 
 type ContactFormProps = {
-  formId: string;
-  defaultValues: ContactFormValues;
-  onSubmit: (values: ContactFormValues) => void;
-  companies: CompanyRef[];
-};
+  formId: string
+  defaultValues: ContactFormValues
+  onSubmit: (values: ContactFormValues) => void
+  companies: CompanyRef[]
+}
 
 export function ContactForm({ formId, defaultValues, onSubmit, companies }: ContactFormProps) {
   // Keep sources set elsewhere (e.g. by n8n integrations) selectable.
@@ -23,11 +23,11 @@ export function ContactForm({ formId, defaultValues, onSubmit, companies }: Cont
       CONTACT_SOURCES.includes(defaultValues.source as (typeof CONTACT_SOURCES)[number])
       ? CONTACT_SOURCES
       : [...CONTACT_SOURCES, defaultValues.source],
-  );
+  )
   const { control, handleSubmit } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues,
-  });
+  })
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)}>
@@ -60,5 +60,5 @@ export function ContactForm({ formId, defaultValues, onSubmit, companies }: Cont
         />
       </FieldGroup>
     </form>
-  );
+  )
 }

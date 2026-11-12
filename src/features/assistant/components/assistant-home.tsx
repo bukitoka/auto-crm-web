@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   AlarmClock,
@@ -11,21 +11,21 @@ import {
   Sparkles,
   TrendingUp,
   UserRoundPlus,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { greeting } from "../context";
-import { ChatThread } from "./chat-thread";
+} from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { cn } from "@/lib/utils"
+import { greeting } from "../context"
+import { ChatThread } from "./chat-thread"
 
 type Idea = {
-  title: string;
-  prompt: string;
-  icon: LucideIcon;
+  title: string
+  prompt: string
+  icon: LucideIcon
   /** "send" asks right away; "fill" puts the text in the box to finish (e.g. a name). */
-  mode: "send" | "fill";
-  tone: string;
-};
+  mode: "send" | "fill"
+  tone: string
+}
 
 const IDEAS: Idea[] = [
   {
@@ -71,24 +71,24 @@ const IDEAS: Idea[] = [
     mode: "send",
     tone: "bg-destructive/10 text-destructive",
   },
-];
+]
 
 export type TodaySnapshot = {
-  overdueTasks: number;
-  openPipeline: string;
-  newLeads: number;
-};
+  overdueTasks: number
+  openPipeline: string
+  newLeads: number
+}
 
 type AssistantHomeProps = {
-  firstName: string;
-  snapshot: TodaySnapshot | null;
-};
+  firstName: string
+  snapshot: TodaySnapshot | null
+}
 
 /** Sending the first message creates a conversation and navigates to /assistant/<id>. */
 export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
-  const router = useRouter();
+  const router = useRouter()
   // The greeting depends on the viewer's clock, so it is computed in the browser.
-  const [hello] = useState(() => greeting());
+  const [hello] = useState(() => greeting())
 
   return (
     <ChatThread
@@ -161,7 +161,7 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
         </div>
       )}
     />
-  );
+  )
 }
 
 function SnapshotChip({
@@ -170,10 +170,10 @@ function SnapshotChip({
   alert = false,
   onClick,
 }: {
-  icon: LucideIcon;
-  label: string;
-  alert?: boolean;
-  onClick: () => void;
+  icon: LucideIcon
+  label: string
+  alert?: boolean
+  onClick: () => void
 }) {
   return (
     <button
@@ -187,5 +187,5 @@ function SnapshotChip({
       <Icon className="size-3.5" />
       {label}
     </button>
-  );
+  )
 }

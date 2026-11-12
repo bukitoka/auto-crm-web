@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { Sparkles } from "lucide-react";
-import { useTransition } from "react";
-import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react"
+import { useTransition } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -10,20 +10,20 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Spinner } from "@/components/ui/spinner";
-import { formatRelative } from "@/lib/format";
-import { toastResult } from "@/lib/toast-result";
-import { scoreContact } from "../actions";
+} from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import { Spinner } from "@/components/ui/spinner"
+import { formatRelative } from "@/lib/format"
+import { toastResult } from "@/lib/toast-result"
+import { scoreContact } from "../actions"
 
 type AiScoreCardProps = {
-  contactId: string;
-  score: number | null;
-  reasoning: string | null;
-  scoredAt: string | null;
-  readOnly?: boolean;
-};
+  contactId: string
+  score: number | null
+  reasoning: string | null
+  scoredAt: string | null
+  readOnly?: boolean
+}
 
 export function AiScoreCard({
   contactId,
@@ -32,13 +32,13 @@ export function AiScoreCard({
   scoredAt,
   readOnly = false,
 }: AiScoreCardProps) {
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
 
   function handleScore() {
     startTransition(async () => {
-      const result = await scoreContact(contactId);
-      toastResult(result, "Lead scored");
-    });
+      const result = await scoreContact(contactId)
+      toastResult(result, "Lead scored")
+    })
   }
 
   return (
@@ -85,5 +85,5 @@ export function AiScoreCard({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
-import { getChangelog } from "./changelog";
-import { fallbackChangelogs } from "./data";
+import { describe, expect, it, vi } from "vitest"
+import { getChangelog } from "./changelog"
+import { fallbackChangelogs } from "./data"
 
 function jsonResponse(body: unknown) {
-  return new Response(JSON.stringify(body), { status: 200 });
+  return new Response(JSON.stringify(body), { status: 200 })
 }
 
 describe("getChangelog", () => {
@@ -11,7 +11,7 @@ describe("getChangelog", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string | URL | Request) => {
-        const isWeb = String(input).includes("auto-crm-web");
+        const isWeb = String(input).includes("auto-crm-web")
         return jsonResponse([
           {
             commit: {
@@ -36,39 +36,39 @@ describe("getChangelog", () => {
           {
             commit: { message: "Merge pull request #1", author: { date: "2026-10-17T10:00:00Z" } },
           },
-        ]);
+        ])
       }),
-    );
+    )
 
-    const changelog = await getChangelog();
+    const changelog = await getChangelog()
 
     expect(changelog.web).toEqual([
       { date: "2026-10-20", changes: ["UI: Restyle toasts", "Add a report"] },
-    ]);
+    ])
     expect(changelog.api).toEqual([
       { date: "2026-10-20", changes: ["Auth: Stop lockouts", "Cache the changelog"] },
-    ]);
-  });
+    ])
+  })
 
   it("falls back to the curated notes when GitHub cannot be reached", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => {
-        throw new Error("offline");
+        throw new Error("offline")
       }),
-    );
+    )
 
-    const changelog = await getChangelog();
+    const changelog = await getChangelog()
 
-    expect(changelog).toEqual(fallbackChangelogs);
-  });
+    expect(changelog).toEqual(fallbackChangelogs)
+  })
 
   it("falls back per repo when one request fails", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string | URL | Request) => {
         if (String(input).includes("auto-crm-api")) {
-          return new Response("rate limited", { status: 403 });
+          return new Response("rate limited", { status: 403 })
         }
         return jsonResponse([
           {
@@ -77,13 +77,13 @@ describe("getChangelog", () => {
               author: { date: "2026-10-20T10:00:00Z" },
             },
           },
-        ]);
+        ])
       }),
-    );
+    )
 
-    const changelog = await getChangelog();
+    const changelog = await getChangelog()
 
-    expect(changelog.web[0].changes).toEqual(["Keep the toast rail close to the edge"]);
-    expect(changelog.api).toEqual(fallbackChangelogs.api);
-  });
-});
+    expect(changelog.web[0].changes).toEqual(["Keep the toast rail close to the edge"])
+    expect(changelog.api).toEqual(fallbackChangelogs.api)
+  })
+})

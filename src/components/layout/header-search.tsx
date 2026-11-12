@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { Handshake, Search } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { Button } from "@/components/ui/button";
+import { Handshake, Search } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState, useTransition } from "react"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandDialog,
@@ -13,12 +13,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { Spinner } from "@/components/ui/spinner";
-import { quickSearch } from "@/features/search/actions";
-import type { QuickSearchGroup, QuickSearchItem } from "@/features/search/types";
+} from "@/components/ui/command"
+import { Spinner } from "@/components/ui/spinner"
+import { quickSearch } from "@/features/search/actions"
+import type { QuickSearchGroup, QuickSearchItem } from "@/features/search/types"
 
-const DEBOUNCE_MS = 200;
+const DEBOUNCE_MS = 200
 
 function ItemIcon({ item }: { item: QuickSearchItem }) {
   if (item.kind === "contact" || item.kind === "company") {
@@ -30,66 +30,66 @@ function ItemIcon({ item }: { item: QuickSearchItem }) {
         className="size-7"
         fallbackClassName="text-[0.6875rem]"
       />
-    );
+    )
   }
   return (
     <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground [&>svg]:size-3.5">
       {item.kind === "deal" ? <Handshake /> : <Search />}
     </span>
-  );
+  )
 }
 
 /** The trigger sits in the header; the search itself is a command dialog. ⌘K / Ctrl+K opens it. */
 export function HeaderSearch() {
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [groups, setGroups] = useState<QuickSearchGroup[]>([]);
-  const [isPending, startTransition] = useTransition();
-  const latestRequest = useRef(0);
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState("")
+  const [groups, setGroups] = useState<QuickSearchGroup[]>([])
+  const [isPending, startTransition] = useTransition()
+  const latestRequest = useRef(0)
 
   // Fetch results shortly after the user stops typing; ignore answers to older queries.
   useEffect(() => {
-    const search = query.trim();
+    const search = query.trim()
     if (search.length < 2) {
-      setGroups([]);
-      return;
+      setGroups([])
+      return
     }
-    const request = ++latestRequest.current;
+    const request = ++latestRequest.current
     const timer = setTimeout(() => {
       startTransition(async () => {
-        const result = await quickSearch(search);
-        if (request === latestRequest.current) setGroups(result.ok ? result.data : []);
-      });
-    }, DEBOUNCE_MS);
-    return () => clearTimeout(timer);
-  }, [query]);
+        const result = await quickSearch(search)
+        if (request === latestRequest.current) setGroups(result.ok ? result.data : [])
+      })
+    }, DEBOUNCE_MS)
+    return () => clearTimeout(timer)
+  }, [query])
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        setOpen((current) => !current);
+        event.preventDefault()
+        setOpen((current) => !current)
       }
     }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [])
 
   function handleOpenChange(next: boolean) {
-    setOpen(next);
+    setOpen(next)
     if (!next) {
-      setQuery("");
-      setGroups([]);
+      setQuery("")
+      setGroups([])
     }
   }
 
   function openItem(item: QuickSearchItem) {
-    router.push(item.href);
-    handleOpenChange(false);
+    router.push(item.href)
+    handleOpenChange(false)
   }
 
-  const hasQuery = query.trim().length >= 2;
+  const hasQuery = query.trim().length >= 2
 
   return (
     <>
@@ -154,5 +154,5 @@ export function HeaderSearch() {
         </Command>
       </CommandDialog>
     </>
-  );
+  )
 }

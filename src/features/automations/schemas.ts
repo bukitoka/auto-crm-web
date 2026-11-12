@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const webhookFormSchema = z.object({
   event: z.string().min(1, "Pick an event"),
@@ -8,11 +8,11 @@ export const webhookFormSchema = z.object({
     error: "Enter a full URL, e.g. http://localhost:5678/webhook/…",
   }),
   is_active: z.boolean(),
-});
-export type WebhookFormValues = z.infer<typeof webhookFormSchema>;
+})
+export type WebhookFormValues = z.infer<typeof webhookFormSchema>
 
 export const emptyWebhookForm: WebhookFormValues = {
   event: "",
   target_url: "",
   is_active: true,
-};
+}

@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { SelectField, TextareaField, TextField } from "@/components/shared/form-fields";
-import { FieldGroup } from "@/components/ui/field";
-import { COMPANY_SIZES, type CompanyFormValues, companyFormSchema } from "../schemas";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { SelectField, TextareaField, TextField } from "@/components/shared/form-fields"
+import { FieldGroup } from "@/components/ui/field"
+import { COMPANY_SIZES, type CompanyFormValues, companyFormSchema } from "../schemas"
 
 type CompanyFormProps = {
-  formId: string;
-  defaultValues: CompanyFormValues;
-  onSubmit: (values: CompanyFormValues) => void;
-};
+  formId: string
+  defaultValues: CompanyFormValues
+  onSubmit: (values: CompanyFormValues) => void
+}
 
-const sizeOptions = COMPANY_SIZES.map((size) => ({ value: size, label: `${size} employees` }));
+const sizeOptions = COMPANY_SIZES.map((size) => ({ value: size, label: `${size} employees` }))
 
 export function CompanyForm({ formId, defaultValues, onSubmit }: CompanyFormProps) {
   const { control, handleSubmit } = useForm<CompanyFormValues>({
     resolver: zodResolver(companyFormSchema),
     defaultValues,
-  });
+  })
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)}>
@@ -43,5 +43,5 @@ export function CompanyForm({ formId, defaultValues, onSubmit }: CompanyFormProp
         />
       </FieldGroup>
     </form>
-  );
+  )
 }

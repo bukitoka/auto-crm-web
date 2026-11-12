@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   closestCenter,
@@ -10,10 +10,10 @@ import {
   useDroppable,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import { GripVertical, Settings2, Trash2 } from "lucide-react";
-import { type FocusEvent, type MouseEvent, useOptimistic, useState, useTransition } from "react";
-import { ComboboxSelect } from "@/components/shared/combobox-select";
+} from "@dnd-kit/core"
+import { GripVertical, Settings2, Trash2 } from "lucide-react"
+import { type FocusEvent, type MouseEvent, useOptimistic, useState, useTransition } from "react"
+import { ComboboxSelect } from "@/components/shared/combobox-select"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,9 +24,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetContent,
@@ -35,43 +35,43 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { cn } from "@/lib/utils";
-import { reorderById } from "../board";
-import type { StageFormValues } from "../schemas";
-import { deleteStage, reorderStages, updateStage } from "../stage-actions";
-import type { PipelineStage } from "../types";
-import { AddStageForm } from "./add-stage-form";
+} from "@/components/ui/sheet"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { cn } from "@/lib/utils"
+import { reorderById } from "../board"
+import type { StageFormValues } from "../schemas"
+import { deleteStage, reorderStages, updateStage } from "../stage-actions"
+import type { PipelineStage } from "../types"
+import { AddStageForm } from "./add-stage-form"
 
 const KIND_OPTIONS = [
   { value: "open", label: "Open" },
   { value: "won", label: "Won" },
   { value: "lost", label: "Lost" },
-];
+]
 
 function stageKind(stage: PipelineStage) {
-  return stage.is_won ? "won" : stage.is_lost ? "lost" : "open";
+  return stage.is_won ? "won" : stage.is_lost ? "lost" : "open"
 }
 
 /** Every change saves immediately; there is no separate save step. */
 export function PipelineEditor({ stages }: { stages: PipelineStage[] }) {
-  const [optimisticStages, setOptimisticStages] = useOptimistic(stages);
-  const [, startTransition] = useTransition();
+  const [optimisticStages, setOptimisticStages] = useOptimistic(stages)
+  const [, startTransition] = useTransition()
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor),
-  );
+  )
 
   function handleDragEnd({ active, over }: DragEndEvent) {
-    if (!over) return;
-    const next = reorderById(optimisticStages, String(active.id), String(over.id));
-    if (next === optimisticStages) return;
+    if (!over) return
+    const next = reorderById(optimisticStages, String(active.id), String(over.id))
+    if (next === optimisticStages) return
     startTransition(async () => {
-      setOptimisticStages(next);
-      toastResult(await reorderStages(next.map((stage) => stage.id)));
-    });
+      setOptimisticStages(next)
+      toastResult(await reorderStages(next.map((stage) => stage.id)))
+    })
   }
 
   return (
@@ -106,49 +106,49 @@ export function PipelineEditor({ stages }: { stages: PipelineStage[] }) {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }
 
 type StageRowProps = {
-  stage: PipelineStage;
-  stages: PipelineStage[];
-};
+  stage: PipelineStage
+  stages: PipelineStage[]
+}
 
 function StageRow({ stage, stages }: StageRowProps) {
-  const drag = useDraggable({ id: stage.id });
-  const { setNodeRef: setDropRef, isOver } = useDroppable({ id: stage.id });
-  const [isPending, startTransition] = useTransition();
-  const y = drag.transform?.y ?? 0;
+  const drag = useDraggable({ id: stage.id })
+  const { setNodeRef: setDropRef, isOver } = useDroppable({ id: stage.id })
+  const [isPending, startTransition] = useTransition()
+  const y = drag.transform?.y ?? 0
 
   function save(values: Partial<StageFormValues>, input?: HTMLInputElement, reset?: string) {
     startTransition(async () => {
-      const result = await updateStage(stage.id, values);
-      if (!toastResult(result) && input && reset !== undefined) input.value = reset;
-    });
+      const result = await updateStage(stage.id, values)
+      if (!toastResult(result) && input && reset !== undefined) input.value = reset
+    })
   }
 
   function saveName(event: FocusEvent<HTMLInputElement>) {
-    const input = event.currentTarget;
-    const name = input.value.trim();
-    if (!name) input.value = stage.name;
-    else if (name !== stage.name) save({ name }, input, stage.name);
+    const input = event.currentTarget
+    const name = input.value.trim()
+    if (!name) input.value = stage.name
+    else if (name !== stage.name) save({ name }, input, stage.name)
   }
 
   function saveProbability(event: FocusEvent<HTMLInputElement>) {
-    const input = event.currentTarget;
-    const probability = Number(input.value);
+    const input = event.currentTarget
+    const probability = Number(input.value)
     if (input.value === "" || probability === stage.probability) {
-      input.value = String(stage.probability);
+      input.value = String(stage.probability)
     } else {
-      save({ probability }, input, String(stage.probability));
+      save({ probability }, input, String(stage.probability))
     }
   }
 
   return (
     <li
       ref={(node) => {
-        drag.setNodeRef(node);
-        setDropRef(node);
+        drag.setNodeRef(node)
+        setDropRef(node)
       }}
       style={y ? { transform: `translate3d(0, ${y}px, 0)` } : undefined}
       className={cn(
@@ -211,24 +211,24 @@ function StageRow({ stage, stages }: StageRowProps) {
       </div>
       <DeleteStageButton stage={stage} stages={stages} />
     </li>
-  );
+  )
 }
 
 function DeleteStageButton({ stage, stages }: StageRowProps) {
-  const [open, setOpen] = useState(false);
-  const [moveTo, setMoveTo] = useState("");
-  const [isPending, startTransition] = useTransition();
-  const hasDeals = stage.deal_count > 0;
+  const [open, setOpen] = useState(false)
+  const [moveTo, setMoveTo] = useState("")
+  const [isPending, startTransition] = useTransition()
+  const hasDeals = stage.deal_count > 0
   const targets = stages
     .filter((s) => s.id !== stage.id)
-    .map((s) => ({ value: s.id, label: s.name }));
+    .map((s) => ({ value: s.id, label: s.name }))
 
   function handleConfirm(event: MouseEvent) {
-    event.preventDefault(); // keep the dialog open while the action runs
+    event.preventDefault() // keep the dialog open while the action runs
     startTransition(async () => {
-      const result = await deleteStage(stage.id, hasDeals ? moveTo : undefined);
-      if (toastResult(result, `Deleted “${stage.name}”`)) setOpen(false);
-    });
+      const result = await deleteStage(stage.id, hasDeals ? moveTo : undefined)
+      if (toastResult(result, `Deleted “${stage.name}”`)) setOpen(false)
+    })
   }
 
   return (
@@ -269,5 +269,5 @@ function DeleteStageButton({ stage, stages }: StageRowProps) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

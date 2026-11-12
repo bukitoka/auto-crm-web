@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { emptyToNull } from "@/lib/form";
-import { toDateInput } from "@/lib/format";
-import type { Deal, DealPayload } from "./types";
+import { z } from "zod"
+import { emptyToNull } from "@/lib/form"
+import { toDateInput } from "@/lib/format"
+import type { Deal, DealPayload } from "./types"
 
 export const dealFormSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(200),
@@ -14,8 +14,8 @@ export const dealFormSchema = z.object({
   contact_id: z.string(),
   company_id: z.string(),
   expected_close_date: z.string(),
-});
-export type DealFormValues = z.infer<typeof dealFormSchema>;
+})
+export type DealFormValues = z.infer<typeof dealFormSchema>
 
 export function emptyDealForm(stageId = ""): DealFormValues {
   return {
@@ -26,7 +26,7 @@ export function emptyDealForm(stageId = ""): DealFormValues {
     contact_id: "",
     company_id: "",
     expected_close_date: "",
-  };
+  }
 }
 
 export function dealToForm(deal: Deal): DealFormValues {
@@ -38,11 +38,11 @@ export function dealToForm(deal: Deal): DealFormValues {
     contact_id: deal.contact_id ?? "",
     company_id: deal.company_id ?? "",
     expected_close_date: toDateInput(deal.expected_close_date),
-  };
+  }
 }
 
 export function toDealPayload(values: DealFormValues): DealPayload {
-  return { ...(emptyToNull(values) as Omit<DealPayload, "value">), value: Number(values.value) };
+  return { ...(emptyToNull(values) as Omit<DealPayload, "value">), value: Number(values.value) }
 }
 
 /** A pipeline stage as edited in the "Edit pipeline" sheet (won/lost exclusivity is checked by the API). */
@@ -51,5 +51,5 @@ export const stageFormSchema = z.object({
   probability: z.number().int().min(0, "Use 0–100%").max(100, "Use 0–100%"),
   is_won: z.boolean(),
   is_lost: z.boolean(),
-});
-export type StageFormValues = z.infer<typeof stageFormSchema>;
+})
+export type StageFormValues = z.infer<typeof stageFormSchema>

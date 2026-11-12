@@ -1,9 +1,9 @@
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { AssistantPanel } from "@/features/assistant/components/assistant-panel";
-import { AppBreadcrumbs } from "./app-breadcrumbs";
-import { HeaderSearch } from "./header-search";
-import { ThemeToggle } from "./theme-toggle";
+import { Separator } from "@/components/ui/separator"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { AssistantPanel } from "@/features/assistant/components/assistant-panel"
+import { AppBreadcrumbs } from "./app-breadcrumbs"
+import { HeaderSearch } from "./header-search"
+import { ThemeToggle } from "./theme-toggle"
 
 export function SiteHeader() {
   return (
@@ -20,5 +20,5 @@ export function SiteHeader() {
         <ThemeToggle />
       </div>
     </header>
-  );
+  )
 }

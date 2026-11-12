@@ -1,8 +1,8 @@
-import { FileQuestion } from "lucide-react";
-import Link from "next/link";
-import { EmptyState } from "@/components/shared/empty-state";
-import { Button } from "@/components/ui/button";
-import { HOME_PATH } from "@/lib/constants";
+import { FileQuestion } from "lucide-react"
+import Link from "next/link"
+import { EmptyState } from "@/components/shared/empty-state"
+import { Button } from "@/components/ui/button"
+import { HOME_PATH } from "@/lib/constants"
 
 export default function DashboardNotFound() {
   return (
@@ -16,5 +16,5 @@ export default function DashboardNotFound() {
         </Button>
       }
     />
-  );
+  )
 }

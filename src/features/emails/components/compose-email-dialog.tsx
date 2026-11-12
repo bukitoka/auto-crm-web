@@ -1,36 +1,36 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Send, Sparkles } from "lucide-react";
-import { useState, useTransition } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { FormDialog } from "@/components/shared/form-dialog";
-import { SelectField, TextareaField, TextField } from "@/components/shared/form-fields";
-import { Button } from "@/components/ui/button";
-import { FieldGroup } from "@/components/ui/field";
-import { Spinner } from "@/components/ui/spinner";
-import { draftEmail } from "@/features/ai/actions";
-import { type EmailDraftValues, emailDraftSchema } from "@/features/ai/schemas";
-import { EMAIL_TONES } from "@/features/ai/types";
-import type { DealRef } from "@/features/deals/types";
-import { enumOptions, toOptions } from "@/lib/options";
-import { toastResult } from "@/lib/toast-result";
-import { sendEmail } from "../actions";
-import { type ComposeEmailValues, composeEmailSchema } from "../schemas";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Send, Sparkles } from "lucide-react"
+import { useState, useTransition } from "react"
+import { useForm, useWatch } from "react-hook-form"
+import { FormDialog } from "@/components/shared/form-dialog"
+import { SelectField, TextareaField, TextField } from "@/components/shared/form-fields"
+import { Button } from "@/components/ui/button"
+import { FieldGroup } from "@/components/ui/field"
+import { Spinner } from "@/components/ui/spinner"
+import { draftEmail } from "@/features/ai/actions"
+import { type EmailDraftValues, emailDraftSchema } from "@/features/ai/schemas"
+import { EMAIL_TONES } from "@/features/ai/types"
+import type { DealRef } from "@/features/deals/types"
+import { enumOptions, toOptions } from "@/lib/options"
+import { toastResult } from "@/lib/toast-result"
+import { sendEmail } from "../actions"
+import { type ComposeEmailValues, composeEmailSchema } from "../schemas"
 
 /** Someone to write to. `email: null` = known to have no address; `undefined` = not loaded. */
-export type EmailRecipient = { id: string; name: string; email?: string | null };
+export type EmailRecipient = { id: string; name: string; email?: string | null }
 
-const writeSchema = emailDraftSchema.pick({ purpose: true, tone: true });
-type WriteValues = Pick<EmailDraftValues, "purpose" | "tone">;
+const writeSchema = emailDraftSchema.pick({ purpose: true, tone: true })
+type WriteValues = Pick<EmailDraftValues, "purpose" | "tone">
 
 type ComposeEmailDialogProps = {
-  recipients: EmailRecipient[];
-  deals: DealRef[];
+  recipients: EmailRecipient[]
+  deals: DealRef[]
   /** Pre-selected recipient and deal (e.g. the contact or deal being viewed). */
-  contactId?: string;
-  dealId?: string;
-};
+  contactId?: string
+  dealId?: string
+}
 
 export function ComposeEmailDialog({
   recipients,
@@ -38,51 +38,51 @@ export function ComposeEmailDialog({
   contactId = "",
   dealId = "",
 }: ComposeEmailDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [showWriter, setShowWriter] = useState(false);
-  const [hasDraft, setHasDraft] = useState(false);
-  const [isSending, startSending] = useTransition();
-  const [isWriting, startWriting] = useTransition();
+  const [open, setOpen] = useState(false)
+  const [showWriter, setShowWriter] = useState(false)
+  const [hasDraft, setHasDraft] = useState(false)
+  const [isSending, startSending] = useTransition()
+  const [isWriting, startWriting] = useTransition()
   const { control, handleSubmit, reset, setValue, setError, getValues } =
     useForm<ComposeEmailValues>({
       resolver: zodResolver(composeEmailSchema),
       defaultValues: { contact_id: contactId, subject: "", body: "", deal_id: dealId },
-    });
+    })
   const writer = useForm<WriteValues>({
     resolver: zodResolver(writeSchema),
     defaultValues: { purpose: "", tone: "friendly" },
-  });
-  const to = useWatch({ control, name: "contact_id" });
-  const recipient = recipients.find((r) => r.id === to);
+  })
+  const to = useWatch({ control, name: "contact_id" })
+  const recipient = recipients.find((r) => r.id === to)
 
   function write(values: WriteValues) {
     if (!to) {
-      setError("contact_id", { message: "Choose who to email" });
-      return;
+      setError("contact_id", { message: "Choose who to email" })
+      return
     }
     startWriting(async () => {
-      const result = await draftEmail(to, { ...values, deal_id: getValues("deal_id") });
-      if (!toastResult(result)) return;
-      setValue("subject", result.data.subject, { shouldValidate: true });
-      setValue("body", result.data.body, { shouldValidate: true });
-      setHasDraft(true);
-    });
+      const result = await draftEmail(to, { ...values, deal_id: getValues("deal_id") })
+      if (!toastResult(result)) return
+      setValue("subject", result.data.subject, { shouldValidate: true })
+      setValue("body", result.data.body, { shouldValidate: true })
+      setHasDraft(true)
+    })
   }
 
   function send({ contact_id, ...values }: ComposeEmailValues) {
     if (recipient?.email === null) {
-      setError("contact_id", { message: "Add an email address to this contact first" });
-      return;
+      setError("contact_id", { message: "Add an email address to this contact first" })
+      return
     }
     startSending(async () => {
-      const result = await sendEmail(contact_id, values);
-      if (!toastResult(result, `Email sent to ${recipient?.name ?? "the contact"}`)) return;
-      reset();
-      writer.reset();
-      setHasDraft(false);
-      setShowWriter(false);
-      setOpen(false);
-    });
+      const result = await sendEmail(contact_id, values)
+      if (!toastResult(result, `Email sent to ${recipient?.name ?? "the contact"}`)) return
+      reset()
+      writer.reset()
+      setHasDraft(false)
+      setShowWriter(false)
+      setOpen(false)
+    })
   }
 
   return (
@@ -175,5 +175,5 @@ export function ComposeEmailDialog({
         </FieldGroup>
       </form>
     </FormDialog>
-  );
+  )
 }

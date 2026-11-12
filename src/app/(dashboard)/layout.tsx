@@ -1,13 +1,13 @@
-import { cookies } from "next/headers";
-import { AppSidebar } from "@/components/layout/app-sidebar";
-import { SiteHeader } from "@/components/layout/site-header";
-import { ReadOnlyBanner } from "@/components/shared/read-only-banner";
-import { SIDEBAR_DEFAULT_WIDTH, SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { getChangelog } from "@/features/about/changelog";
-import { listConversations } from "@/features/assistant/api";
-import { getCurrentUser } from "@/features/auth/api";
-import { canWriteCrm } from "@/features/users/roles";
-import { getApiVersion, webVersion } from "@/lib/app-version";
+import { cookies } from "next/headers"
+import { AppSidebar } from "@/components/layout/app-sidebar"
+import { SiteHeader } from "@/components/layout/site-header"
+import { ReadOnlyBanner } from "@/components/shared/read-only-banner"
+import { SIDEBAR_DEFAULT_WIDTH, SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { getChangelog } from "@/features/about/changelog"
+import { listConversations } from "@/features/assistant/api"
+import { getCurrentUser } from "@/features/auth/api"
+import { canWriteCrm } from "@/features/users/roles"
+import { getApiVersion, webVersion } from "@/lib/app-version"
 
 export default async function DashboardLayout({ children }: LayoutProps<"/">) {
   const [user, cookieStore, recentChats, apiVersion, changelog] = await Promise.all([
@@ -19,10 +19,10 @@ export default async function DashboardLayout({ children }: LayoutProps<"/">) {
       .catch(() => []),
     getApiVersion(),
     getChangelog(),
-  ]);
-  const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
+  ])
+  const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false"
   // Width chosen by dragging the sidebar edge (saved by SidebarRail); clamped by the provider.
-  const defaultWidth = Number(cookieStore.get("sidebar_width")?.value) || SIDEBAR_DEFAULT_WIDTH;
+  const defaultWidth = Number(cookieStore.get("sidebar_width")?.value) || SIDEBAR_DEFAULT_WIDTH
 
   return (
     <SidebarProvider defaultOpen={defaultOpen} defaultWidth={defaultWidth}>
@@ -41,5 +41,5 @@ export default async function DashboardLayout({ children }: LayoutProps<"/">) {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }

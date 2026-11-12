@@ -1,16 +1,16 @@
-import Link from "next/link";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { formatRelative, personName } from "@/lib/format";
-import { deleteActivity } from "../actions";
-import type { Activity } from "../types";
-import { ActivityIcon } from "./activity-icon";
+import Link from "next/link"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { formatRelative, personName } from "@/lib/format"
+import { deleteActivity } from "../actions"
+import type { Activity } from "../types"
+import { ActivityIcon } from "./activity-icon"
 
 type ActivityListProps = {
-  activities: Activity[];
+  activities: Activity[]
   /** Show links to the related contact/deal (dashboard), hide on detail pages. */
-  showLinks?: boolean;
-  canDelete?: boolean;
-};
+  showLinks?: boolean
+  canDelete?: boolean
+}
 
 export function ActivityList({
   activities,
@@ -18,7 +18,7 @@ export function ActivityList({
   canDelete = false,
 }: ActivityListProps) {
   if (activities.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">No activity yet.</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">No activity yet.</p>
   }
 
   return (
@@ -61,5 +61,5 @@ export function ActivityList({
         </li>
       ))}
     </ol>
-  );
+  )
 }

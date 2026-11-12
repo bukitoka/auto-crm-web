@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function ListPageSkeleton({ rows = 8 }: { rows?: number }) {
   return (
@@ -18,7 +18,7 @@ export function ListPageSkeleton({ rows = 8 }: { rows?: number }) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 export function DetailPageSkeleton() {
@@ -39,5 +39,5 @@ export function DetailPageSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }

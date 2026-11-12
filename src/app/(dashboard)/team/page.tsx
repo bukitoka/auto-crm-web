@@ -1,23 +1,23 @@
-import { Plus } from "lucide-react";
-import type { Metadata } from "next";
-import { ForbiddenState } from "@/components/shared/forbidden-state";
-import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/features/auth/api";
-import { listTeam } from "@/features/users/api";
-import { AdminFormDialog } from "@/features/users/components/admin-form-dialog";
-import { TeamTable } from "@/features/users/components/team-table";
-import { canManageAdmins } from "@/features/users/roles";
+import { Plus } from "lucide-react"
+import type { Metadata } from "next"
+import { ForbiddenState } from "@/components/shared/forbidden-state"
+import { PageHeader } from "@/components/shared/page-header"
+import { Button } from "@/components/ui/button"
+import { getCurrentUser } from "@/features/auth/api"
+import { listTeam } from "@/features/users/api"
+import { AdminFormDialog } from "@/features/users/components/admin-form-dialog"
+import { TeamTable } from "@/features/users/components/team-table"
+import { canManageAdmins } from "@/features/users/roles"
 
-export const metadata: Metadata = { title: "Admins" };
+export const metadata: Metadata = { title: "Admins" }
 
 export default async function TeamPage() {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser()
   if (!canManageAdmins(user)) {
-    return <ForbiddenState description="Only the super admin manages admin accounts." />;
+    return <ForbiddenState description="Only the super admin manages admin accounts." />
   }
 
-  const admins = await listTeam();
+  const admins = await listTeam()
 
   return (
     <>
@@ -37,5 +37,5 @@ export default async function TeamPage() {
       />
       <TeamTable users={admins} />
     </>
-  );
+  )
 }

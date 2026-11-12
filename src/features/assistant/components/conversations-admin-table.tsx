@@ -1,9 +1,9 @@
-import { Eye, MessagesSquare } from "lucide-react";
-import Link from "next/link";
-import { EmptyState } from "@/components/shared/empty-state";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Eye, MessagesSquare } from "lucide-react"
+import Link from "next/link"
+import { EmptyState } from "@/components/shared/empty-state"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -11,17 +11,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDateTime, formatRelative } from "@/lib/format";
-import type { Conversation } from "../types";
+} from "@/components/ui/table"
+import { formatDateTime, formatRelative } from "@/lib/format"
+import type { Conversation } from "../types"
 
 /** Read-only list of every admin's chats; the API blocks the super admin from changing them. */
 export function ConversationsAdminTable({
   conversations,
   archived,
 }: {
-  conversations: Conversation[];
-  archived: boolean;
+  conversations: Conversation[]
+  archived: boolean
 }) {
   if (conversations.length === 0) {
     return (
@@ -30,7 +30,7 @@ export function ConversationsAdminTable({
         title={archived ? "No archived chats" : "No chats yet"}
         description="Conversations admins have with the assistant show up here."
       />
-    );
+    )
   }
 
   return (
@@ -93,5 +93,5 @@ export function ConversationsAdminTable({
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

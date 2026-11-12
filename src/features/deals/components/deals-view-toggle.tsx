@@ -1,7 +1,7 @@
-import { KanbanSquare, Table2 } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import type { DealsView } from "../types";
+import { KanbanSquare, Table2 } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import type { DealsView } from "../types"
 
 export function DealsViewToggle({ view }: { view: DealsView }) {
   return (
@@ -29,5 +29,5 @@ export function DealsViewToggle({ view }: { view: DealsView }) {
         </Link>
       </Button>
     </div>
-  );
+  )
 }

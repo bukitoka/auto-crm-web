@@ -1,30 +1,30 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { SelectField, TextField } from "@/components/shared/form-fields";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { SelectField, TextField } from "@/components/shared/form-fields"
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Switch } from "@/components/ui/switch";
-import { type WebhookFormValues, webhookFormSchema } from "../schemas";
+} from "@/components/ui/field"
+import { Switch } from "@/components/ui/switch"
+import { type WebhookFormValues, webhookFormSchema } from "../schemas"
 
 type WebhookFormProps = {
-  formId: string;
-  defaultValues: WebhookFormValues;
-  onSubmit: (values: WebhookFormValues) => void;
-  events: string[];
-};
+  formId: string
+  defaultValues: WebhookFormValues
+  onSubmit: (values: WebhookFormValues) => void
+  events: string[]
+}
 
 export function WebhookForm({ formId, defaultValues, onSubmit, events }: WebhookFormProps) {
   const { control, handleSubmit } = useForm<WebhookFormValues>({
     resolver: zodResolver(webhookFormSchema),
     defaultValues,
-  });
+  })
 
   return (
     <form id={formId} onSubmit={handleSubmit(onSubmit)}>
@@ -59,5 +59,5 @@ export function WebhookForm({ formId, defaultValues, onSubmit, events }: Webhook
         />
       </FieldGroup>
     </form>
-  );
+  )
 }

@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts"
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@/components/ui/chart"
 
 export function CountBarChart({
   data,
   label,
 }: {
-  data: { name: string; count: number }[];
+  data: { name: string; count: number }[]
   /** Tooltip label for the value, e.g. "Contacts". */
-  label: string;
+  label: string
 }) {
-  const chartConfig = { count: { label, color: "var(--chart-1)" } } satisfies ChartConfig;
+  const chartConfig = { count: { label, color: "var(--chart-1)" } } satisfies ChartConfig
 
   return (
     <ChartContainer config={chartConfig} className="aspect-auto h-52 w-full">
@@ -41,5 +41,5 @@ export function CountBarChart({
         </Bar>
       </BarChart>
     </ChartContainer>
-  );
+  )
 }

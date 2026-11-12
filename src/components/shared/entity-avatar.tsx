@@ -1,16 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { initials } from "@/lib/format";
-import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { initials } from "@/lib/format"
+import { cn } from "@/lib/utils"
 
 type EntityAvatarProps = {
-  name: string;
+  name: string
   /** Image URL from the API (`avatar_url` / `logo_url`); initials are shown without it. */
-  src?: string | null;
+  src?: string | null
   /** People are round; companies (logos) use a rounded square. */
-  shape?: "circle" | "square";
-  className?: string;
-  fallbackClassName?: string;
-};
+  shape?: "circle" | "square"
+  className?: string
+  fallbackClassName?: string
+}
 
 export function EntityAvatar({
   name,
@@ -19,7 +19,7 @@ export function EntityAvatar({
   className,
   fallbackClassName,
 }: EntityAvatarProps) {
-  const square = shape === "square";
+  const square = shape === "square"
   return (
     <Avatar title={name} className={cn(square && "rounded-md after:rounded-md", className)}>
       {src ? (
@@ -39,5 +39,5 @@ export function EntityAvatar({
         {initials(name)}
       </AvatarFallback>
     </Avatar>
-  );
+  )
 }

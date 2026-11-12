@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useTransition } from "react";
-import { ComboboxSelect } from "@/components/shared/combobox-select";
-import { toastResult } from "@/lib/toast-result";
-import { moveDealToStage } from "../actions";
-import type { PipelineStage } from "../types";
+import { useTransition } from "react"
+import { ComboboxSelect } from "@/components/shared/combobox-select"
+import { toastResult } from "@/lib/toast-result"
+import { moveDealToStage } from "../actions"
+import type { PipelineStage } from "../types"
 
 type MoveStageSelectProps = {
-  dealId: string;
-  stageId: string;
-  stages: PipelineStage[];
-  readOnly?: boolean;
-};
+  dealId: string
+  stageId: string
+  stages: PipelineStage[]
+  readOnly?: boolean
+}
 
 export function MoveStageSelect({
   dealId,
@@ -19,16 +19,16 @@ export function MoveStageSelect({
   stages,
   readOnly = false,
 }: MoveStageSelectProps) {
-  const [isPending, startTransition] = useTransition();
-  const options = stages.map((stage) => ({ value: stage.id, label: stage.name }));
+  const [isPending, startTransition] = useTransition()
+  const options = stages.map((stage) => ({ value: stage.id, label: stage.name }))
 
   function handleChange(nextStageId: string) {
-    if (!nextStageId || nextStageId === stageId) return;
-    const stage = stages.find((s) => s.id === nextStageId);
+    if (!nextStageId || nextStageId === stageId) return
+    const stage = stages.find((s) => s.id === nextStageId)
     startTransition(async () => {
-      const result = await moveDealToStage(dealId, nextStageId);
-      toastResult(result, `Moved to ${stage?.name ?? "stage"}`);
-    });
+      const result = await moveDealToStage(dealId, nextStageId)
+      toastResult(result, `Moved to ${stage?.name ?? "stage"}`)
+    })
   }
 
   return (
@@ -39,5 +39,5 @@ export function MoveStageSelect({
       aria-label="Move to stage"
       disabled={isPending || readOnly}
     />
-  );
+  )
 }

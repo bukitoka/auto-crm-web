@@ -1,41 +1,41 @@
-import { Globe, Pencil } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { ImageUpload } from "@/components/shared/image-upload";
-import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCurrentUser } from "@/features/auth/api";
-import { deleteCompany, removeCompanyLogo, uploadCompanyLogo } from "@/features/companies/actions";
-import { getCompany } from "@/features/companies/api";
-import { CompanyFormDialog } from "@/features/companies/components/company-form-dialog";
-import { listContacts } from "@/features/contacts/api";
-import { ContactStatusBadge } from "@/features/contacts/components/contact-status-badge";
-import { listDeals } from "@/features/deals/api";
-import { DealList } from "@/features/deals/components/deal-list";
-import { canWriteCrm } from "@/features/users/roles";
-import { ApiError } from "@/lib/api-client";
-import { formatDate, personName } from "@/lib/format";
+import { Globe, Pencil } from "lucide-react"
+import type { Metadata } from "next"
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import type { ReactNode } from "react"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { ImageUpload } from "@/components/shared/image-upload"
+import { PageHeader } from "@/components/shared/page-header"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getCurrentUser } from "@/features/auth/api"
+import { deleteCompany, removeCompanyLogo, uploadCompanyLogo } from "@/features/companies/actions"
+import { getCompany } from "@/features/companies/api"
+import { CompanyFormDialog } from "@/features/companies/components/company-form-dialog"
+import { listContacts } from "@/features/contacts/api"
+import { ContactStatusBadge } from "@/features/contacts/components/contact-status-badge"
+import { listDeals } from "@/features/deals/api"
+import { DealList } from "@/features/deals/components/deal-list"
+import { canWriteCrm } from "@/features/users/roles"
+import { ApiError } from "@/lib/api-client"
+import { formatDate, personName } from "@/lib/format"
 
 async function loadCompany(id: string) {
   try {
-    return await getCompany(id);
+    return await getCompany(id)
   } catch (error) {
-    if (error instanceof ApiError && (error.status === 404 || error.status === 422)) notFound();
-    throw error;
+    if (error instanceof ApiError && (error.status === 404 || error.status === 422)) notFound()
+    throw error
   }
 }
 
 export async function generateMetadata({
   params,
 }: PageProps<"/companies/[id]">): Promise<Metadata> {
-  const { id } = await params;
-  const company = await loadCompany(id);
-  return { title: company.name };
+  const { id } = await params
+  const company = await loadCompany(id)
+  return { title: company.name }
 }
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
@@ -44,17 +44,17 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
       <span className="text-muted-foreground">{label}</span>
       <span className="min-w-0 truncate text-right font-medium">{children}</span>
     </div>
-  );
+  )
 }
 
 export default async function CompanyDetailPage({ params }: PageProps<"/companies/[id]">) {
-  const { id } = await params;
-  const [company, user] = await Promise.all([loadCompany(id), getCurrentUser()]);
-  const readOnly = !canWriteCrm(user);
+  const { id } = await params
+  const [company, user] = await Promise.all([loadCompany(id), getCurrentUser()])
+  const readOnly = !canWriteCrm(user)
   const [contacts, deals] = await Promise.all([
     listContacts({ page: 1, size: 50, company_id: id }),
     listDeals({ page: 1, size: 50, company_id: id }),
-  ]);
+  ])
 
   return (
     <>
@@ -168,5 +168,5 @@ export default async function CompanyDetailPage({ params }: PageProps<"/companie
         </Card>
       </div>
     </>
-  );
+  )
 }

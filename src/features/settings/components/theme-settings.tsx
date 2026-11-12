@@ -1,31 +1,31 @@
-"use client";
+"use client"
 
-import { Monitor, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useSyncExternalStore } from "react";
-import { cn } from "@/lib/utils";
+import { Monitor, Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+import { useSyncExternalStore } from "react"
+import { cn } from "@/lib/utils"
 
 const themes = [
   { value: "light", label: "Light", icon: Sun },
   { value: "dark", label: "Dark", icon: Moon },
   { value: "system", label: "System", icon: Monitor },
-] as const;
+] as const
 
-const subscribe = () => () => {};
+const subscribe = () => () => {}
 
 /** Theme picker; renders neutral until mounted to avoid a hydration mismatch. */
 export function ThemeSettings() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme()
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,
     () => false,
-  );
+  )
 
   return (
     <div className="grid grid-cols-3 gap-3">
       {themes.map(({ value, label, icon: Icon }) => {
-        const selected = mounted && theme === value;
+        const selected = mounted && theme === value
         return (
           <button
             key={value}
@@ -40,8 +40,8 @@ export function ThemeSettings() {
             <Icon className="size-5" />
             {label}
           </button>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

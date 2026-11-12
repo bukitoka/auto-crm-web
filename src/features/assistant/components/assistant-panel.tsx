@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { Maximize2, RotateCcw, Sparkles } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Maximize2, RotateCcw, Sparkles } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Sheet,
   SheetContent,
@@ -12,15 +12,15 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { pageContextFromPath } from "../context";
-import type { ChatMessage, PageContext } from "../types";
-import { ChatThread } from "./chat-thread";
+} from "@/components/ui/sheet"
+import { pageContextFromPath } from "../context"
+import type { ChatMessage, PageContext } from "../types"
+import { ChatThread } from "./chat-thread"
 
-const STORAGE_KEY = "acrm-assistant-panel";
+const STORAGE_KEY = "acrm-assistant-panel"
 
-type PanelChat = { id: string | null; messages: ChatMessage[] };
-const EMPTY: PanelChat = { id: null, messages: [] };
+type PanelChat = { id: string | null; messages: ChatMessage[] }
+const EMPTY: PanelChat = { id: null, messages: [] }
 
 const SUGGESTIONS: Record<PageContext["type"] | "none", string[]> = {
   contact: [
@@ -31,20 +31,20 @@ const SUGGESTIONS: Record<PageContext["type"] | "none", string[]> = {
   company: ["Who are the contacts at this company?", "Create a deal for this company"],
   deal: ["Move this deal to Negotiation", "Add a task to send the contract by Friday"],
   none: ["Which of my tasks are overdue?", "Chart my won deals over the last 6 months"],
-};
+}
 
 function loadChat(): PanelChat {
   try {
-    const saved = sessionStorage.getItem(STORAGE_KEY);
-    return saved ? (JSON.parse(saved) as PanelChat) : EMPTY;
+    const saved = sessionStorage.getItem(STORAGE_KEY)
+    return saved ? (JSON.parse(saved) as PanelChat) : EMPTY
   } catch {
-    return EMPTY;
+    return EMPTY
   }
 }
 
 function saveChat(chat: PanelChat) {
   try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chat));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(chat))
   } catch {
     // Private mode / storage full: the panel just starts fresh next time.
   }
@@ -55,39 +55,39 @@ function saveChat(chat: PanelChat) {
  * works. The open chat is remembered per tab (sessionStorage).
  */
 export function AssistantPanel() {
-  const pathname = usePathname();
-  const context = pageContextFromPath(pathname);
-  const [open, setOpen] = useState(false);
-  const [chat, setChat] = useState<PanelChat>(EMPTY);
+  const pathname = usePathname()
+  const context = pageContextFromPath(pathname)
+  const [open, setOpen] = useState(false)
+  const [chat, setChat] = useState<PanelChat>(EMPTY)
   // Remounts the thread: after restoring a saved chat, and on "New chat".
-  const [version, setVersion] = useState(0);
+  const [version, setVersion] = useState(0)
 
   useEffect(() => {
-    const saved = loadChat();
+    const saved = loadChat()
     if (saved.id) {
-      setChat(saved);
-      setVersion((v) => v + 1);
+      setChat(saved)
+      setVersion((v) => v + 1)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key.toLowerCase() === "j" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        setOpen((value) => !value);
+        event.preventDefault()
+        setOpen((value) => !value)
       }
     }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [])
 
   // The assistant pages already are the full chat.
-  if (pathname.startsWith("/assistant")) return null;
+  if (pathname.startsWith("/assistant")) return null
 
   function newChat() {
-    saveChat(EMPTY);
-    setChat(EMPTY);
-    setVersion((v) => v + 1);
+    saveChat(EMPTY)
+    setChat(EMPTY)
+    setVersion((v) => v + 1)
   }
 
   return (
@@ -135,9 +135,9 @@ export function AssistantPanel() {
           context={context}
           onNavigate={() => setOpen(false)}
           onTurn={(turn, messages) => {
-            const next = { id: turn.conversation.id, messages };
-            saveChat(next);
-            setChat(next);
+            const next = { id: turn.conversation.id, messages }
+            saveChat(next)
+            setChat(next)
           }}
           renderEmpty={(composer, send) => (
             <div className="flex min-h-0 flex-1 flex-col justify-end gap-4 p-4">
@@ -162,5 +162,5 @@ export function AssistantPanel() {
         />
       </SheetContent>
     </Sheet>
-  );
+  )
 }

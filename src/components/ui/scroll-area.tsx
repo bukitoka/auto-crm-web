@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { cn } from "cn";
-import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
-import type * as React from "react";
+import { cn } from "cn"
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui"
+import type * as React from "react"
 
 type ScrollAreaProps = React.ComponentProps<typeof ScrollAreaPrimitive.Root> & {
   /** Which custom scrollbars to render. Default: vertical. */
-  scrollbars?: "vertical" | "horizontal" | "both";
+  scrollbars?: "vertical" | "horizontal" | "both"
   /** Ref to the scrolling element (e.g. to read or set scrollLeft/scrollTop). */
-  viewportRef?: React.Ref<HTMLDivElement>;
-};
+  viewportRef?: React.Ref<HTMLDivElement>
+}
 
 function ScrollArea({
   className,
@@ -35,7 +35,7 @@ function ScrollArea({
       {scrollbars !== "vertical" ? <ScrollBar orientation="horizontal" /> : null}
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
-  );
+  )
 }
 
 function ScrollBar({
@@ -59,7 +59,7 @@ function ScrollBar({
         className="relative flex-1 rounded-full bg-muted-foreground/30 transition-colors hover:bg-muted-foreground/50"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  );
+  )
 }
 
-export { ScrollArea, ScrollBar };
+export { ScrollArea, ScrollBar }

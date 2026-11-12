@@ -1,6 +1,6 @@
-import { ArrowDownToLine, ArrowUpFromLine } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowDownToLine, ArrowUpFromLine } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function N8nGuide({ events }: { events: string[] }) {
   return (
@@ -64,5 +64,5 @@ export function N8nGuide({ events }: { events: string[] }) {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vitest/config"
 
 /**
  * Two projects so each file runs in the right environment: `*.test.ts` in node
@@ -68,4 +68,4 @@ export default defineConfig({
       },
     },
   },
-});
+})

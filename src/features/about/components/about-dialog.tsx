@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import { format, parseISO } from "date-fns";
-import { Sparkles } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { format, parseISO } from "date-fns"
+import { Sparkles } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { VersionInfo } from "@/lib/app-version";
-import { appInfo, type Changelog, type ChangelogEntry } from "../data";
+} from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import type { VersionInfo } from "@/lib/app-version"
+import { appInfo, type Changelog, type ChangelogEntry } from "../data"
 
 type AboutDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  versions: { web: VersionInfo; api: VersionInfo | null };
-  changelog: Changelog;
-};
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  versions: { web: VersionInfo; api: VersionInfo | null }
+  changelog: Changelog
+}
 
 function versionLabel(version: string) {
-  return /^\d/.test(version) ? `v${version}` : version;
+  return /^\d/.test(version) ? `v${version}` : version
 }
 
 function VersionRow({ name, info }: { name: string; info: VersionInfo | null }) {
@@ -41,7 +41,7 @@ function VersionRow({ name, info }: { name: string; info: VersionInfo | null }) 
         {info ? (info.commit ? info.commit.slice(0, 7) : "No commit stamp") : "Health check failed"}
       </span>
     </div>
-  );
+  )
 }
 
 function ChangelogList({ entries, repoUrl }: { entries: ChangelogEntry[]; repoUrl: string }) {
@@ -73,7 +73,7 @@ function ChangelogList({ entries, repoUrl }: { entries: ChangelogEntry[]; repoUr
         </a>
       </Button>
     </div>
-  );
+  )
 }
 
 export function AboutDialog({ open, onOpenChange, versions, changelog }: AboutDialogProps) {
@@ -162,5 +162,5 @@ export function AboutDialog({ open, onOpenChange, versions, changelog }: AboutDi
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

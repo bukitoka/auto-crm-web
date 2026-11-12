@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { formatCurrency } from "@/lib/format";
-import type { Deal } from "../types";
-import { DealStageBadge } from "./deal-stage-badge";
+import Link from "next/link"
+import { formatCurrency } from "@/lib/format"
+import type { Deal } from "../types"
+import { DealStageBadge } from "./deal-stage-badge"
 
 export function DealList({ deals }: { deals: Deal[] }) {
   if (deals.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">No deals yet.</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">No deals yet.</p>
   }
 
   return (
@@ -27,5 +27,5 @@ export function DealList({ deals }: { deals: Deal[] }) {
         </li>
       ))}
     </ul>
-  );
+  )
 }

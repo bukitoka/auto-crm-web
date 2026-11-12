@@ -1,7 +1,7 @@
-import "server-only";
-import { apiFetch } from "@/lib/api-client";
-import type { DashboardSummary } from "./types";
+import "server-only"
+import { apiFetch } from "@/lib/api-client"
+import type { DashboardSummary } from "./types"
 
 export function getDashboardSummary() {
-  return apiFetch<DashboardSummary>("/dashboard/summary");
+  return apiFetch<DashboardSummary>("/dashboard/summary")
 }

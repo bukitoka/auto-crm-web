@@ -1,5 +1,5 @@
-import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react"
+import type { ReactNode } from "react"
 import {
   Empty,
   EmptyContent,
@@ -7,14 +7,14 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
+} from "@/components/ui/empty"
 
 type EmptyStateProps = {
-  icon: LucideIcon;
-  title: string;
-  description?: string;
-  action?: ReactNode;
-};
+  icon: LucideIcon
+  title: string
+  description?: string
+  action?: ReactNode
+}
 
 export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
   return (
@@ -28,5 +28,5 @@ export function EmptyState({ icon: Icon, title, description, action }: EmptyStat
       </EmptyHeader>
       {action ? <EmptyContent>{action}</EmptyContent> : null}
     </Empty>
-  );
+  )
 }

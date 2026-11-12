@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   type Announcements,
@@ -11,26 +11,26 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import { useOptimistic, useRef, useState, useTransition } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useDragToPan } from "@/hooks/use-drag-to-pan";
-import { toastResult } from "@/lib/toast-result";
-import { moveDealToStage } from "../actions";
-import { groupDealsByStage, moveDeal, stageDotClasses } from "../board";
-import type { Deal, PipelineStage } from "../types";
-import { AddStageLane } from "./add-stage-form";
-import { DealCard, DraggableDealCard } from "./deal-card";
-import { StageLane } from "./stage-lane";
+} from "@dnd-kit/core"
+import { useOptimistic, useRef, useState, useTransition } from "react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useDragToPan } from "@/hooks/use-drag-to-pan"
+import { toastResult } from "@/lib/toast-result"
+import { moveDealToStage } from "../actions"
+import { groupDealsByStage, moveDeal, stageDotClasses } from "../board"
+import type { Deal, PipelineStage } from "../types"
+import { AddStageLane } from "./add-stage-form"
+import { DealCard, DraggableDealCard } from "./deal-card"
+import { StageLane } from "./stage-lane"
 
 type DealsCanvasProps = {
-  deals: Deal[];
-  stages: PipelineStage[];
-  canEditPipeline?: boolean;
-  readOnly?: boolean;
-};
+  deals: Deal[]
+  stages: PipelineStage[]
+  canEditPipeline?: boolean
+  readOnly?: boolean
+}
 
-type Move = { dealId: string; stage: PipelineStage };
+type Move = { dealId: string; stage: PipelineStage }
 
 /** Stage moves are optimistic; if saving fails the deal snaps back and an error toast is shown. */
 export function DealsCanvas({
@@ -41,24 +41,24 @@ export function DealsCanvas({
 }: DealsCanvasProps) {
   const [optimisticDeals, applyMove] = useOptimistic(deals, (current: Deal[], move: Move) =>
     moveDeal(current, move.dealId, move.stage),
-  );
-  const [, startTransition] = useTransition();
-  const [activeDeal, setActiveDeal] = useState<Deal | null>(null);
+  )
+  const [, startTransition] = useTransition()
+  const [activeDeal, setActiveDeal] = useState<Deal | null>(null)
 
-  const canvasRef = useRef<HTMLDivElement>(null);
-  useDragToPan(canvasRef);
+  const canvasRef = useRef<HTMLDivElement>(null)
+  useDragToPan(canvasRef)
 
   const sensors = useSensors(
     // Small distance/delay so clicking the title link still works.
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 6 } }),
     useSensor(KeyboardSensor),
-  );
+  )
 
-  const columns = groupDealsByStage(optimisticDeals, stages);
-  const dotClasses = stageDotClasses(stages);
-  const stageName = (id: unknown) => stages.find((stage) => stage.id === id)?.name ?? "a stage";
-  const dealTitle = (id: unknown) => deals.find((deal) => deal.id === id)?.title ?? "deal";
+  const columns = groupDealsByStage(optimisticDeals, stages)
+  const dotClasses = stageDotClasses(stages)
+  const stageName = (id: unknown) => stages.find((stage) => stage.id === id)?.name ?? "a stage"
+  const dealTitle = (id: unknown) => deals.find((deal) => deal.id === id)?.title ?? "deal"
 
   const announcements: Announcements = {
     onDragStart: ({ active }) => `Picked up ${dealTitle(active.id)}.`,
@@ -69,23 +69,23 @@ export function DealsCanvas({
         ? `${dealTitle(active.id)} was dropped on ${stageName(over.id)}.`
         : `${dealTitle(active.id)} was dropped.`,
     onDragCancel: ({ active }) => `Moving ${dealTitle(active.id)} was cancelled.`,
-  };
+  }
 
   function handleDragStart({ active }: DragStartEvent) {
-    setActiveDeal(optimisticDeals.find((deal) => deal.id === active.id) ?? null);
+    setActiveDeal(optimisticDeals.find((deal) => deal.id === active.id) ?? null)
   }
 
   function handleDragEnd({ active, over }: DragEndEvent) {
-    setActiveDeal(null);
-    const deal = optimisticDeals.find((d) => d.id === active.id);
-    const stage = stages.find((s) => s.id === over?.id);
-    if (!deal || !stage || deal.stage_id === stage.id) return;
+    setActiveDeal(null)
+    const deal = optimisticDeals.find((d) => d.id === active.id)
+    const stage = stages.find((s) => s.id === over?.id)
+    if (!deal || !stage || deal.stage_id === stage.id) return
 
     startTransition(async () => {
-      applyMove({ dealId: deal.id, stage });
-      const result = await moveDealToStage(deal.id, stage.id);
-      toastResult(result, `Moved “${deal.title}” to ${stage.name}`);
-    });
+      applyMove({ dealId: deal.id, stage })
+      const result = await moveDealToStage(deal.id, stage.id)
+      toastResult(result, `Moved “${deal.title}” to ${stage.name}`)
+    })
   }
 
   return (
@@ -127,5 +127,5 @@ export function DealsCanvas({
 
       <DragOverlay>{activeDeal ? <DealCard deal={activeDeal} isOverlay /> : null}</DragOverlay>
     </DndContext>
-  );
+  )
 }

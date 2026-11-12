@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import { ArrowUp, Paperclip } from "lucide-react";
-import { forwardRef, useRef, useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { CAPTURE_ACCEPT, MAX_ATTACHMENTS, MAX_UPLOAD_BYTES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { AttachmentChip } from "./attachment-chip";
+import { ArrowUp, Paperclip } from "lucide-react"
+import { forwardRef, useRef, useState } from "react"
+import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import { CAPTURE_ACCEPT, MAX_ATTACHMENTS, MAX_UPLOAD_BYTES } from "@/lib/constants"
+import { cn } from "@/lib/utils"
+import { AttachmentChip } from "./attachment-chip"
 
 type ComposerProps = {
-  value: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
+  value: string
+  onChange: (value: string) => void
+  onSubmit: () => void
   /** Attached files (photos, PDFs, Word, emails, text): the API reads their text. */
-  files?: File[];
-  onFilesChange?: (files: File[]) => void;
-  isPending?: boolean;
-  placeholder?: string;
+  files?: File[]
+  onFilesChange?: (files: File[]) => void
+  isPending?: boolean
+  placeholder?: string
   /** "hero": the big box on the assistant home; "compact": under a conversation. */
-  variant?: "hero" | "compact";
+  variant?: "hero" | "compact"
   /** Shown above the box, e.g. "Using this contact". */
-  hint?: React.ReactNode;
-  autoFocus?: boolean;
-};
+  hint?: React.ReactNode
+  autoFocus?: boolean
+}
 
 /** Enter sends, Shift+Enter starts a new line. */
 export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function Composer(
@@ -41,47 +41,47 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
   },
   ref,
 ) {
-  const hero = variant === "hero";
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const canSend = !isPending && (value.trim().length > 0 || files.length > 0);
+  const hero = variant === "hero"
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const canSend = !isPending && (value.trim().length > 0 || files.length > 0)
 
   function addFiles(added: FileList | File[]) {
-    if (!onFilesChange) return;
+    if (!onFilesChange) return
     const fitting = Array.from(added).filter((file) => {
-      if (file.size <= MAX_UPLOAD_BYTES) return true;
-      toast.error(`${file.name} is larger than 5 MB`);
-      return false;
-    });
-    const next = [...files, ...fitting];
-    if (next.length > MAX_ATTACHMENTS) toast.error(`Attach at most ${MAX_ATTACHMENTS} files`);
-    onFilesChange(next.slice(0, MAX_ATTACHMENTS));
+      if (file.size <= MAX_UPLOAD_BYTES) return true
+      toast.error(`${file.name} is larger than 5 MB`)
+      return false
+    })
+    const next = [...files, ...fitting]
+    if (next.length > MAX_ATTACHMENTS) toast.error(`Attach at most ${MAX_ATTACHMENTS} files`)
+    onFilesChange(next.slice(0, MAX_ATTACHMENTS))
   }
 
   function onKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
-      event.preventDefault();
-      if (canSend) onSubmit();
+      event.preventDefault()
+      if (canSend) onSubmit()
     }
   }
 
   return (
     <form
       onSubmit={(event) => {
-        event.preventDefault();
-        if (canSend) onSubmit();
+        event.preventDefault()
+        if (canSend) onSubmit()
       }}
       onDragOver={(event) => {
-        if (!onFilesChange || !event.dataTransfer.types.includes("Files")) return;
-        event.preventDefault();
-        setIsDragging(true);
+        if (!onFilesChange || !event.dataTransfer.types.includes("Files")) return
+        event.preventDefault()
+        setIsDragging(true)
       }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={(event) => {
-        if (!onFilesChange) return;
-        event.preventDefault();
-        setIsDragging(false);
-        addFiles(event.dataTransfer.files);
+        if (!onFilesChange) return
+        event.preventDefault()
+        setIsDragging(false)
+        addFiles(event.dataTransfer.files)
       }}
       className={cn(
         "flex flex-col gap-2 rounded-lg border bg-card transition-colors focus-within:border-primary/60",
@@ -110,9 +110,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={onKeyDown}
           onPaste={(event) => {
-            if (!onFilesChange || event.clipboardData.files.length === 0) return;
-            event.preventDefault(); // a pasted screenshot becomes an attachment
-            addFiles(event.clipboardData.files);
+            if (!onFilesChange || event.clipboardData.files.length === 0) return
+            event.preventDefault() // a pasted screenshot becomes an attachment
+            addFiles(event.clipboardData.files)
           }}
           placeholder={placeholder}
           aria-label="Message the assistant"
@@ -147,8 +147,8 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               tabIndex={-1}
               aria-label="Attach files to the message"
               onChange={(event) => {
-                if (event.target.files) addFiles(event.target.files);
-                event.target.value = "";
+                if (event.target.files) addFiles(event.target.files)
+                event.target.value = ""
               }}
             />
           </>
@@ -164,5 +164,5 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
         </Button>
       </div>
     </form>
-  );
-});
+  )
+})

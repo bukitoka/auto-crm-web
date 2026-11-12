@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { useDroppable } from "@dnd-kit/core";
-import { formatCurrency } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import type { StageColumn } from "../board";
+import { useDroppable } from "@dnd-kit/core"
+import { formatCurrency } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import type { StageColumn } from "../board"
 
 type StageLaneProps = {
-  column: StageColumn;
-  dotClassName: string;
-  children: React.ReactNode;
-  readOnly?: boolean;
-};
+  column: StageColumn
+  dotClassName: string
+  children: React.ReactNode
+  readOnly?: boolean
+}
 
 /** The whole lane is a drop target, not just the card list. */
 export function StageLane({ column, dotClassName, children, readOnly = false }: StageLaneProps) {
-  const { stage, deals, total } = column;
-  const { setNodeRef, isOver } = useDroppable({ id: stage.id });
-  const headingId = `stage-${stage.id}`;
+  const { stage, deals, total } = column
+  const { setNodeRef, isOver } = useDroppable({ id: stage.id })
+  const headingId = `stage-${stage.id}`
 
   return (
     <section
@@ -52,5 +52,5 @@ export function StageLane({ column, dotClassName, children, readOnly = false }: 
         )}
       </div>
     </section>
-  );
+  )
 }

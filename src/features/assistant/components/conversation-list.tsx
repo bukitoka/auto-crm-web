@@ -1,46 +1,46 @@
-"use client";
+"use client"
 
-import { MessagesSquare, Search } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
-import { EmptyState } from "@/components/shared/empty-state";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatRelative } from "@/lib/format";
-import { searchConversations } from "../actions";
-import { groupByDate } from "../context";
-import type { Conversation } from "../types";
-import { ConversationMenu } from "./conversation-menu";
+import { MessagesSquare, Search } from "lucide-react"
+import Link from "next/link"
+import { useEffect, useState, useTransition } from "react"
+import { EmptyState } from "@/components/shared/empty-state"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { formatRelative } from "@/lib/format"
+import { searchConversations } from "../actions"
+import { groupByDate } from "../context"
+import type { Conversation } from "../types"
+import { ConversationMenu } from "./conversation-menu"
 
 type ConversationListProps = {
   /** Your active conversations, loaded by the history page. */
-  conversations: Conversation[];
-};
+  conversations: Conversation[]
+}
 
 export function ConversationList({ conversations }: ConversationListProps) {
-  const [search, setSearch] = useState("");
-  const [archived, setArchived] = useState(false);
-  const [results, setResults] = useState<Conversation[] | null>(null);
-  const [isSearching, startSearch] = useTransition();
+  const [search, setSearch] = useState("")
+  const [archived, setArchived] = useState(false)
+  const [results, setResults] = useState<Conversation[] | null>(null)
+  const [isSearching, startSearch] = useTransition()
 
   // The default view comes from the server; searching or "Archived" loads from the API.
-  const filtering = archived || search.trim().length > 0;
+  const filtering = archived || search.trim().length > 0
   // biome-ignore lint/correctness/useExhaustiveDependencies: refetch when the server list changes too
   useEffect(() => {
     if (!filtering) {
-      setResults(null);
-      return;
+      setResults(null)
+      return
     }
     const timer = setTimeout(() => {
       startSearch(async () => {
-        const result = await searchConversations({ archived, search: search.trim() || undefined });
-        if (result.ok) setResults(result.data.items);
-      });
-    }, 200);
-    return () => clearTimeout(timer);
-  }, [archived, search, filtering, conversations]);
+        const result = await searchConversations({ archived, search: search.trim() || undefined })
+        if (result.ok) setResults(result.data.items)
+      })
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [archived, search, filtering, conversations])
 
-  const shown = results ?? conversations;
+  const shown = results ?? conversations
 
   return (
     <div className="flex max-w-3xl flex-col gap-4">
@@ -112,5 +112,5 @@ export function ConversationList({ conversations }: ConversationListProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

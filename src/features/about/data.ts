@@ -1,10 +1,10 @@
 export type ChangelogEntry = {
   /** Release date, ISO 8601 (YYYY-MM-DD). */
-  date: string;
-  changes: string[];
-};
+  date: string
+  changes: string[]
+}
 
-export type Changelog = { web: ChangelogEntry[]; api: ChangelogEntry[] };
+export type Changelog = { web: ChangelogEntry[]; api: ChangelogEntry[] }
 
 /** Shown in the About dialog. The name and links come from the project's git metadata. */
 export const appInfo = {
@@ -18,7 +18,7 @@ export const appInfo = {
     web: "https://github.com/bukitoka/auto-crm-web",
     api: "https://github.com/bukitoka/auto-crm-api",
   },
-};
+}
 
 /**
  * Used when GitHub cannot be reached. The live changelog is built from each repo's
@@ -98,4 +98,4 @@ export const fallbackChangelogs: Changelog = {
       ],
     },
   ],
-};
+}

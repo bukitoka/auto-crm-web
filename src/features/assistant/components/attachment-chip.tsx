@@ -1,5 +1,5 @@
-import { Paperclip, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Paperclip, X } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 /** A file attached to a message: in the composer (removable) and on sent messages. */
 export function AttachmentChip({ name, onRemove }: { name: string; onRemove?: () => void }) {
@@ -23,5 +23,5 @@ export function AttachmentChip({ name, onRemove }: { name: string; onRemove?: ()
         </button>
       ) : null}
     </span>
-  );
+  )
 }

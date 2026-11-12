@@ -21,13 +21,13 @@ opens a one-time setup page to create the super admin, who then creates the admi
 
 ## Commands
 
-| Command | |
-| --- | --- |
-| `bun dev` | Dev server |
-| `bun run check:fix` | Lint and format |
-| `bun run typecheck` | Type check |
-| `bun run test` | Unit tests (`test:watch`, `test:coverage` also exist) |
-| `bun run build` | Production build |
+| Command             |                                                       |
+| ------------------- | ----------------------------------------------------- |
+| `bun dev`           | Dev server                                            |
+| `bun run check:fix` | Lint and format                                       |
+| `bun run typecheck` | Type check                                            |
+| `bun run test`      | Unit tests (`test:watch`, `test:coverage` also exist) |
+| `bun run build`     | Production build                                      |
 
 Before pushing, run `bun run check && bun run typecheck && bun run test && bun run build`.
 

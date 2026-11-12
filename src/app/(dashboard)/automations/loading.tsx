@@ -1,5 +1,5 @@
-import { ListPageSkeleton } from "@/components/shared/page-skeleton";
+import { ListPageSkeleton } from "@/components/shared/page-skeleton"
 
 export default function Loading() {
-  return <ListPageSkeleton rows={4} />;
+  return <ListPageSkeleton rows={4} />
 }

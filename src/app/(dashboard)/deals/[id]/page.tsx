@@ -1,11 +1,11 @@
-import { Pencil, Plus } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
+import { Pencil, Plus } from "lucide-react"
+import type { Metadata } from "next"
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import type { ReactNode } from "react"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { PageHeader } from "@/components/shared/page-header"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -13,40 +13,40 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { listActivities } from "@/features/activities/api";
-import { ActivityList } from "@/features/activities/components/activity-list";
-import { AddActivityForm } from "@/features/activities/components/add-activity-form";
-import { TimelineSummary } from "@/features/ai/components/timeline-summary";
-import { getCurrentUser } from "@/features/auth/api";
-import { listCompanyOptions } from "@/features/companies/api";
-import { listContactOptions } from "@/features/contacts/api";
-import { deleteDeal } from "@/features/deals/actions";
-import { getDeal, listStages } from "@/features/deals/api";
-import { DealFormDialog } from "@/features/deals/components/deal-form-dialog";
-import { DealStageBadge } from "@/features/deals/components/deal-stage-badge";
-import { MoveStageSelect } from "@/features/deals/components/move-stage-select";
-import { ComposeEmailDialog } from "@/features/emails/components/compose-email-dialog";
-import { listTasks } from "@/features/tasks/api";
-import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog";
-import { TaskList } from "@/features/tasks/components/task-list";
-import { canWriteCrm } from "@/features/users/roles";
-import { ApiError } from "@/lib/api-client";
-import { formatCurrency, formatDate, personName } from "@/lib/format";
+} from "@/components/ui/card"
+import { listActivities } from "@/features/activities/api"
+import { ActivityList } from "@/features/activities/components/activity-list"
+import { AddActivityForm } from "@/features/activities/components/add-activity-form"
+import { TimelineSummary } from "@/features/ai/components/timeline-summary"
+import { getCurrentUser } from "@/features/auth/api"
+import { listCompanyOptions } from "@/features/companies/api"
+import { listContactOptions } from "@/features/contacts/api"
+import { deleteDeal } from "@/features/deals/actions"
+import { getDeal, listStages } from "@/features/deals/api"
+import { DealFormDialog } from "@/features/deals/components/deal-form-dialog"
+import { DealStageBadge } from "@/features/deals/components/deal-stage-badge"
+import { MoveStageSelect } from "@/features/deals/components/move-stage-select"
+import { ComposeEmailDialog } from "@/features/emails/components/compose-email-dialog"
+import { listTasks } from "@/features/tasks/api"
+import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog"
+import { TaskList } from "@/features/tasks/components/task-list"
+import { canWriteCrm } from "@/features/users/roles"
+import { ApiError } from "@/lib/api-client"
+import { formatCurrency, formatDate, personName } from "@/lib/format"
 
 async function loadDeal(id: string) {
   try {
-    return await getDeal(id);
+    return await getDeal(id)
   } catch (error) {
-    if (error instanceof ApiError && (error.status === 404 || error.status === 422)) notFound();
-    throw error;
+    if (error instanceof ApiError && (error.status === 404 || error.status === 422)) notFound()
+    throw error
   }
 }
 
 export async function generateMetadata({ params }: PageProps<"/deals/[id]">): Promise<Metadata> {
-  const { id } = await params;
-  const deal = await loadDeal(id);
-  return { title: deal.title };
+  const { id } = await params
+  const deal = await loadDeal(id)
+  return { title: deal.title }
 }
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
@@ -55,20 +55,20 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
       <span className="text-muted-foreground">{label}</span>
       <span className="min-w-0 truncate text-right font-medium">{children}</span>
     </div>
-  );
+  )
 }
 
 export default async function DealDetailPage({ params }: PageProps<"/deals/[id]">) {
-  const { id } = await params;
-  const [deal, user] = await Promise.all([loadDeal(id), getCurrentUser()]);
-  const readOnly = !canWriteCrm(user);
+  const { id } = await params
+  const [deal, user] = await Promise.all([loadDeal(id), getCurrentUser()])
+  const readOnly = !canWriteCrm(user)
   const [activities, tasks, stages, companies, contacts] = await Promise.all([
     listActivities({ deal_id: id }),
     listTasks({ page: 1, size: 50, deal_id: id }),
     listStages(),
     listCompanyOptions(),
     listContactOptions(),
-  ]);
+  ])
 
   return (
     <>
@@ -190,5 +190,5 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
         </Card>
       </div>
     </>
-  );
+  )
 }

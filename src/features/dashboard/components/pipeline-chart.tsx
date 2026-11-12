@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { formatCompactCurrency, formatCurrency } from "@/lib/format";
-import type { PipelineStageSummary } from "../types";
+} from "@/components/ui/chart"
+import { formatCompactCurrency, formatCurrency } from "@/lib/format"
+import type { PipelineStageSummary } from "../types"
 
 const chartConfig = {
   total_value: { label: "Value", color: "var(--chart-1)" },
-} satisfies ChartConfig;
+} satisfies ChartConfig
 
 export function PipelineChart({ data }: { data: PipelineStageSummary[] }) {
   const rows = data.map((stage) => ({
     stage: stage.stage_name,
     total_value: Number(stage.total_value),
     deal_count: stage.deal_count,
-  }));
+  }))
 
   return (
     <ChartContainer config={chartConfig} className="aspect-auto h-72 w-full">
@@ -52,5 +52,5 @@ export function PipelineChart({ data }: { data: PipelineStageSummary[] }) {
         <Bar dataKey="total_value" fill="var(--color-total_value)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ChartContainer>
-  );
+  )
 }

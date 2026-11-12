@@ -1,36 +1,36 @@
-"use client";
+"use client"
 
-import { useRouter } from "next/navigation";
-import { type ReactNode, useEffect, useRef, useState, useTransition } from "react";
-import { Badge } from "@/components/ui/badge";
-import { toastResult } from "@/lib/toast-result";
-import { cn } from "@/lib/utils";
-import { sendMessage, startConversation } from "../actions";
-import type { ChatMessage, ChatTurn, PageContext } from "../types";
-import { AssistantMessage, AssistantThinking } from "./assistant-message";
-import { Composer } from "./composer";
+import { useRouter } from "next/navigation"
+import { type ReactNode, useEffect, useRef, useState, useTransition } from "react"
+import { Badge } from "@/components/ui/badge"
+import { toastResult } from "@/lib/toast-result"
+import { cn } from "@/lib/utils"
+import { sendMessage, startConversation } from "../actions"
+import type { ChatMessage, ChatTurn, PageContext } from "../types"
+import { AssistantMessage, AssistantThinking } from "./assistant-message"
+import { Composer } from "./composer"
 
 export type ChatThreadProps = {
   /** null = a new chat; the first message creates the conversation. */
-  conversationId: string | null;
-  initialMessages?: ChatMessage[];
+  conversationId: string | null
+  initialMessages?: ChatMessage[]
   /** The record being viewed (only used by the header panel). */
-  context?: PageContext | null;
+  context?: PageContext | null
   /** The super admin looking at another admin's chat: no composer. */
-  readOnly?: boolean;
+  readOnly?: boolean
   /** "page": the /assistant pages; "panel": the header side panel. */
-  variant?: "page" | "panel";
+  variant?: "page" | "panel"
   /** Shown instead of the message list while the chat is empty (gets the composer + send). */
   renderEmpty?: (
     composer: ReactNode,
     send: (text: string) => void,
     fill: (text: string) => void,
-  ) => ReactNode;
+  ) => ReactNode
   /** Called after each successful reply (e.g. to remember the new conversation id). */
-  onTurn?: (turn: ChatTurn, messages: ChatMessage[]) => void;
+  onTurn?: (turn: ChatTurn, messages: ChatMessage[]) => void
   /** Called when a link under a reply is clicked (the panel closes itself). */
-  onNavigate?: () => void;
-};
+  onNavigate?: () => void
+}
 
 /**
  * Render with `key={conversationId}` so switching chats starts from fresh state.
@@ -47,25 +47,25 @@ export function ChatThread({
   onTurn,
   onNavigate,
 }: ChatThreadProps) {
-  const router = useRouter();
-  const [id, setId] = useState(conversationId);
-  const [messages, setMessages] = useState(initialMessages);
-  const [draft, setDraft] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
-  const [isPending, startTransition] = useTransition();
-  const endRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter()
+  const [id, setId] = useState(conversationId)
+  const [messages, setMessages] = useState(initialMessages)
+  const [draft, setDraft] = useState("")
+  const [files, setFiles] = useState<File[]>([])
+  const [isPending, startTransition] = useTransition()
+  const endRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: scroll whenever the list changes
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end" });
-  }, [messages.length, isPending]);
+    endRef.current?.scrollIntoView({ block: "end" })
+  }, [messages.length, isPending])
 
   function send(text: string) {
-    const content = text.trim();
-    if ((!content && files.length === 0) || isPending) return;
-    const before = messages;
-    const sentFiles = files;
+    const content = text.trim()
+    if ((!content && files.length === 0) || isPending) return
+    const before = messages
+    const sentFiles = files
     const optimistic: ChatMessage = {
       id: `pending-${Date.now()}`,
       role: "user",
@@ -74,42 +74,42 @@ export function ChatThread({
       blocks: [],
       attachments: sentFiles.map((file) => ({ name: file.name })),
       created_at: new Date().toISOString(),
-    };
-    setMessages([...before, optimistic]);
-    setDraft("");
-    setFiles([]);
+    }
+    setMessages([...before, optimistic])
+    setDraft("")
+    setFiles([])
 
-    let attachments: FormData | undefined;
+    let attachments: FormData | undefined
     if (sentFiles.length > 0) {
-      attachments = new FormData();
-      for (const file of sentFiles) attachments.append("files", file);
+      attachments = new FormData()
+      for (const file of sentFiles) attachments.append("files", file)
     }
 
     startTransition(async () => {
       const result = id
         ? await sendMessage(id, content, context, attachments)
-        : await startConversation(content, context, attachments);
+        : await startConversation(content, context, attachments)
       if (!toastResult(result)) {
-        setMessages(before);
-        setDraft(content);
-        setFiles(sentFiles);
-        inputRef.current?.focus();
-        return;
+        setMessages(before)
+        setDraft(content)
+        setFiles(sentFiles)
+        inputRef.current?.focus()
+        return
       }
-      const next = [...before, ...result.data.messages];
-      setMessages(next);
-      setId(result.data.conversation.id);
-      onTurn?.(result.data, next);
-      if (result.data.messages.some((message) => message.actions.length > 0)) router.refresh();
-    });
+      const next = [...before, ...result.data.messages]
+      setMessages(next)
+      setId(result.data.conversation.id)
+      onTurn?.(result.data, next)
+      if (result.data.messages.some((message) => message.actions.length > 0)) router.refresh()
+    })
   }
 
   function fill(text: string) {
-    setDraft(text);
-    inputRef.current?.focus();
+    setDraft(text)
+    inputRef.current?.focus()
   }
 
-  const isPanel = variant === "panel";
+  const isPanel = variant === "panel"
   const composer = readOnly ? null : (
     <Composer
       ref={inputRef}
@@ -123,10 +123,10 @@ export function ChatThread({
       autoFocus={!isPanel}
       hint={context ? <Badge variant="secondary">Using this {context.type}</Badge> : undefined}
     />
-  );
+  )
 
   if (messages.length === 0 && renderEmpty) {
-    return <>{renderEmpty(composer, send, fill)}</>;
+    return <>{renderEmpty(composer, send, fill)}</>
   }
 
   return (
@@ -154,5 +154,5 @@ export function ChatThread({
         </div>
       ) : null}
     </div>
-  );
+  )
 }

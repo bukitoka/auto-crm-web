@@ -9,13 +9,13 @@ import {
   MoveRight,
   Send,
   Sparkles,
-} from "lucide-react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { actionHref } from "../context";
-import type { AssistantAction, AssistantBlock, ChatMessage } from "../types";
-import { AssistantBlocks } from "./assistant-blocks";
-import { AttachmentChip } from "./attachment-chip";
+} from "lucide-react"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { actionHref } from "../context"
+import type { AssistantAction, AssistantBlock, ChatMessage } from "../types"
+import { AssistantBlocks } from "./assistant-blocks"
+import { AttachmentChip } from "./attachment-chip"
 
 const ACTION_ICONS: Record<AssistantAction["kind"], LucideIcon> = {
   created: ListPlus,
@@ -25,10 +25,10 @@ const ACTION_ICONS: Record<AssistantAction["kind"], LucideIcon> = {
   moved: MoveRight,
   sent: Send,
   scored: Gauge,
-};
+}
 
 function ActionLink({ action, onNavigate }: { action: AssistantAction; onNavigate?: () => void }) {
-  const Icon = ACTION_ICONS[action.kind];
+  const Icon = ACTION_ICONS[action.kind]
   return (
     <Link
       href={actionHref(action)}
@@ -41,17 +41,17 @@ function ActionLink({ action, onNavigate }: { action: AssistantAction; onNavigat
       <span className="min-w-0 flex-1 truncate font-medium">{action.label}</span>
       <ArrowUpRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
     </Link>
-  );
+  )
 }
 
 type MessageProps = {
-  role: "user" | "assistant";
-  content: string;
-  actions?: AssistantAction[];
-  blocks?: AssistantBlock[];
-  attachments?: ChatMessage["attachments"];
-  onNavigate?: () => void;
-};
+  role: "user" | "assistant"
+  content: string
+  actions?: AssistantAction[]
+  blocks?: AssistantBlock[]
+  attachments?: ChatMessage["attachments"]
+  onNavigate?: () => void
+}
 
 /** Assistant replies show charts and tables and link to the records they changed. */
 export function AssistantMessage({
@@ -62,7 +62,7 @@ export function AssistantMessage({
   attachments = [],
   onNavigate,
 }: MessageProps) {
-  const isUser = role === "user";
+  const isUser = role === "user"
   return (
     <div className={cn("flex gap-2.5", isUser && "justify-end")}>
       {isUser ? null : (
@@ -104,7 +104,7 @@ export function AssistantMessage({
         ) : null}
       </div>
     </div>
-  );
+  )
 }
 
 export function AssistantThinking() {
@@ -115,5 +115,5 @@ export function AssistantThinking() {
       </span>
       Working on it…
     </div>
-  );
+  )
 }

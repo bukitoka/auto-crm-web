@@ -1,9 +1,9 @@
-import { CheckSquare, Pencil } from "lucide-react";
-import Link from "next/link";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { EmptyState } from "@/components/shared/empty-state";
-import { SortableHeader } from "@/components/shared/sortable-header";
-import { Button } from "@/components/ui/button";
+import { CheckSquare, Pencil } from "lucide-react"
+import Link from "next/link"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { EmptyState } from "@/components/shared/empty-state"
+import { SortableHeader } from "@/components/shared/sortable-header"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -11,24 +11,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDate, formatDateTime, isOverdue, personName } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import { deleteTask } from "../actions";
-import type { Task } from "../types";
-import { CompleteTaskButton } from "./complete-task-button";
-import { TaskPriorityBadge, TaskStatusBadge } from "./task-badges";
-import type { TaskFormOptions } from "./task-form";
-import { TaskFormDialog } from "./task-form-dialog";
+} from "@/components/ui/table"
+import { formatDate, formatDateTime, isOverdue, personName } from "@/lib/format"
+import { cn } from "@/lib/utils"
+import { deleteTask } from "../actions"
+import type { Task } from "../types"
+import { CompleteTaskButton } from "./complete-task-button"
+import { TaskPriorityBadge, TaskStatusBadge } from "./task-badges"
+import type { TaskFormOptions } from "./task-form"
+import { TaskFormDialog } from "./task-form-dialog"
 
 export function TasksTable({
   tasks,
   options,
   readOnly = false,
 }: {
-  tasks: Task[];
-  options: TaskFormOptions;
-  readOnly?: boolean;
+  tasks: Task[]
+  options: TaskFormOptions
+  readOnly?: boolean
 }) {
   if (tasks.length === 0) {
     return (
@@ -37,7 +37,7 @@ export function TasksTable({
         title="No tasks found"
         description={readOnly ? "No admin has added tasks yet." : "You're all caught up."}
       />
-    );
+    )
   }
 
   return (
@@ -71,7 +71,7 @@ export function TasksTable({
         </TableHeader>
         <TableBody>
           {tasks.map((task) => {
-            const overdue = task.status !== "done" && isOverdue(task.due_date);
+            const overdue = task.status !== "done" && isOverdue(task.due_date)
             return (
               <TableRow key={task.id}>
                 {readOnly ? null : (
@@ -139,10 +139,10 @@ export function TasksTable({
                   </TableCell>
                 )}
               </TableRow>
-            );
+            )
           })}
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

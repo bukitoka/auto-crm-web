@@ -1,10 +1,10 @@
-import { Pencil, Users } from "lucide-react";
-import Link from "next/link";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { EmptyState } from "@/components/shared/empty-state";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { SortableHeader } from "@/components/shared/sortable-header";
-import { Button } from "@/components/ui/button";
+import { Pencil, Users } from "lucide-react"
+import Link from "next/link"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { EmptyState } from "@/components/shared/empty-state"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { SortableHeader } from "@/components/shared/sortable-header"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -12,20 +12,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { AiScoreBadge } from "@/features/ai/components/ai-score-badge";
-import type { CompanyRef } from "@/features/companies/types";
-import { formatDate, formatDateTime, personName } from "@/lib/format";
-import { deleteContact } from "../actions";
-import type { Contact } from "../types";
-import { ContactFormDialog } from "./contact-form-dialog";
-import { ContactStatusBadge } from "./contact-status-badge";
+} from "@/components/ui/table"
+import { AiScoreBadge } from "@/features/ai/components/ai-score-badge"
+import type { CompanyRef } from "@/features/companies/types"
+import { formatDate, formatDateTime, personName } from "@/lib/format"
+import { deleteContact } from "../actions"
+import type { Contact } from "../types"
+import { ContactFormDialog } from "./contact-form-dialog"
+import { ContactStatusBadge } from "./contact-status-badge"
 
 type ContactsTableProps = {
-  contacts: Contact[];
-  companies: CompanyRef[];
-  readOnly?: boolean;
-};
+  contacts: Contact[]
+  companies: CompanyRef[]
+  readOnly?: boolean
+}
 
 export function ContactsTable({ contacts, companies, readOnly = false }: ContactsTableProps) {
   if (contacts.length === 0) {
@@ -39,7 +39,7 @@ export function ContactsTable({ contacts, companies, readOnly = false }: Contact
             : "Try a different search or filter, or add your first contact."
         }
       />
-    );
+    )
   }
 
   return (
@@ -130,5 +130,5 @@ export function ContactsTable({ contacts, companies, readOnly = false }: Contact
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

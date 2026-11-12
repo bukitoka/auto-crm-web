@@ -1,30 +1,30 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import type { SearchParams } from "@/lib/types";
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import type { SearchParams } from "@/lib/types"
 
 type PaginationBarProps = {
-  pathname: string;
-  searchParams: SearchParams;
-  page: number;
-  size: number;
-  total: number;
-};
+  pathname: string
+  searchParams: SearchParams
+  page: number
+  size: number
+  total: number
+}
 
 function hrefForPage(pathname: string, searchParams: SearchParams, page: number) {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams()
   for (const [key, value] of Object.entries(searchParams)) {
-    if (typeof value === "string" && key !== "page") params.set(key, value);
+    if (typeof value === "string" && key !== "page") params.set(key, value)
   }
-  if (page > 1) params.set("page", String(page));
-  const query = params.toString();
-  return query ? `${pathname}?${query}` : pathname;
+  if (page > 1) params.set("page", String(page))
+  const query = params.toString()
+  return query ? `${pathname}?${query}` : pathname
 }
 
 export function PaginationBar({ pathname, searchParams, page, size, total }: PaginationBarProps) {
-  const pageCount = Math.max(1, Math.ceil(total / size));
-  const from = total === 0 ? 0 : (page - 1) * size + 1;
-  const to = Math.min(page * size, total);
+  const pageCount = Math.max(1, Math.ceil(total / size))
+  const from = total === 0 ? 0 : (page - 1) * size + 1
+  const to = Math.min(page * size, total)
 
   return (
     <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground">
@@ -60,5 +60,5 @@ export function PaginationBar({ pathname, searchParams, page, size, total }: Pag
         </Button>
       </div>
     </div>
-  );
+  )
 }

@@ -1,30 +1,30 @@
-"use client";
+"use client"
 
-import { type ReactNode, useState, useTransition } from "react";
-import { FormDialog } from "@/components/shared/form-dialog";
-import { toastResult } from "@/lib/toast-result";
-import { createTask, updateTask } from "../actions";
-import { emptyTaskForm, type TaskFormValues, taskToForm } from "../schemas";
-import type { Task } from "../types";
-import { TaskForm, type TaskFormOptions } from "./task-form";
+import { type ReactNode, useState, useTransition } from "react"
+import { FormDialog } from "@/components/shared/form-dialog"
+import { toastResult } from "@/lib/toast-result"
+import { createTask, updateTask } from "../actions"
+import { emptyTaskForm, type TaskFormValues, taskToForm } from "../schemas"
+import type { Task } from "../types"
+import { TaskForm, type TaskFormOptions } from "./task-form"
 
 type TaskFormDialogProps = TaskFormOptions & {
-  task?: Task;
-  initialValues?: Partial<TaskFormValues>;
-  trigger: ReactNode;
-};
+  task?: Task
+  initialValues?: Partial<TaskFormValues>
+  trigger: ReactNode
+}
 
 export function TaskFormDialog({ task, initialValues, trigger, ...options }: TaskFormDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
-  const defaultValues = task ? taskToForm(task) : { ...emptyTaskForm(), ...initialValues };
+  const defaultValues = task ? taskToForm(task) : { ...emptyTaskForm(), ...initialValues }
 
   function handleSubmit(values: TaskFormValues) {
     startTransition(async () => {
-      const result = task ? await updateTask(task.id, values) : await createTask(values);
-      if (toastResult(result, task ? "Task updated" : "Task created")) setOpen(false);
-    });
+      const result = task ? await updateTask(task.id, values) : await createTask(values)
+      if (toastResult(result, task ? "Task updated" : "Task created")) setOpen(false)
+    })
   }
 
   return (
@@ -44,5 +44,5 @@ export function TaskFormDialog({ task, initialValues, trigger, ...options }: Tas
         {...options}
       />
     </FormDialog>
-  );
+  )
 }

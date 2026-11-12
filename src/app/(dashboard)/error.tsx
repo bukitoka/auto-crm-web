@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { ErrorState } from "@/components/shared/error-state";
+import { ErrorState } from "@/components/shared/error-state"
 
 export default function DashboardError(props: {
-  error: Error & { digest?: string };
-  retry: () => void;
+  error: Error & { digest?: string }
+  retry: () => void
 }) {
-  return <ErrorState {...props} />;
+  return <ErrorState {...props} />
 }

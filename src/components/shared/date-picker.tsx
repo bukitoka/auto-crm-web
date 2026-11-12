@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import { format, parseISO } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format, parseISO } from "date-fns"
+import { CalendarIcon, X } from "lucide-react"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 type DatePickerProps = {
-  id?: string;
+  id?: string
   /** `"YYYY-MM-DD"` or `""`. */
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-};
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
+}
 
 export function DatePicker({ id, value, onChange, placeholder = "Pick a date" }: DatePickerProps) {
-  const [open, setOpen] = useState(false);
-  const selected = value ? parseISO(value) : undefined;
+  const [open, setOpen] = useState(false)
+  const selected = value ? parseISO(value) : undefined
 
   return (
     <div className="flex items-center gap-1">
@@ -40,8 +40,8 @@ export function DatePicker({ id, value, onChange, placeholder = "Pick a date" }:
             selected={selected}
             defaultMonth={selected}
             onSelect={(date) => {
-              onChange(date ? format(date, "yyyy-MM-dd") : "");
-              setOpen(false);
+              onChange(date ? format(date, "yyyy-MM-dd") : "")
+              setOpen(false)
             }}
           />
         </PopoverContent>
@@ -58,5 +58,5 @@ export function DatePicker({ id, value, onChange, placeholder = "Pick a date" }:
         </Button>
       ) : null}
     </div>
-  );
+  )
 }

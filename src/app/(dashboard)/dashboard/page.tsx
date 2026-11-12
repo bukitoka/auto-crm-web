@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import { PageHeader } from "@/components/shared/page-header";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next"
+import Link from "next/link"
+import type { ReactNode } from "react"
+import { PageHeader } from "@/components/shared/page-header"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -10,20 +10,20 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ActivityList } from "@/features/activities/components/activity-list";
-import { getCurrentUser } from "@/features/auth/api";
-import { getDashboardSummary } from "@/features/dashboard/api";
-import { ClosingSoonList } from "@/features/dashboard/components/closing-soon-list";
-import { CountBarChart } from "@/features/dashboard/components/count-bar-chart";
-import { KpiCards } from "@/features/dashboard/components/kpi-cards";
-import { PipelineChart } from "@/features/dashboard/components/pipeline-chart";
-import { TeamLeaderboard } from "@/features/dashboard/components/team-leaderboard";
-import { TaskList } from "@/features/tasks/components/task-list";
-import { canViewTeam } from "@/features/users/roles";
-import { enumOptions } from "@/lib/options";
+} from "@/components/ui/card"
+import { ActivityList } from "@/features/activities/components/activity-list"
+import { getCurrentUser } from "@/features/auth/api"
+import { getDashboardSummary } from "@/features/dashboard/api"
+import { ClosingSoonList } from "@/features/dashboard/components/closing-soon-list"
+import { CountBarChart } from "@/features/dashboard/components/count-bar-chart"
+import { KpiCards } from "@/features/dashboard/components/kpi-cards"
+import { PipelineChart } from "@/features/dashboard/components/pipeline-chart"
+import { TeamLeaderboard } from "@/features/dashboard/components/team-leaderboard"
+import { TaskList } from "@/features/tasks/components/task-list"
+import { canViewTeam } from "@/features/users/roles"
+import { enumOptions } from "@/lib/options"
 
-export const metadata: Metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Dashboard" }
 
 function DashboardCard({
   title,
@@ -33,12 +33,12 @@ function DashboardCard({
   className,
   children,
 }: {
-  title: string;
-  description: string;
-  href?: string;
-  linkText?: string;
-  className?: string;
-  children: ReactNode;
+  title: string
+  description: string
+  href?: string
+  linkText?: string
+  className?: string
+  children: ReactNode
 }) {
   return (
     <Card className={className}>
@@ -55,25 +55,25 @@ function DashboardCard({
       </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>
-  );
+  )
 }
 
 /** Chart rows with readable names ("lead" → "Lead"). */
 function chartRows(rows: { key: string; count: number }[]) {
-  const labels = enumOptions(rows.map((row) => row.key));
-  return rows.map((row, i) => ({ name: labels[i].label, count: row.count }));
+  const labels = enumOptions(rows.map((row) => row.key))
+  return rows.map((row, i) => ({ name: labels[i].label, count: row.count }))
 }
 
 export default async function DashboardPage() {
-  const [user, summary] = await Promise.all([getCurrentUser(), getDashboardSummary()]);
-  const firstName = user.full_name.split(" ")[0];
-  const oversight = canViewTeam(user);
+  const [user, summary] = await Promise.all([getCurrentUser(), getDashboardSummary()])
+  const firstName = user.full_name.split(" ")[0]
+  const oversight = canViewTeam(user)
   const statusRows = chartRows(
     summary.contacts_by_status.map(({ status, count }) => ({ key: status, count })),
-  );
+  )
   const activityRows = chartRows(
     summary.activities_last_30_days.map(({ type, count }) => ({ key: type, count })),
-  );
+  )
 
   return (
     <>
@@ -149,5 +149,5 @@ export default async function DashboardPage() {
         </DashboardCard>
       </div>
     </>
-  );
+  )
 }

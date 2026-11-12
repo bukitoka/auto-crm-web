@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import type { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import type { ReactNode } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -11,22 +11,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/ui/dialog"
+import { Spinner } from "@/components/ui/spinner"
 
 type FormDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  trigger?: ReactNode;
-  title: string;
-  description?: string;
-  formId: string;
-  submitLabel: string;
-  isPending: boolean;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  trigger?: ReactNode
+  title: string
+  description?: string
+  formId: string
+  submitLabel: string
+  isPending: boolean
   /** Keeps Submit off until the form is ready (the dialog still closes with Cancel). */
-  submitDisabled?: boolean;
-  children: ReactNode;
-};
+  submitDisabled?: boolean
+  children: ReactNode
+}
 
 export function FormDialog({
   open,
@@ -62,5 +62,5 @@ export function FormDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

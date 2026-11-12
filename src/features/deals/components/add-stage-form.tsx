@@ -1,32 +1,32 @@
-"use client";
+"use client"
 
-import { Plus } from "lucide-react";
-import { type FormEvent, useState, useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { toastResult } from "@/lib/toast-result";
-import { createStage } from "../stage-actions";
+import { Plus } from "lucide-react"
+import { type FormEvent, useState, useTransition } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { toastResult } from "@/lib/toast-result"
+import { createStage } from "../stage-actions"
 
 type AddStageFormProps = {
-  autoFocus?: boolean;
-  onAdded?: () => void;
-};
+  autoFocus?: boolean
+  onAdded?: () => void
+}
 
 /** Name-only quick add; the stage is open, 0% and placed before Won/Lost. */
 export function AddStageForm({ autoFocus, onAdded }: AddStageFormProps) {
-  const [name, setName] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [name, setName] = useState("")
+  const [isPending, startTransition] = useTransition()
 
   function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (!name.trim()) return;
+    event.preventDefault()
+    if (!name.trim()) return
     startTransition(async () => {
-      const result = await createStage({ name, probability: 0, is_won: false, is_lost: false });
-      if (!toastResult(result, `Added “${result.ok ? result.data.name : name}”`)) return;
-      setName("");
-      onAdded?.();
-    });
+      const result = await createStage({ name, probability: 0, is_won: false, is_lost: false })
+      if (!toastResult(result, `Added “${result.ok ? result.data.name : name}”`)) return
+      setName("")
+      onAdded?.()
+    })
   }
 
   return (
@@ -45,11 +45,11 @@ export function AddStageForm({ autoFocus, onAdded }: AddStageFormProps) {
         Add
       </Button>
     </form>
-  );
+  )
 }
 
 export function AddStageLane() {
-  const [isAdding, setIsAdding] = useState(false);
+  const [isAdding, setIsAdding] = useState(false)
 
   return (
     <section
@@ -74,5 +74,5 @@ export function AddStageLane() {
         </Button>
       )}
     </section>
-  );
+  )
 }

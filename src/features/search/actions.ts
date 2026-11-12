@@ -1,26 +1,26 @@
-"use server";
+"use server"
 
-import { listCompanies } from "@/features/companies/api";
-import { listContacts } from "@/features/contacts/api";
-import { listDeals } from "@/features/deals/api";
-import { type ActionResult, runAction } from "@/lib/action-result";
-import { formatCurrency, personName } from "@/lib/format";
-import type { QuickSearchGroup } from "./types";
+import { listCompanies } from "@/features/companies/api"
+import { listContacts } from "@/features/contacts/api"
+import { listDeals } from "@/features/deals/api"
+import { type ActionResult, runAction } from "@/lib/action-result"
+import { formatCurrency, personName } from "@/lib/format"
+import type { QuickSearchGroup } from "./types"
 
-const PER_GROUP = 5;
+const PER_GROUP = 5
 
 /** Live results for the header search box: a few matches per record type. */
 export async function quickSearch(query: string): Promise<ActionResult<QuickSearchGroup[]>> {
-  const search = query.trim();
-  if (search.length < 2) return { ok: true, data: [] };
+  const search = query.trim()
+  if (search.length < 2) return { ok: true, data: [] }
 
   return runAction(async () => {
-    const params = { page: 1, size: PER_GROUP, search };
+    const params = { page: 1, size: PER_GROUP, search }
     const [contacts, companies, deals] = await Promise.all([
       listContacts(params),
       listCompanies(params),
       listDeals(params),
-    ]);
+    ])
     const groups: QuickSearchGroup[] = [
       {
         label: "Contacts",
@@ -55,8 +55,8 @@ export async function quickSearch(query: string): Promise<ActionResult<QuickSear
           image: null,
         })),
       },
-    ];
-    const found = groups.filter((group) => group.items.length > 0);
+    ]
+    const found = groups.filter((group) => group.items.length > 0)
     // Always offer the full results page (also where Enter goes with nothing highlighted).
     found.push({
       label: "More",
@@ -70,7 +70,7 @@ export async function quickSearch(query: string): Promise<ActionResult<QuickSear
           image: null,
         },
       ],
-    });
-    return found;
-  });
+    })
+    return found
+  })
 }

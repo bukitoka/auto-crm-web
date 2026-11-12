@@ -10,9 +10,9 @@
  * pending while an earlier async action is unfinished, which breaks other tests.
  */
 export function deferred<T>() {
-  let resolve: (value: T) => void = () => {};
+  let resolve: (value: T) => void = () => {}
   const promise = new Promise<T>((done) => {
-    resolve = done;
-  });
-  return { promise, resolve };
+    resolve = done
+  })
+  return { promise, resolve }
 }

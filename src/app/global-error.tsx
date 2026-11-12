@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import "./globals.css";
+import "./globals.css"
 
 export default function GlobalError({
   retry,
 }: {
-  error: Error & { digest?: string };
-  retry: () => void;
+  error: Error & { digest?: string }
+  retry: () => void
 }) {
   return (
     <html lang="en">
@@ -21,5 +21,5 @@ export default function GlobalError({
         </button>
       </body>
     </html>
-  );
+  )
 }

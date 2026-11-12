@@ -1,11 +1,11 @@
-import { Building2, Handshake, Users } from "lucide-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ContactStatusBadge } from "@/features/contacts/components/contact-status-badge";
-import { DealStageBadge } from "@/features/deals/components/deal-stage-badge";
-import { formatCurrency, personName } from "@/lib/format";
-import type { SearchResults as Results } from "../types";
+import { Building2, Handshake, Users } from "lucide-react"
+import Link from "next/link"
+import type { ReactNode } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ContactStatusBadge } from "@/features/contacts/components/contact-status-badge"
+import { DealStageBadge } from "@/features/deals/components/deal-stage-badge"
+import { formatCurrency, personName } from "@/lib/format"
+import type { SearchResults as Results } from "../types"
 
 function Section({
   title,
@@ -13,10 +13,10 @@ function Section({
   children,
   empty,
 }: {
-  title: string;
-  icon: ReactNode;
-  children: ReactNode;
-  empty: boolean;
+  title: string
+  icon: ReactNode
+  children: ReactNode
+  empty: boolean
 }) {
   return (
     <Card>
@@ -34,7 +34,7 @@ function Section({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export function SearchResults({ results }: { results: Results }) {
@@ -84,5 +84,5 @@ export function SearchResults({ results }: { results: Results }) {
         ))}
       </Section>
     </div>
-  );
+  )
 }

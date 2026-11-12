@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { emptyToNull } from "@/lib/form";
-import { toDateInput } from "@/lib/format";
-import { TASK_PRIORITIES, TASK_STATUSES, type Task, type TaskPayload } from "./types";
+import { z } from "zod"
+import { emptyToNull } from "@/lib/form"
+import { toDateInput } from "@/lib/format"
+import { TASK_PRIORITIES, TASK_STATUSES, type Task, type TaskPayload } from "./types"
 
 export const taskFormSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(200),
@@ -11,8 +11,8 @@ export const taskFormSchema = z.object({
   status: z.enum(TASK_STATUSES),
   contact_id: z.string(),
   deal_id: z.string(),
-});
-export type TaskFormValues = z.infer<typeof taskFormSchema>;
+})
+export type TaskFormValues = z.infer<typeof taskFormSchema>
 
 export function emptyTaskForm(link: { contactId?: string; dealId?: string } = {}): TaskFormValues {
   return {
@@ -23,7 +23,7 @@ export function emptyTaskForm(link: { contactId?: string; dealId?: string } = {}
     status: "todo",
     contact_id: link.contactId ?? "",
     deal_id: link.dealId ?? "",
-  };
+  }
 }
 
 export function taskToForm(task: Task): TaskFormValues {
@@ -35,9 +35,9 @@ export function taskToForm(task: Task): TaskFormValues {
     status: task.status,
     contact_id: task.contact_id ?? "",
     deal_id: task.deal_id ?? "",
-  };
+  }
 }
 
 export function toTaskPayload(values: TaskFormValues): TaskPayload {
-  return emptyToNull(values) as TaskPayload;
+  return emptyToNull(values) as TaskPayload
 }

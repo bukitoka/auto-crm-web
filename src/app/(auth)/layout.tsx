@@ -1,32 +1,71 @@
-import { Sparkles } from "lucide-react";
+import Image from "next/image"
+import Link from "next/link"
+import { ThemeToggle } from "@/components/layout/theme-toggle"
+import { Brand } from "@/components/shared/brand"
 
 export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-6 p-6 md:p-10">
-        <div className="flex items-center gap-2 font-semibold">
-          <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Sparkles className="size-4" />
-          </div>
-          Auto CRM
+    <main className="grid min-h-svh bg-background text-foreground lg:grid-cols-2">
+      <section
+        className="relative isolate hidden h-svh flex-col justify-between overflow-hidden bg-linear-to-br from-teal-950 via-teal-900 to-teal-600 p-10 text-teal-50 lg:sticky lg:top-0 lg:flex xl:p-16"
+        aria-label="About Auto CRM"
+      >
+        <Image
+          src="/logo.svg"
+          alt=""
+          width={640}
+          height={640}
+          className="pointer-events-none absolute -right-32 bottom-0 -z-10 w-full max-w-2xl opacity-[0.07] brightness-0 invert"
+        />
+        <Link
+          href="/login"
+          aria-label="Auto CRM home"
+          className="w-fit rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-teal-200"
+        >
+          <Brand className="text-teal-50 [&_img]:brightness-0 [&_img]:invert" />
+        </Link>
+        <div className="my-16 max-w-lg space-y-8">
+          <p className="text-5xl font-medium leading-tight tracking-tight text-balance xl:text-6xl 2xl:text-7xl">
+            From first contact.
+            <br />
+            <span className="text-teal-200">To what’s next.</span>
+          </p>
+          <p className="max-w-sm text-base leading-relaxed text-teal-100">
+            Keep the conversation, the deal and the next follow-up together. One place for your team
+            to pick up where you left off.
+          </p>
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-teal-50/25 pt-6 text-sm text-teal-100">
+          <span>Contacts</span>
+          <span aria-hidden="true">/</span>
+          <span>Pipeline</span>
+          <span aria-hidden="true">/</span>
+          <span>Follow-ups</span>
+        </div>
+      </section>
+      <section
+        className="flex min-h-svh min-w-0 flex-col px-6 sm:px-10 xl:px-16"
+        aria-label="Workspace access"
+      >
+        <header className="flex min-h-24 items-center justify-between gap-4 py-6">
+          <Link
+            href="/login"
+            aria-label="Auto CRM home"
+            className="rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+          >
+            <Brand />
+          </Link>
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
+        </header>
+        <div className="flex flex-1 items-center justify-center py-10 sm:py-16">
           <div className="w-full max-w-sm">{children}</div>
         </div>
-      </div>
-      <div className="hidden p-3 lg:flex">
-        <div className="relative flex flex-1 flex-col justify-end overflow-hidden rounded-lg bg-teal-950 p-10 text-teal-50">
-          <div className="absolute -top-24 -right-24 size-96 rounded-full bg-teal-700/50 blur-3xl" />
-          <div className="absolute bottom-10 -left-20 size-80 rounded-full bg-teal-400/25 blur-3xl" />
-          <blockquote className="relative space-y-3">
-            <p className="text-2xl font-medium text-balance">
-              Contacts, deals and follow-ups in one place, with an assistant that knows your
-              pipeline.
-            </p>
-            <footer className="text-sm text-teal-200">AI-assisted CRM · DeepSeek · n8n</footer>
-          </blockquote>
-        </div>
-      </div>
-    </div>
-  );
+        <footer className="py-6 text-center text-xs text-muted-foreground">
+          Auto CRM · Your team’s workspace
+        </footer>
+      </section>
+    </main>
+  )
 }

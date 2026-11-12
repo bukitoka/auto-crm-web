@@ -1,29 +1,29 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { ForbiddenState } from "@/components/shared/forbidden-state";
-import { PageHeader } from "@/components/shared/page-header";
-import { PaginationBar } from "@/components/shared/pagination-bar";
-import { ParamSelect } from "@/components/shared/param-select";
-import { SearchInput } from "@/components/shared/search-input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { listConversations } from "@/features/assistant/api";
-import { ConversationsAdminTable } from "@/features/assistant/components/conversations-admin-table";
-import { getCurrentUser } from "@/features/auth/api";
-import { listUserOptions } from "@/features/users/api";
-import { canViewTeam } from "@/features/users/roles";
-import { getListParams, getParam } from "@/lib/search-params";
+import type { Metadata } from "next"
+import Link from "next/link"
+import { ForbiddenState } from "@/components/shared/forbidden-state"
+import { PageHeader } from "@/components/shared/page-header"
+import { PaginationBar } from "@/components/shared/pagination-bar"
+import { ParamSelect } from "@/components/shared/param-select"
+import { SearchInput } from "@/components/shared/search-input"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { listConversations } from "@/features/assistant/api"
+import { ConversationsAdminTable } from "@/features/assistant/components/conversations-admin-table"
+import { getCurrentUser } from "@/features/auth/api"
+import { listUserOptions } from "@/features/users/api"
+import { canViewTeam } from "@/features/users/roles"
+import { getListParams, getParam } from "@/lib/search-params"
 
-export const metadata: Metadata = { title: "AI chats" };
+export const metadata: Metadata = { title: "AI chats" }
 
 export default async function AiChatsPage({ searchParams }: PageProps<"/ai-chats">) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser()
   if (!canViewTeam(user)) {
-    return <ForbiddenState description="Only the super admin can read other admins' chats." />;
+    return <ForbiddenState description="Only the super admin can read other admins' chats." />
   }
 
-  const params = await searchParams;
-  const archived = getParam(params, "status") === "archived";
-  const { page, size, search } = getListParams(params);
+  const params = await searchParams
+  const archived = getParam(params, "status") === "archived"
+  const { page, size, search } = getListParams(params)
   const [conversations, users] = await Promise.all([
     listConversations({
       scope: "all",
@@ -34,7 +34,7 @@ export default async function AiChatsPage({ searchParams }: PageProps<"/ai-chats
       size,
     }),
     listUserOptions(),
-  ]);
+  ])
 
   return (
     <>
@@ -75,5 +75,5 @@ export default async function AiChatsPage({ searchParams }: PageProps<"/ai-chats
         total={conversations.total}
       />
     </>
-  );
+  )
 }

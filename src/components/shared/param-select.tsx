@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useSearchParamUpdater } from "@/hooks/use-search-param-updater";
-import { ComboboxSelect, type Option } from "./combobox-select";
+import { useSearchParamUpdater } from "@/hooks/use-search-param-updater"
+import { ComboboxSelect, type Option } from "./combobox-select"
 
 type ParamSelectProps = {
-  param: string;
-  allLabel: string;
-  options: Option[];
-};
+  param: string
+  allLabel: string
+  options: Option[]
+}
 
 /** Clearing the selection removes the search param instead of setting it to `""`. */
 export function ParamSelect({ param, allLabel, options }: ParamSelectProps) {
-  const { searchParams, setParams } = useSearchParamUpdater();
+  const { searchParams, setParams } = useSearchParamUpdater()
 
   return (
     <ComboboxSelect
@@ -23,5 +23,5 @@ export function ParamSelect({ param, allLabel, options }: ParamSelectProps) {
       clearable
       className="sm:w-48"
     />
-  );
+  )
 }

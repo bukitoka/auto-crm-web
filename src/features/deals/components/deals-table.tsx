@@ -1,8 +1,8 @@
-import { Handshake } from "lucide-react";
-import Link from "next/link";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { EmptyState } from "@/components/shared/empty-state";
-import { SortableHeader } from "@/components/shared/sortable-header";
+import { Handshake } from "lucide-react"
+import Link from "next/link"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { EmptyState } from "@/components/shared/empty-state"
+import { SortableHeader } from "@/components/shared/sortable-header"
 import {
   Table,
   TableBody,
@@ -10,11 +10,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatCurrency, formatDate, formatDateTime, personName } from "@/lib/format";
-import { deleteDeal } from "../actions";
-import type { Deal } from "../types";
-import { DealStageBadge } from "./deal-stage-badge";
+} from "@/components/ui/table"
+import { formatCurrency, formatDate, formatDateTime, personName } from "@/lib/format"
+import { deleteDeal } from "../actions"
+import type { Deal } from "../types"
+import { DealStageBadge } from "./deal-stage-badge"
 
 export function DealsTable({ deals, readOnly = false }: { deals: Deal[]; readOnly?: boolean }) {
   if (deals.length === 0) {
@@ -26,7 +26,7 @@ export function DealsTable({ deals, readOnly = false }: { deals: Deal[]; readOnl
           readOnly ? "No admin has added deals yet." : "Add a deal to start tracking your pipeline."
         }
       />
-    );
+    )
   }
 
   return (
@@ -97,5 +97,5 @@ export function DealsTable({ deals, readOnly = false }: { deals: Deal[]; readOnl
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

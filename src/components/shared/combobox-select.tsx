@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Combobox,
@@ -7,26 +7,26 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from "@/components/ui/combobox";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/combobox"
+import { cn } from "@/lib/utils"
 
-export type Option = { value: string; label: string };
+export type Option = { value: string; label: string }
 
 type ComboboxSelectProps = {
-  options: Option[];
+  options: Option[]
   /** Selected option value; `""` means nothing selected. */
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
   /** Show an × button that clears the selection (sets `""`). */
-  clearable?: boolean;
-  emptyText?: string;
-  id?: string;
-  "aria-label"?: string;
-  invalid?: boolean;
-  disabled?: boolean;
-  className?: string;
-};
+  clearable?: boolean
+  emptyText?: string
+  id?: string
+  "aria-label"?: string
+  invalid?: boolean
+  disabled?: boolean
+  className?: string
+}
 
 /** Works with plain string values so forms and URL params stay simple. */
 export function ComboboxSelect({
@@ -42,7 +42,7 @@ export function ComboboxSelect({
   disabled,
   className,
 }: ComboboxSelectProps) {
-  const selected = options.find((option) => option.value === value) ?? null;
+  const selected = options.find((option) => option.value === value) ?? null
 
   return (
     <Combobox
@@ -72,5 +72,5 @@ export function ComboboxSelect({
         </ComboboxList>
       </ComboboxContent>
     </Combobox>
-  );
+  )
 }

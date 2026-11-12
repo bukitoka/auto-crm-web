@@ -1,4 +1,4 @@
-import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar"
 import {
   Table,
   TableBody,
@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatCurrency } from "@/lib/format";
-import type { TeamMemberStats } from "../types";
+} from "@/components/ui/table"
+import { formatCurrency } from "@/lib/format"
+import type { TeamMemberStats } from "../types"
 
 /** Active users ranked by value won this month (the API sorts). */
 export function TeamLeaderboard({ team }: { team: TeamMemberStats[] }) {
@@ -46,5 +46,5 @@ export function TeamLeaderboard({ team }: { team: TeamMemberStats[] }) {
         ))}
       </TableBody>
     </Table>
-  );
+  )
 }

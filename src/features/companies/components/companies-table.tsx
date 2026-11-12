@@ -1,10 +1,10 @@
-import { Building2, Pencil } from "lucide-react";
-import Link from "next/link";
-import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button";
-import { EmptyState } from "@/components/shared/empty-state";
-import { EntityAvatar } from "@/components/shared/entity-avatar";
-import { SortableHeader } from "@/components/shared/sortable-header";
-import { Button } from "@/components/ui/button";
+import { Building2, Pencil } from "lucide-react"
+import Link from "next/link"
+import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
+import { EmptyState } from "@/components/shared/empty-state"
+import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { SortableHeader } from "@/components/shared/sortable-header"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -12,18 +12,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatDate, formatDateTime } from "@/lib/format";
-import { deleteCompany } from "../actions";
-import type { Company } from "../types";
-import { CompanyFormDialog } from "./company-form-dialog";
+} from "@/components/ui/table"
+import { formatDate, formatDateTime } from "@/lib/format"
+import { deleteCompany } from "../actions"
+import type { Company } from "../types"
+import { CompanyFormDialog } from "./company-form-dialog"
 
 export function CompaniesTable({
   companies,
   readOnly = false,
 }: {
-  companies: Company[];
-  readOnly?: boolean;
+  companies: Company[]
+  readOnly?: boolean
 }) {
   if (companies.length === 0) {
     return (
@@ -36,7 +36,7 @@ export function CompaniesTable({
             : "Try a different search, or add your first company."
         }
       />
-    );
+    )
   }
 
   return (
@@ -112,5 +112,5 @@ export function CompaniesTable({
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

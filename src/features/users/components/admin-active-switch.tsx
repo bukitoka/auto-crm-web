@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { type MouseEvent, useState, useTransition } from "react";
+import { type MouseEvent, useState, useTransition } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,26 +10,26 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
-import { toastResult } from "@/lib/toast-result";
-import { updateUser } from "../actions";
+} from "@/components/ui/alert-dialog"
+import { Spinner } from "@/components/ui/spinner"
+import { Switch } from "@/components/ui/switch"
+import { toastResult } from "@/lib/toast-result"
+import { updateUser } from "../actions"
 
-type AdminActiveSwitchProps = { id: string; name: string; isActive: boolean };
+type AdminActiveSwitchProps = { id: string; name: string; isActive: boolean }
 
 /** The switch only asks; the account changes once the super admin confirms. */
 export function AdminActiveSwitch({ id, name, isActive }: AdminActiveSwitchProps) {
-  const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  const next = !isActive;
+  const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const next = !isActive
 
   function handleConfirm(event: MouseEvent) {
-    event.preventDefault();
+    event.preventDefault()
     startTransition(async () => {
-      const result = await updateUser(id, { is_active: next });
-      if (toastResult(result, next ? "Admin activated" : "Admin deactivated")) setOpen(false);
-    });
+      const result = await updateUser(id, { is_active: next })
+      if (toastResult(result, next ? "Admin activated" : "Admin deactivated")) setOpen(false)
+    })
   }
 
   return (
@@ -65,5 +65,5 @@ export function AdminActiveSwitch({ id, name, isActive }: AdminActiveSwitchProps
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }
