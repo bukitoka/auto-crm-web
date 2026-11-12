@@ -94,8 +94,8 @@ export function HeaderSearch() {
   return (
     <>
       <Button
-        variant="outline"
-        className="px-0 font-normal text-muted-foreground max-md:size-10 md:w-64 md:justify-start md:px-4"
+        variant="ghost"
+        className="rounded-md bg-muted/50 px-0 font-normal text-muted-foreground max-md:size-10 md:w-64 md:justify-start md:px-3"
         onClick={() => setOpen(true)}
         aria-label="Search"
       >

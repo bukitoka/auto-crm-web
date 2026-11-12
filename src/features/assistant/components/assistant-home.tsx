@@ -2,11 +2,13 @@
 
 import {
   AlarmClock,
+  ArrowUpRight,
   CalendarCheck,
   Gauge,
   HandCoins,
   type LucideIcon,
   Mail,
+  PencilLine,
   PhoneCall,
   Sparkles,
   TrendingUp,
@@ -14,6 +16,7 @@ import {
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { colorTones } from "@/lib/color-tones"
 import { cn } from "@/lib/utils"
 import { greeting } from "../context"
 import { ChatThread } from "./chat-thread"
@@ -21,55 +24,62 @@ import { ChatThread } from "./chat-thread"
 type Idea = {
   title: string
   prompt: string
+  description: string
   icon: LucideIcon
   /** "send" asks right away; "fill" puts the text in the box to finish (e.g. a name). */
   mode: "send" | "fill"
-  tone: string
+  tone: keyof typeof colorTones
 }
 
 const IDEAS: Idea[] = [
   {
     title: "Plan my day",
+    description: "Find the follow-ups that need you first.",
     prompt: "What should I focus on today? Check my overdue and upcoming tasks.",
     icon: CalendarCheck,
     mode: "send",
-    tone: "bg-primary/10 text-primary",
+    tone: "primary",
   },
   {
     title: "Pipeline check",
+    description: "See where deals stand and what needs attention.",
     prompt:
       "Chart my pipeline by stage and my won deals over the last 6 months. Which deals need attention?",
     icon: TrendingUp,
     mode: "send",
-    tone: "bg-success/10 text-success",
+    tone: "success",
   },
   {
     title: "Add a follow-up",
+    description: "Set a reminder so you don’t lose touch.",
     prompt: "Create a follow-up task for ",
     icon: AlarmClock,
     mode: "fill",
-    tone: "bg-warning/10 text-warning",
+    tone: "warning",
   },
   {
     title: "Log a call",
+    description: "Save the details while they’re fresh.",
     prompt: "Log a call with ",
     icon: PhoneCall,
     mode: "fill",
-    tone: "bg-info/10 text-info",
+    tone: "info",
   },
   {
     title: "Draft an email",
+    description: "Find the right words for your next check-in.",
     prompt: "Draft a friendly check-in email to ",
     icon: Mail,
     mode: "fill",
-    tone: "bg-primary/10 text-primary",
+    tone: "primary",
   },
   {
     title: "Who to call first",
+    description: "Review your newest leads and pick a starting point.",
     prompt: "Score my newest leads and tell me who to call first.",
     icon: Gauge,
     mode: "send",
-    tone: "bg-destructive/10 text-destructive",
+    tone: "info",
   },
 ]
 
@@ -96,9 +106,9 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
       onTurn={(turn) => router.replace(`/assistant/${turn.conversation.id}`)}
       renderEmpty={(composer, send, fill) => (
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-          <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-8 px-4 py-10">
+          <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-7 px-4 py-8 sm:px-6 sm:py-12">
             <div className="flex flex-col items-center gap-4 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-linear-to-br from-primary to-info text-primary-foreground">
+              <span className="flex size-12 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
                 <Sparkles className="size-6" />
               </span>
               <div className="space-y-2">
@@ -106,8 +116,11 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
                   {hello}, {firstName}
                 </p>
                 <h1 className="font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-                  What are you going to do today?
+                  What would you like to work on?
                 </h1>
+                <p className="mx-auto max-w-md text-sm leading-relaxed text-muted-foreground">
+                  Plan your next follow-up, check a deal, or tell me what needs doing.
+                </p>
               </div>
             </div>
 
@@ -134,29 +147,47 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
               </div>
             ) : null}
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {IDEAS.map((idea) => (
-                <button
-                  key={idea.title}
-                  type="button"
-                  onClick={() => (idea.mode === "send" ? send(idea.prompt) : fill(idea.prompt))}
-                  className="group flex flex-col gap-3 rounded-lg border bg-card p-4 text-left transition-colors hover:border-primary/50 hover:bg-accent/40"
-                >
-                  <span
-                    className={cn("flex size-9 items-center justify-center rounded-md", idea.tone)}
+            <section aria-labelledby="assistant-shortcuts" className="space-y-3">
+              <h2 id="assistant-shortcuts" className="text-sm font-medium text-muted-foreground">
+                A few ways to get started
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {IDEAS.map((idea) => (
+                  <button
+                    key={idea.title}
+                    type="button"
+                    onClick={() => (idea.mode === "send" ? send(idea.prompt) : fill(idea.prompt))}
+                    className="group flex flex-col gap-3 rounded-lg border bg-card p-4 text-left transition-colors outline-none hover:border-primary/40 hover:bg-muted/40 focus-visible:ring-3 focus-visible:ring-ring/50"
+                    aria-describedby={`idea-${idea.title.replaceAll(" ", "-")}`}
                   >
-                    <idea.icon className="size-4.5" />
-                  </span>
-                  <span className="space-y-1">
-                    <span className="block text-sm font-medium">{idea.title}</span>
-                    <span className="line-clamp-2 block text-xs text-muted-foreground">
-                      {idea.prompt.trim()}
-                      {idea.mode === "fill" ? "…" : ""}
+                    <span className="flex w-full items-center justify-between">
+                      <span
+                        className={cn(
+                          "flex size-9 items-center justify-center rounded-md",
+                          colorTones[idea.tone],
+                        )}
+                      >
+                        <idea.icon aria-hidden className="size-4.5" />
+                      </span>
+                      {idea.mode === "send" ? (
+                        <ArrowUpRight aria-hidden className="size-4 text-muted-foreground" />
+                      ) : (
+                        <PencilLine aria-hidden className="size-4 text-muted-foreground" />
+                      )}
                     </span>
-                  </span>
-                </button>
-              ))}
-            </div>
+                    <span className="space-y-1">
+                      <span className="block text-sm font-medium">{idea.title}</span>
+                      <span
+                        id={`idea-${idea.title.replaceAll(" ", "-")}`}
+                        className="mt-1 block text-xs leading-relaxed text-muted-foreground"
+                      >
+                        {idea.description}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </section>
           </div>
         </div>
       )}
@@ -180,7 +211,7 @@ function SnapshotChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors hover:border-primary/50",
+        "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors outline-none hover:border-primary/50 focus-visible:ring-3 focus-visible:ring-ring/50",
         alert ? "border-destructive/30 bg-destructive/5 text-destructive" : "bg-card",
       )}
     >

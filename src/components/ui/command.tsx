@@ -11,14 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { InputGroup, InputGroupAddon } from "@/components/ui/input-group"
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "flex size-full flex-col overflow-hidden rounded-lg! bg-popover p-1 text-popover-foreground",
+        "flex size-full flex-col overflow-hidden rounded-lg bg-popover text-popover-foreground",
         className,
       )}
       {...props}
@@ -41,14 +40,17 @@ function CommandDialog({
 }) {
   return (
     <Dialog {...props}>
-      <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </DialogHeader>
       <DialogContent
-        className={cn("top-1/3 translate-y-0 overflow-hidden rounded-lg! p-0", className)}
+        className={cn(
+          "top-[15svh] translate-y-0 gap-0 overflow-hidden rounded-lg p-0 sm:max-w-lg",
+          className,
+        )}
         showCloseButton={showCloseButton}
       >
+        <DialogHeader className="sr-only">
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
         {children}
       </DialogContent>
     </Dialog>
@@ -60,20 +62,16 @@ function CommandInput({
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
-    <div data-slot="command-input-wrapper" className="p-1 pb-0">
-      <InputGroup className="h-10! rounded-full! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
-        <CommandPrimitive.Input
-          data-slot="command-input"
-          className={cn(
-            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-            className,
-          )}
-          {...props}
-        />
-        <InputGroupAddon>
-          <SearchIcon className="size-4 shrink-0 opacity-50" />
-        </InputGroupAddon>
-      </InputGroup>
+    <div data-slot="command-input-wrapper" className="flex items-center gap-2 border-b px-3">
+      <SearchIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+      <CommandPrimitive.Input
+        data-slot="command-input"
+        className={cn(
+          "flex h-12 w-full min-w-0 rounded-none border-0 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        {...props}
+      />
     </div>
   )
 }
@@ -83,7 +81,7 @@ function CommandList({ className, ...props }: React.ComponentProps<typeof Comman
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        "no-scrollbar max-h-[min(24rem,60svh)] scroll-py-1 overflow-x-hidden overflow-y-auto p-1 outline-none",
         className,
       )}
       {...props}

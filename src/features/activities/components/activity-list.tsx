@@ -10,12 +10,14 @@ type ActivityListProps = {
   /** Show links to the related contact/deal (dashboard), hide on detail pages. */
   showLinks?: boolean
   canDelete?: boolean
+  compact?: boolean
 }
 
 export function ActivityList({
   activities,
   showLinks = false,
   canDelete = false,
+  compact = false,
 }: ActivityListProps) {
   if (activities.length === 0) {
     return <p className="py-6 text-center text-sm text-muted-foreground">No activity yet.</p>
@@ -51,7 +53,16 @@ export function ActivityList({
               ) : null}
             </div>
             {activity.body ? (
-              <p className="text-sm whitespace-pre-line text-muted-foreground">{activity.body}</p>
+              compact ? (
+                <details className="text-sm text-muted-foreground">
+                  <summary className="w-fit cursor-pointer rounded-sm text-xs outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring">
+                    Read details
+                  </summary>
+                  <p className="mt-2 wrap-break-word whitespace-pre-line">{activity.body}</p>
+                </details>
+              ) : (
+                <p className="text-sm whitespace-pre-line text-muted-foreground">{activity.body}</p>
+              )
             ) : null}
             <p className="text-xs text-muted-foreground">
               {formatRelative(activity.occurred_at)}

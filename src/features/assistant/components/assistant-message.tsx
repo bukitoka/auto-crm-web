@@ -70,7 +70,9 @@ export function AssistantMessage({
           <Sparkles className="size-3.5" />
         </span>
       )}
-      <div className={cn("flex max-w-[85%] min-w-0 flex-col gap-2", isUser && "items-end")}>
+      <div
+        className={cn("flex min-w-0 flex-col gap-2", isUser ? "max-w-[85%] items-end" : "w-full")}
+      >
         {attachments.length > 0 ? (
           <div className="flex flex-wrap justify-end gap-1.5">
             {attachments.map((file) => (
@@ -81,7 +83,7 @@ export function AssistantMessage({
         {content ? (
           <div
             className={cn(
-              "rounded-lg px-3.5 py-2.5 text-sm wrap-break-word whitespace-pre-wrap",
+              "rounded-lg px-3.5 py-2.5 text-sm leading-relaxed wrap-break-word whitespace-pre-wrap",
               isUser
                 ? "rounded-br-sm bg-primary text-primary-foreground"
                 : "rounded-tl-sm bg-muted text-foreground",

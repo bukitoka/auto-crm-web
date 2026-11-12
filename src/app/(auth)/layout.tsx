@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
     <main className="grid min-h-svh bg-background text-foreground lg:grid-cols-2">
       <section
-        className="relative isolate hidden h-svh flex-col justify-between overflow-hidden bg-linear-to-br from-teal-950 via-teal-900 to-teal-600 p-10 text-teal-50 lg:sticky lg:top-0 lg:flex xl:p-16"
+        className="relative isolate hidden h-svh flex-col justify-between overflow-hidden bg-linear-to-br from-brand-900 via-brand-800 to-brand-600 p-10 text-brand-50 lg:sticky lg:top-0 lg:flex xl:p-16"
         aria-label="About Auto CRM"
       >
         <Image
@@ -20,22 +20,22 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
         <Link
           href="/login"
           aria-label="Auto CRM home"
-          className="w-fit rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-teal-200"
+          className="w-fit rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-brand-200"
         >
-          <Brand className="text-teal-50 [&_img]:brightness-0 [&_img]:invert" />
+          <Brand className="text-brand-50 [&_svg]:text-brand-50" />
         </Link>
         <div className="my-16 max-w-lg space-y-8">
           <p className="text-5xl font-medium leading-tight tracking-tight text-balance xl:text-6xl 2xl:text-7xl">
             From first contact.
             <br />
-            <span className="text-teal-200">To what’s next.</span>
+            <span className="text-brand-200">To what’s next.</span>
           </p>
-          <p className="max-w-sm text-base leading-relaxed text-teal-100">
+          <p className="max-w-sm text-base leading-relaxed text-brand-100">
             Keep the conversation, the deal and the next follow-up together. One place for your team
             to pick up where you left off.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-teal-50/25 pt-6 text-sm text-teal-100">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-brand-50/25 pt-6 text-sm text-brand-100">
           <span>Contacts</span>
           <span aria-hidden="true">/</span>
           <span>Pipeline</span>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist_Mono } from "next/font/google"
+import localFont from "next/font/local"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -7,9 +8,15 @@ import "./globals.css"
 
 export const dynamic = "force-dynamic"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const fixel = localFont({
+  src: [
+    { path: "./fonts/FixelText-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/FixelText-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/FixelText-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/FixelText-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-fixel",
+  display: "swap",
 })
 
 const geistMono = Geist_Mono({
@@ -26,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fixel.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full">

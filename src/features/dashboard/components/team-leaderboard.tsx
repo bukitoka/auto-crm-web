@@ -12,6 +12,14 @@ import type { TeamMemberStats } from "../types"
 
 /** Active users ranked by value won this month (the API sorts). */
 export function TeamLeaderboard({ team }: { team: TeamMemberStats[] }) {
+  if (team.length === 0) {
+    return (
+      <p className="py-6 text-center text-sm text-muted-foreground">
+        No team results yet. Wins and open work will appear here.
+      </p>
+    )
+  }
+
   return (
     <Table>
       <TableHeader>

@@ -15,12 +15,12 @@ const turn = {
 } as unknown as ChatTurn
 
 describe("AssistantHome", () => {
-  it("greets the user and asks what they will do today", () => {
+  it("greets the user and offers help with their next step", () => {
     renderWithUser(<AssistantHome firstName="Alex" snapshot={snapshot} />)
 
     expect(screen.getByText(/, Alex$/)).toBeInTheDocument()
     expect(
-      screen.getByRole("heading", { name: "What are you going to do today?" }),
+      screen.getByRole("heading", { name: "What would you like to work on?" }),
     ).toBeInTheDocument()
     expect(screen.getByRole("button", { name: /3 overdue tasks/ })).toBeInTheDocument()
   })

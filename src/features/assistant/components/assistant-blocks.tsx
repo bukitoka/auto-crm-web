@@ -35,10 +35,10 @@ import type { AssistantBlock, ChartBlock, MetricsBlock, TableBlock } from "../ty
 /** Distinct hues from the theme tokens, so neighbouring series and slices tell apart. */
 const SERIES_COLORS = [
   "var(--chart-1)",
-  "var(--info)",
-  "var(--warning)",
-  "var(--muted-foreground)",
+  "var(--chart-2)",
+  "var(--chart-3)",
   "var(--chart-4)",
+  "var(--chart-5)",
 ]
 
 const ROW_LINK_PATHS = { contact: "/contacts", company: "/companies", deal: "/deals" } as const
@@ -51,7 +51,7 @@ function formatValue(value: number, unit: ChartBlock["unit"], compact = false): 
 
 function BlockFrame({ title, children }: { title: string | null; children: React.ReactNode }) {
   return (
-    <section className="w-full min-w-0 rounded-lg border bg-card p-3">
+    <section className="@container w-full min-w-0 rounded-lg border bg-card p-3 sm:p-4">
       {title ? <h3 className="mb-2 text-sm font-medium">{title}</h3> : null}
       {children}
     </section>
@@ -194,7 +194,7 @@ function ChartView({ block }: { block: ChartBlock }) {
 function MetricsView({ block }: { block: MetricsBlock }) {
   return (
     <BlockFrame title={block.title}>
-      <dl className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      <dl className="grid grid-cols-1 gap-2 @xs:grid-cols-2 @lg:grid-cols-3">
         {block.items.map((item) => (
           <div key={item.label} className="min-w-0 rounded-md border p-3">
             <dt className="truncate text-xs text-muted-foreground">{item.label}</dt>

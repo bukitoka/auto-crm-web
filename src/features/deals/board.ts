@@ -30,11 +30,16 @@ export function moveDeal(deals: Deal[], dealId: string, stage: PipelineStage): D
   )
 }
 
-const OPEN_STAGE_DOTS = ["bg-teal-300", "bg-teal-500", "bg-teal-700", "bg-teal-900"]
+const OPEN_STAGE_DOTS = [
+  "bg-brand-400 dark:bg-brand-200",
+  "bg-brand-500 dark:bg-brand-300",
+  "bg-brand-600 dark:bg-brand-400",
+  "bg-brand-700 dark:bg-brand-500",
+]
 
 /**
  * Color of the small dot next to each stage name, keyed by stage id:
- * a teal ramp for open stages (in order), success for won, destructive for lost.
+ * a theme-aware brand ramp for open stages (in order), success for won, destructive for lost.
  */
 export function stageDotClasses(stages: PipelineStage[]): Record<string, string> {
   const classes: Record<string, string> = {}

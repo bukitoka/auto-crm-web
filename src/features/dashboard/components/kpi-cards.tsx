@@ -1,158 +1,99 @@
 import {
-  AlarmClock,
   ArrowUpRight,
-  CircleCheck,
   HandCoins,
   type LucideIcon,
   Percent,
-  Scale,
   Trophy,
   UserRoundPlus,
 } from "lucide-react"
 import Link from "next/link"
-import { formatCurrency } from "@/lib/format"
+import { colorTones } from "@/lib/color-tones"
+import { formatCompactCurrency, formatCurrency } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import type { DashboardSummary } from "../types"
-
-/**
- * Color per card, built from the semantic tokens so light and dark mode both work.
- * Class names are written out in full because Tailwind only generates classes it can see.
- */
-const TONES = {
-  primary: {
-    card: "border-primary/20 from-primary/15 via-primary/5 hover:border-primary/50",
-    icon: "bg-primary text-primary-foreground",
-    accent: "text-primary",
-  },
-  success: {
-    card: "border-success/20 from-success/15 via-success/5 hover:border-success/50",
-    icon: "bg-success text-success-foreground",
-    accent: "text-success",
-  },
-  info: {
-    card: "border-info/20 from-info/15 via-info/5 hover:border-info/50",
-    icon: "bg-info text-info-foreground",
-    accent: "text-info",
-  },
-  destructive: {
-    card: "border-destructive/20 from-destructive/15 via-destructive/5 hover:border-destructive/50",
-    icon: "bg-destructive text-destructive-foreground",
-    accent: "text-destructive",
-  },
-} as const
 
 type Kpi = {
   label: string
   value: string
-  /** Optional context under the value, e.g. "3 won · 1 lost". */
-  detail?: string
-  hint: string
+  exactValue?: string
+  detail: string
   icon: LucideIcon
-  tone: keyof typeof TONES
+  tone: keyof typeof colorTones
   href: string
 }
 
 export function KpiCards({ summary }: { summary: DashboardSummary }) {
-  const hasOverdue = summary.overdue_tasks > 0
   const kpis: Kpi[] = [
     {
       label: "Open pipeline",
-      value: formatCurrency(summary.open_pipeline_value),
-      hint: "View the board",
+      value: formatCompactCurrency(summary.open_pipeline_value),
+      exactValue: formatCurrency(summary.open_pipeline_value),
+      detail: "Value of deals still in play",
       icon: HandCoins,
       tone: "primary",
       href: "/deals",
     },
     {
       label: "Won this month",
-      value: formatCurrency(summary.won_this_month_value),
-      detail: `${summary.deals_won_this_month} won · ${summary.deals_lost_this_month} lost`,
-      hint: "See won deals",
+      value: formatCompactCurrency(summary.won_this_month_value),
+      exactValue: formatCurrency(summary.won_this_month_value),
+      detail: `${summary.deals_won_this_month} won · ${summary.deals_lost_this_month} lost this month`,
       icon: Trophy,
       tone: "success",
       href: "/deals?view=table",
     },
     {
       label: "Win rate",
-      value: summary.win_rate === null ? "N/A" : `${Math.round(summary.win_rate * 100)}%`,
-      detail: "Won vs. lost, last 90 days",
-      hint: "See closed deals",
+      value: summary.win_rate === null ? "No data yet" : `${Math.round(summary.win_rate * 100)}%`,
+      detail: "Of closed deals, last 90 days",
       icon: Percent,
       tone: "success",
       href: "/deals?view=table",
     },
     {
-      label: "Average deal size",
-      value: summary.average_deal_size === null ? "N/A" : formatCurrency(summary.average_deal_size),
-      detail: "Won deals, last 90 days",
-      hint: "See closed deals",
-      icon: Scale,
-      tone: "primary",
-      href: "/deals?view=table",
-    },
-    {
-      label: "New leads this month",
+      label: "New leads",
       value: String(summary.new_leads_this_month),
-      hint: "Open leads",
+      detail: "Added this month",
       icon: UserRoundPlus,
       tone: "info",
       href: "/contacts?status=lead",
     },
-    {
-      label: "Overdue tasks",
-      value: String(summary.overdue_tasks),
-      detail: `${summary.tasks_due_today} due today · ${summary.tasks_due_this_week} this week`,
-      hint: hasOverdue ? "Needs attention" : "All caught up",
-      icon: hasOverdue ? AlarmClock : CircleCheck,
-      tone: hasOverdue ? "destructive" : "success",
-      href: "/tasks?overdue=true",
-    },
   ]
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {kpis.map((kpi) => {
-        const tone = TONES[kpi.tone]
-        return (
-          <Link
-            key={kpi.label}
-            href={kpi.href}
-            className={cn(
-              "group relative flex flex-col gap-4 overflow-hidden rounded-lg border bg-card bg-linear-to-br to-card p-5 transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-              tone.card,
-            )}
-          >
-            <kpi.icon
-              aria-hidden
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      {kpis.map((kpi) => (
+        <Link
+          key={kpi.label}
+          href={kpi.href}
+          className="group min-w-0 rounded-lg border bg-card p-4 transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-ring sm:p-5"
+        >
+          <div className="flex items-center gap-2.5">
+            <span
               className={cn(
-                "pointer-events-none absolute -right-4 -bottom-5 size-28 opacity-10 transition-transform group-hover:scale-110",
-                tone.accent,
+                "flex size-8 shrink-0 items-center justify-center rounded-md",
+                colorTones[kpi.tone],
               )}
-            />
-            <div className="flex items-center gap-3">
-              <span
-                className={cn(
-                  "flex size-10 shrink-0 items-center justify-center rounded-md",
-                  tone.icon,
-                )}
-              >
-                <kpi.icon className="size-5" />
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">{kpi.label}</span>
-            </div>
-            <div>
-              <p className="text-3xl font-semibold tracking-tight tabular-nums">{kpi.value}</p>
-              {kpi.detail ? (
-                <p className="mt-1 text-sm text-muted-foreground">{kpi.detail}</p>
-              ) : null}
-            </div>
-            <span className={cn("flex items-center gap-1 text-xs font-medium", tone.accent)}>
-              {kpi.hint}
-              <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            >
+              <kpi.icon aria-hidden className="size-4" />
             </span>
-          </Link>
-        )
-      })}
+            <span className="min-w-0 flex-1 text-sm font-medium text-muted-foreground">
+              {kpi.label}
+            </span>
+            <ArrowUpRight
+              aria-hidden
+              className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+            />
+          </div>
+          <p
+            title={kpi.exactValue}
+            className="mt-4 text-2xl font-semibold tracking-tight wrap-break-word tabular-nums sm:text-3xl"
+          >
+            {kpi.value}
+          </p>
+          <p className="mt-1.5 text-xs text-muted-foreground">{kpi.detail}</p>
+        </Link>
+      ))}
     </div>
   )
 }

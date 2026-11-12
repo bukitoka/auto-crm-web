@@ -44,12 +44,12 @@ describe("moveDeal", () => {
 })
 
 describe("stageDotClasses", () => {
-  it("uses a teal ramp for open stages and status colors for won/lost", () => {
+  it("uses a theme-aware brand ramp for open stages and status colors for won/lost", () => {
     const classes = stageDotClasses([lost, won, proposal, lead])
 
     expect(classes).toEqual({
-      lead: "bg-teal-300",
-      proposal: "bg-teal-500",
+      lead: "bg-brand-400 dark:bg-brand-200",
+      proposal: "bg-brand-500 dark:bg-brand-300",
       won: "bg-success",
       lost: "bg-destructive",
     })

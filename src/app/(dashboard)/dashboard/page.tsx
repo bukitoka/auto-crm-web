@@ -1,3 +1,4 @@
+import { ArrowUpRight, HandCoins, Sparkles } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import type { ReactNode } from "react"
@@ -16,14 +17,17 @@ import { getCurrentUser } from "@/features/auth/api"
 import { getDashboardSummary } from "@/features/dashboard/api"
 import { ClosingSoonList } from "@/features/dashboard/components/closing-soon-list"
 import { CountBarChart } from "@/features/dashboard/components/count-bar-chart"
+import { FocusCard } from "@/features/dashboard/components/focus-card"
 import { KpiCards } from "@/features/dashboard/components/kpi-cards"
 import { PipelineChart } from "@/features/dashboard/components/pipeline-chart"
 import { TeamLeaderboard } from "@/features/dashboard/components/team-leaderboard"
 import { TaskList } from "@/features/tasks/components/task-list"
 import { canViewTeam } from "@/features/users/roles"
+import { formatCurrency } from "@/lib/format"
 import { enumOptions } from "@/lib/options"
+import { cn } from "@/lib/utils"
 
-export const metadata: Metadata = { title: "Dashboard" }
+export const metadata: Metadata = { title: "Insights" }
 
 function DashboardCard({
   title,
@@ -31,6 +35,7 @@ function DashboardCard({
   href,
   linkText = "View all",
   className,
+  contentClassName,
   children,
 }: {
   title: string
@@ -38,27 +43,32 @@ function DashboardCard({
   href?: string
   linkText?: string
   className?: string
+  contentClassName?: string
   children: ReactNode
 }) {
   return (
-    <Card className={className}>
+    <Card className={cn("min-w-0", className)}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <h2>{title}</h2>
+        </CardTitle>
         <CardDescription>{description}</CardDescription>
         {href ? (
           <CardAction>
             <Button variant="ghost" size="sm" asChild>
-              <Link href={href}>{linkText}</Link>
+              <Link href={href}>
+                {linkText}
+                <ArrowUpRight aria-hidden className="size-3.5" />
+              </Link>
             </Button>
           </CardAction>
         ) : null}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className={contentClassName}>{children}</CardContent>
     </Card>
   )
 }
 
-/** Chart rows with readable names ("lead" → "Lead"). */
 function chartRows(rows: { key: string; count: number }[]) {
   const labels = enumOptions(rows.map((row) => row.key))
   return rows.map((row, i) => ({ name: labels[i].label, count: row.count }))
@@ -78,76 +88,153 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader
-        title={`Hi, ${firstName}`}
-        description={
-          oversight
-            ? "Here's how every admin's pipeline is doing."
-            : "Here's what's happening in your pipeline."
+        title="Insights"
+        description={`Hi, ${firstName}. ${oversight ? "See where your team stands and what needs attention." : "See where you stand and what needs attention."}`}
+        actions={
+          <>
+            <Button variant="outline" asChild>
+              <Link href="/deals">View deals</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/assistant">
+                <Sparkles /> Help me prioritize
+              </Link>
+            </Button>
+          </>
         }
       />
-      <KpiCards summary={summary} />
-      <div className="grid gap-6 lg:grid-cols-2">
-        <DashboardCard
-          title="Pipeline by stage"
-          description="Total deal value in each stage"
-          href="/deals"
-          linkText="Open board"
-        >
-          {summary.pipeline_by_stage.length > 0 ? (
-            <PipelineChart data={summary.pipeline_by_stage} />
-          ) : (
-            <p className="py-12 text-center text-sm text-muted-foreground">No deals yet.</p>
-          )}
-        </DashboardCard>
-        {oversight ? null : (
-          <DashboardCard title="My tasks" description="Upcoming work assigned to you" href="/tasks">
-            <TaskList tasks={summary.my_tasks} emptyText="Nothing due." />
-          </DashboardCard>
-        )}
-        <DashboardCard
-          title="Overdue tasks"
-          description={oversight ? "All admins, oldest first" : "Oldest first"}
-          href="/tasks?overdue=true"
-        >
-          <TaskList
-            tasks={summary.overdue_task_list}
-            emptyText="Nothing overdue."
-            showAssignee={oversight}
-          />
-        </DashboardCard>
+      <section aria-label="Business overview">
+        <KpiCards summary={summary} />
+      </section>
+
+      <div className="grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
+        <Card className="min-w-0">
+          <CardHeader>
+            <CardTitle>
+              <h2>Your pipeline</h2>
+            </CardTitle>
+            <CardDescription>Where deal value sits across your stages</CardDescription>
+            <CardAction>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/deals">
+                  Open board
+                  <ArrowUpRight aria-hidden className="size-3.5" />
+                </Link>
+              </Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent className="flex flex-1 flex-col gap-4">
+            {summary.pipeline_by_stage.length > 0 ? (
+              <PipelineChart data={summary.pipeline_by_stage} />
+            ) : (
+              <div className="flex min-h-64 flex-1 flex-col items-center justify-center gap-3 rounded-md border border-dashed px-6 text-center">
+                <HandCoins aria-hidden className="size-8 text-muted-foreground" />
+                <p className="font-medium">Your next deal starts here.</p>
+                <p className="max-w-xs text-sm text-muted-foreground">
+                  Add a deal to see your pipeline take shape, stage by stage.
+                </p>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/deals">Open the deals board</Link>
+                </Button>
+              </div>
+            )}
+            <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t pt-4 text-sm">
+              <p className="text-muted-foreground">
+                Average won deal <span className="text-xs">· Last 90 days</span>
+              </p>
+              <p className="font-semibold tabular-nums">
+                {summary.average_deal_size === null
+                  ? "No wins in the last 90 days"
+                  : formatCurrency(summary.average_deal_size)}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        <FocusCard summary={summary} oversight={oversight} />
+      </div>
+
+      <div className="grid items-stretch gap-5 lg:grid-cols-2">
         <DashboardCard
           title="Closing soon"
-          description="Open deals expected to close in the next 30 days"
+          description="Deals expected to close in the next 30 days"
           href="/deals?view=table"
+          linkText="View deals"
         >
           <ClosingSoonList deals={summary.deals_closing_soon} />
         </DashboardCard>
         <DashboardCard
-          title="Contacts by status"
-          description="Where your contacts are in the funnel"
-        >
-          <CountBarChart data={statusRows} label="Contacts" />
-        </DashboardCard>
-        <DashboardCard title="Activity" description="Logged in the last 30 days, by type">
-          <CountBarChart data={activityRows} label="Activities" />
-        </DashboardCard>
-        {oversight ? (
-          <DashboardCard
-            title="Admins"
-            description="Won this month, open pipeline and open tasks per admin"
-            className="lg:col-span-2"
-          >
-            <TeamLeaderboard team={summary.team} />
-          </DashboardCard>
-        ) : null}
-        <DashboardCard
           title="Recent activity"
-          description="Latest notes, calls, emails and meetings"
-          className="lg:col-span-2"
+          description="The 5 most recent conversations and updates"
+          className="lg:[contain:size]"
+          contentClassName="min-h-0 flex-1"
         >
-          <ActivityList activities={summary.recent_activities} showLinks />
+          <section
+            className="max-h-80 overflow-y-auto rounded-sm pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring lg:h-full lg:max-h-none"
+            // biome-ignore lint/a11y/noNoninteractiveTabindex: scrollable region needs keyboard focus
+            tabIndex={0}
+            aria-label="Recent activity updates"
+          >
+            <ActivityList activities={summary.recent_activities.slice(0, 5)} showLinks compact />
+          </section>
         </DashboardCard>
       </div>
+
+      <section aria-labelledby="insights-details" className="space-y-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="insights-details" className="font-heading text-lg font-semibold">
+            A closer look
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Your contacts and the conversations behind them
+          </p>
+        </div>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <DashboardCard
+            title="Contacts by status"
+            description="How your relationships are progressing"
+          >
+            <CountBarChart
+              data={statusRows}
+              label="Contacts"
+              color="var(--chart-2)"
+              emptyText="No contacts yet. Add a contact to start seeing your funnel."
+            />
+          </DashboardCard>
+          <DashboardCard
+            title="Activity mix"
+            description="Calls, emails, notes, and meetings over the last 30 days"
+          >
+            <CountBarChart
+              data={activityRows}
+              label="Activities"
+              color="var(--chart-4)"
+              emptyText="No activity logged in the last 30 days."
+            />
+          </DashboardCard>
+          {oversight ? (
+            <DashboardCard
+              title="Team performance"
+              description="Wins this month, open pipeline, and outstanding tasks"
+              className="lg:col-span-2"
+            >
+              <TeamLeaderboard team={summary.team} />
+            </DashboardCard>
+          ) : (
+            <DashboardCard
+              title="Your upcoming tasks"
+              description="Keep your next follow-ups on track"
+              href="/tasks"
+              linkText="View tasks"
+              className="lg:col-span-2"
+            >
+              <TaskList
+                tasks={summary.my_tasks}
+                emptyText="Nothing lined up yet. Plan a follow-up from your tasks page."
+              />
+            </DashboardCard>
+          )}
+        </div>
+      </section>
     </>
   )
 }

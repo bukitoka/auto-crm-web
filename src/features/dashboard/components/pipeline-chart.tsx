@@ -25,8 +25,15 @@ export function PipelineChart({ data }: { data: PipelineStageSummary[] }) {
     <ChartContainer config={chartConfig} className="aspect-auto h-72 w-full">
       <BarChart data={rows} margin={{ left: 4, right: 4, top: 8 }}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="stage" tickLine={false} axisLine={false} tickMargin={8} />
+        <XAxis
+          dataKey="stage"
+          tick={{ fill: "var(--muted-foreground)" }}
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+        />
         <YAxis
+          tick={{ fill: "var(--muted-foreground)" }}
           tickLine={false}
           axisLine={false}
           width={56}

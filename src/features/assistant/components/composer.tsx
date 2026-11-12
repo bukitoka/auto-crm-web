@@ -34,7 +34,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
     files = [],
     onFilesChange,
     isPending = false,
-    placeholder = "Ask or tell the assistant…",
+    placeholder = "Ask about your CRM, or tell me what to do…",
     variant = "compact",
     hint,
     autoFocus,
@@ -85,7 +85,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
       }}
       className={cn(
         "flex flex-col gap-2 rounded-lg border bg-card transition-colors focus-within:border-primary/60",
-        hero ? "p-3 ring-4 ring-primary/5 focus-within:ring-primary/10" : "p-2",
+        hero ? "p-3 ring-4 ring-foreground/5 focus-within:ring-primary/10" : "p-2",
         isDragging && "border-primary bg-accent",
       )}
     >
@@ -163,6 +163,11 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
           {isPending ? <Spinner /> : <ArrowUp />}
         </Button>
       </div>
+      {hero ? (
+        <p className="px-2 pb-1 text-xs text-muted-foreground">
+          Enter to send · Shift+Enter for a new line
+        </p>
+      ) : null}
     </form>
   )
 })

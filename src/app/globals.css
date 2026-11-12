@@ -4,22 +4,24 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * ─── Colors ─────────────────────────────────────────────────────────────────
- * Everything uses Tailwind's built-in palettes (oklch), no custom scales:
- *   brand    → teal      (teal-50 … teal-950)
- *   neutral  → zinc
- *   success  → green · warning → amber · info → sky · destructive (danger) → red
- * The semantic tokens below pick the right shade for light and dark mode, so
- * components use `bg-primary`, `text-success`, `bg-warning/10`… and never raw shades.
- */
-
+/* Brand accents use pine and sage. Surfaces stay neutral; status hues keep their meaning. */
 /*
  * ─── Type scale ─────────────────────────────────────────────────────────────
  * One step larger than Tailwind's defaults (xs 12→13px, sm 14→15px) so the
  * dense dashboard UI stays readable. Components keep using text-xs / text-sm.
  */
 @theme {
+  --color-brand-50: #f2f8f3;
+  --color-brand-100: #daf1de;
+  --color-brand-200: #b7d5bd;
+  --color-brand-300: #8eb69b;
+  --color-brand-400: #68957c;
+  --color-brand-500: #44745e;
+  --color-brand-600: #235347;
+  --color-brand-700: #163832;
+  --color-brand-800: #0b2b26;
+  --color-brand-900: #051f20;
+
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.125rem;
   --text-sm: 0.9375rem;
@@ -32,9 +34,9 @@
  * utilities: bg-primary, text-muted-foreground, rounded-xl, …
  */
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-fixel);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-heading: var(--font-fixel);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -44,6 +46,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -104,14 +107,15 @@
   --popover: var(--color-white);
   --popover-foreground: var(--color-zinc-950);
 
-  --primary: var(--color-teal-700);
+  --primary: var(--color-brand-600);
+  --primary-hover: var(--color-brand-700);
   --primary-foreground: var(--color-white);
   --secondary: var(--color-zinc-100);
   --secondary-foreground: var(--color-zinc-900);
   --muted: var(--color-zinc-100);
   --muted-foreground: var(--color-zinc-500);
-  --accent: var(--color-teal-50);
-  --accent-foreground: var(--color-teal-900);
+  --accent: var(--color-brand-50);
+  --accent-foreground: var(--color-brand-900);
 
   --destructive: var(--color-red-600);
   --destructive-foreground: var(--color-white);
@@ -124,22 +128,22 @@
 
   --border: var(--color-zinc-200);
   --input: var(--color-zinc-300);
-  --ring: var(--color-teal-500);
+  --ring: var(--color-brand-500);
 
-  --chart-1: var(--color-teal-700);
-  --chart-2: var(--color-teal-600);
-  --chart-3: var(--color-teal-500);
-  --chart-4: var(--color-teal-400);
-  --chart-5: var(--color-teal-300);
+  --chart-1: var(--primary);
+  --chart-2: var(--info);
+  --chart-3: var(--warning);
+  --chart-4: var(--color-violet-600);
+  --chart-5: var(--muted-foreground);
 
   --sidebar: var(--color-white);
   --sidebar-foreground: var(--color-zinc-700);
-  --sidebar-primary: var(--color-teal-700);
-  --sidebar-primary-foreground: var(--color-white);
-  --sidebar-accent: var(--color-teal-50);
-  --sidebar-accent-foreground: var(--color-teal-800);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--color-zinc-100);
+  --sidebar-accent-foreground: var(--color-zinc-900);
   --sidebar-border: var(--color-zinc-200);
-  --sidebar-ring: var(--color-teal-500);
+  --sidebar-ring: var(--ring);
 
   --canvas: var(--color-zinc-100);
   --canvas-dot: var(--color-zinc-300);
@@ -153,14 +157,15 @@
   --popover: var(--color-zinc-900);
   --popover-foreground: var(--color-zinc-50);
 
-  --primary: var(--color-teal-400);
-  --primary-foreground: var(--color-teal-950);
+  --primary: var(--color-brand-300);
+  --primary-hover: var(--color-brand-200);
+  --primary-foreground: var(--color-brand-900);
   --secondary: var(--color-zinc-800);
   --secondary-foreground: var(--color-zinc-50);
   --muted: var(--color-zinc-800);
   --muted-foreground: var(--color-zinc-400);
-  --accent: var(--color-teal-950);
-  --accent-foreground: var(--color-teal-100);
+  --accent: var(--color-brand-900);
+  --accent-foreground: var(--color-brand-100);
 
   --destructive: var(--color-red-400);
   --destructive-foreground: var(--color-red-950);
@@ -173,22 +178,22 @@
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: var(--color-teal-500);
+  --ring: var(--color-brand-300);
 
-  --chart-1: var(--color-teal-300);
-  --chart-2: var(--color-teal-400);
-  --chart-3: var(--color-teal-500);
-  --chart-4: var(--color-teal-600);
-  --chart-5: var(--color-teal-700);
+  --chart-1: var(--primary);
+  --chart-2: var(--info);
+  --chart-3: var(--warning);
+  --chart-4: var(--color-violet-400);
+  --chart-5: var(--muted-foreground);
 
   --sidebar: var(--color-zinc-900);
   --sidebar-foreground: var(--color-zinc-300);
-  --sidebar-primary: var(--color-teal-400);
-  --sidebar-primary-foreground: var(--color-teal-950);
-  --sidebar-accent: var(--color-teal-950);
-  --sidebar-accent-foreground: var(--color-teal-100);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--color-zinc-800);
+  --sidebar-accent-foreground: var(--color-zinc-50);
   --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: var(--color-teal-500);
+  --sidebar-ring: var(--ring);
 
   --canvas: var(--color-zinc-950);
   --canvas-dot: var(--color-zinc-800);
@@ -356,5 +361,11 @@
 @media (prefers-reduced-motion: reduce) {
   [data-sonner-toaster] [data-sonner-toast][data-type] [data-icon] svg {
     animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="button"] {
+    transition: none;
   }
 }

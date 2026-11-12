@@ -78,7 +78,7 @@ export function AppSidebar({ user, recentChats, versions, changelog, ...props }:
             <SidebarMenuButton
               size="lg"
               asChild
-              className="group-data-[collapsible=icon]:justify-center"
+              className="group-data-[collapsible=icon]:justify-center [&_svg]:size-9!"
             >
               <Link href={HOME_PATH} aria-label="Auto CRM home">
                 <Brand />
