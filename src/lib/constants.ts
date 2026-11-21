@@ -18,7 +18,8 @@ export const IMAGE_ACCEPT = "image/jpeg,image/png,image/webp,image/gif"
 
 /** Smart capture uploads (photos, screenshots, PDF, Word, email, text). Mirrors the API's limit. */
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024
-export const CAPTURE_ACCEPT = "image/*,.pdf,.docx,.eml,.txt,.csv,.md,.vcf"
+export const DOCUMENT_ACCEPT = ".pdf,.docx,.eml,.txt,.csv,.md,.vcf"
+export const CAPTURE_ACCEPT = `image/*,${DOCUMENT_ACCEPT}`
 
 /** Files per assistant message (each read like smart capture). Mirrors the API's limit. */
 export const MAX_ATTACHMENTS = 3

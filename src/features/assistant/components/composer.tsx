@@ -1,11 +1,17 @@
 "use client"
 
-import { ArrowUp, Paperclip } from "lucide-react"
+import { ArrowUp, FileText, Image, Paperclip } from "lucide-react"
 import { forwardRef, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Spinner } from "@/components/ui/spinner"
-import { CAPTURE_ACCEPT, MAX_ATTACHMENTS, MAX_UPLOAD_BYTES } from "@/lib/constants"
+import { DOCUMENT_ACCEPT, IMAGE_ACCEPT, MAX_ATTACHMENTS, MAX_UPLOAD_BYTES } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { AttachmentChip } from "./attachment-chip"
 
@@ -42,6 +48,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
   ref,
 ) {
   const hero = variant === "hero"
+  const imageInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const canSend = !isPending && (value.trim().length > 0 || files.length > 0)
@@ -127,30 +134,46 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
         />
         {onFilesChange ? (
           <>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              aria-label="Attach files"
-              disabled={isPending || files.length >= MAX_ATTACHMENTS}
-              onClick={() => fileInputRef.current?.click()}
-              className="shrink-0"
-            >
-              <Paperclip />
-            </Button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept={CAPTURE_ACCEPT}
-              className="sr-only"
-              tabIndex={-1}
-              aria-label="Attach files to the message"
-              onChange={(event) => {
-                if (event.target.files) addFiles(event.target.files)
-                event.target.value = ""
-              }}
-            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  aria-label="Attach files"
+                  disabled={isPending || files.length >= MAX_ATTACHMENTS}
+                >
+                  <Paperclip />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" side="top" className="w-44">
+                <DropdownMenuItem onSelect={() => imageInputRef.current?.click()}>
+                  <Image /> Upload images
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
+                  <FileText /> Upload files
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {[
+              { ref: imageInputRef, accept: IMAGE_ACCEPT, label: "Attach images to the message" },
+              { ref: fileInputRef, accept: DOCUMENT_ACCEPT, label: "Attach files to the message" },
+            ].map(({ ref: inputRef, accept, label }) => (
+              <input
+                key={label}
+                ref={inputRef}
+                type="file"
+                multiple
+                accept={accept}
+                className="sr-only"
+                tabIndex={-1}
+                aria-label={label}
+                onChange={(event) => {
+                  if (event.target.files) addFiles(event.target.files)
+                  event.target.value = ""
+                }}
+              />
+            ))}
           </>
         ) : null}
         <Button

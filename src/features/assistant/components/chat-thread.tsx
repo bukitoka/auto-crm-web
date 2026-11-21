@@ -149,7 +149,7 @@ export function ChatThread({
         </div>
       </div>
       {composer ? (
-        <div className={cn("border-t bg-background", isPanel ? "p-3" : "px-4 py-3")}>
+        <div className={cn("border-t bg-card", isPanel ? "p-3" : "px-4 py-3")}>
           <div className={cn("mx-auto w-full", !isPanel && "max-w-3xl")}>{composer}</div>
         </div>
       ) : null}

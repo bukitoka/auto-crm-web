@@ -86,7 +86,7 @@ export function AssistantMessage({
               "rounded-lg px-3.5 py-2.5 text-sm leading-relaxed wrap-break-word whitespace-pre-wrap",
               isUser
                 ? "rounded-br-sm bg-primary text-primary-foreground"
-                : "rounded-tl-sm bg-muted text-foreground",
+                : "rounded-tl-sm border bg-card text-card-foreground",
             )}
           >
             {content}

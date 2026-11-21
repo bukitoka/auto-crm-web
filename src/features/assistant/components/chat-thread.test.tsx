@@ -161,7 +161,11 @@ describe("ChatThread", () => {
     const card = new File(["Jane Doe"], "card.png", { type: "image/png" })
     const notes = new File(["notes"], "notes.txt", { type: "text/plain" })
 
-    await user.upload(screen.getByLabelText("Attach files to the message"), [card, notes])
+    await user.click(screen.getByRole("button", { name: "Attach files" }))
+    expect(screen.getByRole("menuitem", { name: "Upload files" })).toBeInTheDocument()
+    await user.click(screen.getByRole("menuitem", { name: "Upload images" }))
+    await user.upload(screen.getByLabelText("Attach images to the message"), card)
+    await user.upload(screen.getByLabelText("Attach files to the message"), notes)
     await user.click(screen.getByRole("button", { name: "Remove notes.txt" }))
     expect(screen.queryByText("notes.txt")).not.toBeInTheDocument()
     await user.click(screen.getByRole("button", { name: "Send" })) // files alone are enough

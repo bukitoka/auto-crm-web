@@ -32,7 +32,7 @@ export default async function ConversationPage({ params }: PageProps<"/assistant
 
   return (
     <AssistantShell>
-      <div className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
+      <div className="flex h-12 shrink-0 items-center gap-2 border-b bg-card px-4">
         <h1 className="min-w-0 flex-1 truncate text-sm font-medium">{conversation.title}</h1>
         {readOnly ? (
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
