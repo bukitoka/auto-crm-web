@@ -14,6 +14,8 @@ export type ChatThreadProps = {
   /** null = a new chat; the first message creates the conversation. */
   conversationId: string | null
   initialMessages?: ChatMessage[]
+  initialDraft?: string
+  conversationHeader?: ReactNode
   /** The record being viewed (only used by the header panel). */
   context?: PageContext | null
   /** The super admin looking at another admin's chat: no composer. */
@@ -40,6 +42,8 @@ export type ChatThreadProps = {
 export function ChatThread({
   conversationId,
   initialMessages = [],
+  initialDraft = "",
+  conversationHeader,
   context = null,
   readOnly = false,
   variant = "page",
@@ -50,7 +54,7 @@ export function ChatThread({
   const router = useRouter()
   const [id, setId] = useState(conversationId)
   const [messages, setMessages] = useState(initialMessages)
-  const [draft, setDraft] = useState("")
+  const [draft, setDraft] = useState(initialDraft)
   const [files, setFiles] = useState<File[]>([])
   const [isPending, startTransition] = useTransition()
   const endRef = useRef<HTMLDivElement>(null)
@@ -131,6 +135,7 @@ export function ChatThread({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      {conversationHeader}
       <div className={cn("min-h-0 flex-1 overflow-y-auto", isPanel ? "p-4" : "px-4 py-6")}>
         <div className={cn("mx-auto flex w-full flex-col gap-5", !isPanel && "max-w-3xl")}>
           {messages.map((message) => (
@@ -149,7 +154,7 @@ export function ChatThread({
         </div>
       </div>
       {composer ? (
-        <div className={cn("border-t bg-card", isPanel ? "p-3" : "px-4 py-3")}>
+        <div className={cn("shrink-0 border-t bg-card", isPanel ? "p-3" : "px-4 py-3")}>
           <div className={cn("mx-auto w-full", !isPanel && "max-w-3xl")}>{composer}</div>
         </div>
       ) : null}

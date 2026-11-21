@@ -1,5 +1,6 @@
 import { Pencil, Plus } from "lucide-react"
 import type { Metadata } from "next"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ConfirmDeleteButton } from "@/components/shared/confirm-delete-button"
 import { PageHeader } from "@/components/shared/page-header"
@@ -32,6 +33,7 @@ import { listTasks } from "@/features/tasks/api"
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog"
 import { TaskList } from "@/features/tasks/components/task-list"
 import { canWriteCrm } from "@/features/users/roles"
+import { documentsHref } from "@/features/workspace/record-links"
 import { ApiError } from "@/lib/api-client"
 import { personName } from "@/lib/format"
 
@@ -76,32 +78,43 @@ export default async function ContactDetailPage({ params }: PageProps<"/contacts
           [contact.job_title, contact.company?.name].filter(Boolean).join(" · ") || undefined
         }
         actions={
-          readOnly ? null : (
-            <>
-              <ComposeEmailDialog
-                recipients={[{ id: contact.id, name, email: contact.email }]}
-                contactId={contact.id}
-                deals={deals.items.map(({ id, title }) => ({ id, title }))}
-              />
-              <ContactFormDialog
-                contact={contact}
-                companies={companies}
-                trigger={
-                  <Button variant="outline">
-                    <Pencil />
-                    Edit
-                  </Button>
-                }
-              />
-              <ConfirmDeleteButton
-                variant="button"
-                title={`Delete ${name}?`}
-                description="The contact and its activities will be removed."
-                action={deleteContact.bind(null, contact.id)}
-                redirectTo="/contacts"
-              />
-            </>
-          )
+          <>
+            <Button asChild variant="outline">
+              <Link href={documentsHref("contact", id)}>Documents</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href={`/contacts/${id}/call-prep`}>Call prep</Link>
+            </Button>
+            {readOnly ? null : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link href={`/duplicates?kind=contact&id=${contact.id}`}>Review duplicates</Link>
+                </Button>
+                <ComposeEmailDialog
+                  recipients={[{ id: contact.id, name, email: contact.email }]}
+                  contactId={contact.id}
+                  deals={deals.items.map(({ id, title }) => ({ id, title }))}
+                />
+                <ContactFormDialog
+                  contact={contact}
+                  companies={companies}
+                  trigger={
+                    <Button variant="outline">
+                      <Pencil />
+                      Edit
+                    </Button>
+                  }
+                />
+                <ConfirmDeleteButton
+                  variant="button"
+                  title={`Delete ${name}?`}
+                  description="The contact and its activities will be removed."
+                  action={deleteContact.bind(null, contact.id)}
+                  redirectTo="/contacts"
+                />
+              </>
+            )}
+          </>
         }
       />
       <div className="grid gap-6 lg:grid-cols-3">

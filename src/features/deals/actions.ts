@@ -9,6 +9,7 @@ import type { Deal } from "./types"
 function revalidateDeal(id?: string) {
   revalidatePath("/deals")
   revalidatePath("/dashboard")
+  revalidatePath("/follow-ups")
   if (id) revalidatePath(`/deals/${id}`)
 }
 

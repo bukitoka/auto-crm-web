@@ -26,7 +26,11 @@ export function ActivityList({
   return (
     <ol className="relative space-y-5 before:absolute before:top-2 before:bottom-2 before:left-4 before:w-px before:bg-border">
       {activities.map((activity) => (
-        <li key={activity.id} className="relative flex gap-3">
+        <li
+          id={`activity-${activity.id}`}
+          key={activity.id}
+          className="relative flex scroll-mt-20 gap-3"
+        >
           <ActivityIcon type={activity.type} />
           <div className="min-w-0 flex-1 space-y-1">
             <div className="flex items-start justify-between gap-2">

@@ -1,6 +1,6 @@
 import type { AssistantAction, Conversation, PageContext } from "./types"
 
-const DETAIL_PAGE = /^\/(contacts|companies|deals)\/([0-9a-f-]{36})$/
+const DETAIL_PAGE = /^\/(contacts|companies|deals)\/([0-9a-f-]{36})(?:\/call-prep)?$/
 const TYPES = { contacts: "contact", companies: "company", deals: "deal" } as const
 
 /** `/contacts/<id>` → `{type: "contact", id}`; other pages have no context. */
@@ -21,6 +21,8 @@ export function actionHref(action: AssistantAction): string {
       return `/companies/${id}`
     case "deal":
       return `/deals/${id}`
+    case "calendar_event":
+      return `/calendar?event=${encodeURIComponent(id)}`
     default:
       return "/tasks"
   }

@@ -35,7 +35,9 @@ describe("createActivity", () => {
     })
     expect(revalidatePath).toHaveBeenCalledWith("/contacts/c1")
     expect(revalidatePath).toHaveBeenCalledWith("/dashboard")
-    expect(revalidatePath).toHaveBeenCalledTimes(2)
+    expect(revalidatePath).toHaveBeenCalledWith("/contacts/c1/call-prep")
+    expect(revalidatePath).toHaveBeenCalledWith("/follow-ups")
+    expect(revalidatePath).toHaveBeenCalledTimes(4)
   })
 
   it("revalidates the linked deal", async () => {

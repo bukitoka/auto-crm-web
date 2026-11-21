@@ -13,9 +13,18 @@ type DatePickerProps = {
   value: string
   onChange: (value: string) => void
   placeholder?: string
+  required?: boolean
+  minDate?: Date
 }
 
-export function DatePicker({ id, value, onChange, placeholder = "Pick a date" }: DatePickerProps) {
+export function DatePicker({
+  id,
+  value,
+  onChange,
+  placeholder = "Pick a date",
+  required = false,
+  minDate,
+}: DatePickerProps) {
   const [open, setOpen] = useState(false)
   const selected = value ? parseISO(value) : undefined
 
@@ -38,15 +47,17 @@ export function DatePicker({ id, value, onChange, placeholder = "Pick a date" }:
           <Calendar
             mode="single"
             selected={selected}
-            defaultMonth={selected}
-            onSelect={(date) => {
+            required={required}
+            disabled={minDate ? { before: minDate } : undefined}
+            defaultMonth={selected && minDate && selected < minDate ? minDate : selected}
+            onSelect={(date: Date | undefined) => {
               onChange(date ? format(date, "yyyy-MM-dd") : "")
               setOpen(false)
             }}
           />
         </PopoverContent>
       </Popover>
-      {value ? (
+      {value && !required ? (
         <Button
           type="button"
           variant="ghost"

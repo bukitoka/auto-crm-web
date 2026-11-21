@@ -19,6 +19,7 @@ import { useState } from "react"
 import { colorTones } from "@/lib/color-tones"
 import { cn } from "@/lib/utils"
 import { greeting } from "../context"
+import type { PageContext } from "../types"
 import { ChatThread } from "./chat-thread"
 
 type Idea = {
@@ -91,11 +92,13 @@ export type TodaySnapshot = {
 
 type AssistantHomeProps = {
   firstName: string
+  initialDraft?: string
+  context?: PageContext
   snapshot: TodaySnapshot | null
 }
 
 /** Sending the first message creates a conversation and navigates to /assistant/<id>. */
-export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
+export function AssistantHome({ firstName, snapshot, initialDraft, context }: AssistantHomeProps) {
   const router = useRouter()
   // The greeting depends on the viewer's clock, so it is computed in the browser.
   const [hello] = useState(() => greeting())
@@ -103,6 +106,8 @@ export function AssistantHome({ firstName, snapshot }: AssistantHomeProps) {
   return (
     <ChatThread
       conversationId={null}
+      initialDraft={initialDraft}
+      context={context}
       onTurn={(turn) => router.replace(`/assistant/${turn.conversation.id}`)}
       renderEmpty={(composer, send, fill) => (
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">

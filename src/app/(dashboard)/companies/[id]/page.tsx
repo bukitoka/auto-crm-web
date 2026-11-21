@@ -18,6 +18,7 @@ import { ContactStatusBadge } from "@/features/contacts/components/contact-statu
 import { listDeals } from "@/features/deals/api"
 import { DealList } from "@/features/deals/components/deal-list"
 import { canWriteCrm } from "@/features/users/roles"
+import { documentsHref } from "@/features/workspace/record-links"
 import { ApiError } from "@/lib/api-client"
 import { formatDate, personName } from "@/lib/format"
 
@@ -66,25 +67,33 @@ export default async function CompanyDetailPage({ params }: PageProps<"/companie
             .join(" · ") || undefined
         }
         actions={
-          readOnly ? null : (
-            <>
-              <CompanyFormDialog
-                company={company}
-                trigger={
-                  <Button variant="outline">
-                    <Pencil />
-                    Edit
-                  </Button>
-                }
-              />
-              <ConfirmDeleteButton
-                variant="button"
-                title={`Delete ${company.name}?`}
-                action={deleteCompany.bind(null, company.id)}
-                redirectTo="/companies"
-              />
-            </>
-          )
+          <>
+            <Button asChild variant="outline">
+              <Link href={documentsHref("company", company.id)}>Documents</Link>
+            </Button>
+            {readOnly ? null : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link href={`/duplicates?kind=company&id=${company.id}`}>Review duplicates</Link>
+                </Button>
+                <CompanyFormDialog
+                  company={company}
+                  trigger={
+                    <Button variant="outline">
+                      <Pencil />
+                      Edit
+                    </Button>
+                  }
+                />
+                <ConfirmDeleteButton
+                  variant="button"
+                  title={`Delete ${company.name}?`}
+                  action={deleteCompany.bind(null, company.id)}
+                  redirectTo="/companies"
+                />
+              </>
+            )}
+          </>
         }
       />
       <div className="grid gap-6 lg:grid-cols-3">

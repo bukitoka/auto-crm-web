@@ -80,14 +80,23 @@ not need the model provider's credentials.
 | `/dashboard`                         | Insights: four headline metrics, pipeline chart, today's focus, closing deals, and recent activity |
 | `/contacts`, `/companies`            | Relationship records and their details                                                             |
 | `/deals`                             | Pipeline board and sortable table                                                                  |
+| `/calendar`                          | Personal events, CRM record links, and filters for task and deal dates                             |
+| `/documents`                         | Private picture and document library, record links, and Ask AI                                     |
+| `/follow-ups`                        | Overdue work, deals needing a next step, and leads awaiting contact                                |
 | `/tasks`                             | Follow-ups, status, priority, and overdue filters                                                  |
 | `/search`                            | Full search results across contacts, companies, and deals                                          |
 | `/team`, `/automations`, `/ai-chats` | Super admin workspace controls and conversation oversight                                          |
 | `/settings`                          | Account and appearance settings                                                                    |
 
-Recent activity shows five entries with expandable notes. Its card stays between 256px and
-384px tall and scrolls internally. On desktop, it follows the Closing soon card's height
-within those bounds.
+### Connected workflows
+
+- In **Calendar**, open a contact-linked event for Call Prep. After the event ends, open **Draft meeting follow-up**, paste your notes, and review suggested activities, tasks, and an email before requesting changes.
+- Upload a file in **Documents** or from a contact, company, or deal’s Documents link. Picture previews and downloads require ownership. **Ask AI** prepares a message to summarize the selected file.
+- From **Follow-ups**, complete overdue work, schedule tasks, or open Call Prep. Contact and company detail pages also offer **Review duplicates**.
+- **Automations** gives the super admin lead-routing settings, response targets, delivery history, and manual retries. Regular admins can run an optional Google or Microsoft import from **Settings**.
+- Chat titles are generated automatically when available. The compact pinned bar keeps the title and menu visible while the messages scroll.
+
+Run `make help` for frontend shortcuts. Recent activity shows up to five entries with expandable notes and scrolls internally when needed.
 
 | Shortcut                | Action                                                          |
 | ----------------------- | --------------------------------------------------------------- |

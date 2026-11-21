@@ -31,6 +31,7 @@ import { listTasks } from "@/features/tasks/api"
 import { TaskFormDialog } from "@/features/tasks/components/task-form-dialog"
 import { TaskList } from "@/features/tasks/components/task-list"
 import { canWriteCrm } from "@/features/users/roles"
+import { documentsHref } from "@/features/workspace/record-links"
 import { ApiError } from "@/lib/api-client"
 import { formatCurrency, formatDate, personName } from "@/lib/format"
 
@@ -81,34 +82,44 @@ export default async function DealDetailPage({ params }: PageProps<"/deals/[id]"
         }
         description={formatCurrency(deal.value, deal.currency)}
         actions={
-          readOnly ? null : (
-            <>
-              <ComposeEmailDialog
-                recipients={contacts.map((c) => ({ id: c.id, name: personName(c) }))}
-                contactId={deal.contact_id ?? undefined}
-                deals={[{ id: deal.id, title: deal.title }]}
-                dealId={deal.id}
-              />
-              <DealFormDialog
-                deal={deal}
-                stages={stages}
-                companies={companies}
-                contacts={contacts}
-                trigger={
-                  <Button variant="outline">
-                    <Pencil />
-                    Edit
-                  </Button>
-                }
-              />
-              <ConfirmDeleteButton
-                variant="button"
-                title={`Delete "${deal.title}"?`}
-                action={deleteDeal.bind(null, deal.id)}
-                redirectTo="/deals"
-              />
-            </>
-          )
+          <>
+            <Button asChild variant="outline">
+              <Link href={documentsHref("deal", deal.id)}>Documents</Link>
+            </Button>
+            {deal.contact_id ? (
+              <Button asChild variant="outline">
+                <Link href={`/contacts/${deal.contact_id}/call-prep`}>Call prep</Link>
+              </Button>
+            ) : null}
+            {readOnly ? null : (
+              <>
+                <ComposeEmailDialog
+                  recipients={contacts.map((c) => ({ id: c.id, name: personName(c) }))}
+                  contactId={deal.contact_id ?? undefined}
+                  deals={[{ id: deal.id, title: deal.title }]}
+                  dealId={deal.id}
+                />
+                <DealFormDialog
+                  deal={deal}
+                  stages={stages}
+                  companies={companies}
+                  contacts={contacts}
+                  trigger={
+                    <Button variant="outline">
+                      <Pencil />
+                      Edit
+                    </Button>
+                  }
+                />
+                <ConfirmDeleteButton
+                  variant="button"
+                  title={`Delete "${deal.title}"?`}
+                  action={deleteDeal.bind(null, deal.id)}
+                  redirectTo="/deals"
+                />
+              </>
+            )}
+          </>
         }
       />
       <div className="grid gap-6 lg:grid-cols-3">

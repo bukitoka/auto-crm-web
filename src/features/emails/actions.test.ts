@@ -35,7 +35,8 @@ describe("sendEmail", () => {
     await sendEmail("contact-1", { subject: "Hi", body: "Hi", deal_id: "" })
 
     expect(apiFetchMock.mock.calls[0][1]?.body).toMatchObject({ deal_id: null })
-    expect(revalidatePath).toHaveBeenCalledTimes(1)
+    expect(revalidatePath).toHaveBeenCalledWith("/follow-ups")
+    expect(revalidatePath).toHaveBeenCalledTimes(3)
   })
 
   it("validates before calling the API", async () => {

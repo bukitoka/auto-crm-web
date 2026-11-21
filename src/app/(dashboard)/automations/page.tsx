@@ -5,6 +5,8 @@ import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
 import { getCurrentUser } from "@/features/auth/api"
 import { listWebhookEvents, listWebhooks } from "@/features/automations/api"
+import { DeliveryHistory } from "@/features/automations/components/delivery-history"
+import { LeadRouting } from "@/features/automations/components/lead-routing"
 import { N8nGuide } from "@/features/automations/components/n8n-guide"
 import { WebhookFormDialog } from "@/features/automations/components/webhook-form-dialog"
 import { WebhooksTable } from "@/features/automations/components/webhooks-table"
@@ -42,6 +44,8 @@ export default async function AutomationsPage() {
         <h2 className="text-lg font-semibold">Webhook subscriptions</h2>
         <WebhooksTable webhooks={webhooks} events={events} />
       </section>
+      <LeadRouting />
+      <DeliveryHistory />
     </>
   )
 }

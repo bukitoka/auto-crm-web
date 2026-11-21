@@ -7,9 +7,13 @@ import { type ActivityFormValues, activityFormSchema, toActivityPayload } from "
 import type { Activity } from "./types"
 
 function revalidateLinked(contactId?: string | null, dealId?: string | null) {
-  if (contactId) revalidatePath(`/contacts/${contactId}`)
+  if (contactId) {
+    revalidatePath(`/contacts/${contactId}`)
+    revalidatePath(`/contacts/${contactId}/call-prep`)
+  }
   if (dealId) revalidatePath(`/deals/${dealId}`)
   revalidatePath("/dashboard")
+  revalidatePath("/follow-ups")
 }
 
 export async function createActivity(values: ActivityFormValues): Promise<ActionResult<Activity>> {

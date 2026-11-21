@@ -26,6 +26,8 @@ export async function sendEmail(
   )
   if (result.ok) {
     revalidatePath(`/contacts/${contactId}`)
+    revalidatePath(`/contacts/${contactId}/call-prep`)
+    revalidatePath("/follow-ups")
     if (deal_id) revalidatePath(`/deals/${deal_id}`)
   }
   return result

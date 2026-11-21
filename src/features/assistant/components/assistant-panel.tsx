@@ -29,6 +29,8 @@ const SUGGESTIONS: Record<PageContext["type"] | "none", string[]> = {
     "Summarize this contact and suggest next steps",
   ],
   company: ["Who are the contacts at this company?", "Create a deal for this company"],
+  meeting: ["Draft meeting notes and follow-up tasks for review"],
+
   deal: ["Move this deal to Negotiation", "Add a task to send the contract by Friday"],
   none: ["Which of my tasks are overdue?", "Chart my won deals over the last 6 months"],
 }

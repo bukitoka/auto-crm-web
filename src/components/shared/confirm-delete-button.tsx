@@ -26,6 +26,9 @@ type ConfirmDeleteButtonProps = {
   description?: string
   redirectTo?: string
   variant?: "icon" | "button"
+  triggerLabel?: string
+  confirmLabel?: string
+  successMessage?: string
 }
 
 export function ConfirmDeleteButton({
@@ -34,6 +37,9 @@ export function ConfirmDeleteButton({
   description = "This cannot be undone.",
   redirectTo,
   variant = "icon",
+  triggerLabel = "Delete",
+  confirmLabel = "Delete",
+  successMessage = "Deleted",
 }: ConfirmDeleteButtonProps) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -43,7 +49,7 @@ export function ConfirmDeleteButton({
     event.preventDefault() // keep the dialog open while the action runs
     startTransition(async () => {
       const result = await action()
-      if (!toastResult(result, "Deleted")) return
+      if (!toastResult(result, successMessage)) return
       setOpen(false)
       if (redirectTo) router.push(redirectTo)
     })
@@ -58,8 +64,8 @@ export function ConfirmDeleteButton({
           </Button>
         ) : (
           <Button variant="destructive">
-            <Trash2 />
-            Delete
+            {triggerLabel === "Delete" ? <Trash2 /> : null}
+            {triggerLabel}
           </Button>
         )}
       </AlertDialogTrigger>
@@ -72,7 +78,7 @@ export function ConfirmDeleteButton({
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={handleConfirm} disabled={isPending}>
             {isPending ? <Spinner /> : null}
-            Delete
+            {confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

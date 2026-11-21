@@ -1,10 +1,10 @@
 import type { UserRef } from "@/features/users/types"
 
-export type EntityType = "contact" | "company" | "deal" | "task" | "activity"
+export type EntityType = "contact" | "company" | "deal" | "task" | "activity" | "calendar_event"
 
 /** The record the user is looking at, so "this contact" works in prompts. */
 export type PageContext = {
-  type: "contact" | "company" | "deal"
+  type: "contact" | "company" | "deal" | "meeting"
   id: string
 }
 
@@ -59,6 +59,7 @@ export type ChatMessage = {
 export type Conversation = {
   id: string
   title: string
+  summary?: string | null
   is_archived: boolean
   message_count: number
   last_message_at: string

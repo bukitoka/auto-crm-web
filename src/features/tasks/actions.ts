@@ -9,7 +9,11 @@ import type { Task, TaskStatus } from "./types"
 function revalidateTask(task?: Task) {
   revalidatePath("/tasks")
   revalidatePath("/dashboard")
-  if (task?.contact_id) revalidatePath(`/contacts/${task.contact_id}`)
+  revalidatePath("/follow-ups")
+  if (task?.contact_id) {
+    revalidatePath(`/contacts/${task.contact_id}`)
+    revalidatePath(`/contacts/${task.contact_id}/call-prep`)
+  }
   if (task?.deal_id) revalidatePath(`/deals/${task.deal_id}`)
 }
 

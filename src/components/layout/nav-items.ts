@@ -1,7 +1,10 @@
 import {
   Building2,
+  CalendarDays,
   CheckSquare,
+  FolderOpen,
   Handshake,
+  Inbox,
   LayoutDashboard,
   type LucideIcon,
   MessageCircle,
@@ -28,6 +31,9 @@ export const mainNav: NavItem[] = [
   { title: "Companies", href: "/companies", icon: Building2 },
   { title: "Deals", href: "/deals", icon: Handshake },
   { title: "Tasks", href: "/tasks", icon: CheckSquare },
+  { title: "Calendar", href: "/calendar", icon: CalendarDays },
+  { title: "Documents", href: "/documents", icon: FolderOpen },
+  { title: "Follow-ups", href: "/follow-ups", icon: Inbox },
 ]
 
 export const secondaryNav: NavItem[] = [
@@ -51,6 +57,10 @@ export const segmentLabels: Record<string, string> = {
   companies: "Companies",
   deals: "Deals",
   tasks: "Tasks",
+  calendar: "Calendar",
+  documents: "Documents",
+  "follow-ups": "Follow-ups",
+  "call-prep": "Call prep",
   automations: "Automations",
   team: "Admins",
   settings: "Settings",

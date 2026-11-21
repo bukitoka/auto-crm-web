@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getCurrentUser } from "@/features/auth/api"
 import { PasswordForm, ProfileForm } from "@/features/settings/components/account-forms"
 import { ThemeSettings } from "@/features/settings/components/theme-settings"
+import { WorkspaceSync } from "@/features/settings/components/workspace-sync"
 import { removeMyAvatar, uploadMyAvatar } from "@/features/users/actions"
 import { isSuperAdmin, roleLabel } from "@/features/users/roles"
 import { formatDate } from "@/lib/format"
@@ -22,7 +23,7 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-export default async function SettingsPage() {
+export default async function SettingsPage({ searchParams }: PageProps<"/settings">) {
   const user = await getCurrentUser()
 
   return (
@@ -70,6 +71,7 @@ export default async function SettingsPage() {
               <ThemeSettings />
             </CardContent>
           </Card>
+          {!isSuperAdmin(user) ? <WorkspaceSync params={await searchParams} /> : null}
         </div>
       </div>
     </>
