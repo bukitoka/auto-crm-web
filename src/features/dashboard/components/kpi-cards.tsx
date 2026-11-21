@@ -61,12 +61,12 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-4">
       {kpis.map((kpi) => (
         <Link
           key={kpi.label}
           href={kpi.href}
-          className="group min-w-0 rounded-lg border bg-card p-4 transition-colors outline-none hover:border-primary/40 focus-visible:ring-2 focus-visible:ring-ring sm:p-5"
+          className="dashboard-enter group min-w-0 rounded-lg border bg-card p-4 outline-none transition-colors hover:border-primary/45 focus-visible:ring-2 focus-visible:ring-ring sm:p-5"
         >
           <div className="flex items-center gap-2.5">
             <span
@@ -82,7 +82,7 @@ export function KpiCards({ summary }: { summary: DashboardSummary }) {
             </span>
             <ArrowUpRight
               aria-hidden
-              className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+              className="size-4 shrink-0 text-muted-foreground group-hover:text-primary motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5"
             />
           </div>
           <p

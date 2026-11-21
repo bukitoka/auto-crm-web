@@ -186,12 +186,14 @@ export function ImportCsvDialog({ entity, fields, rules = [], action }: ImportCs
             name="file"
             type="file"
             accept=".csv,text/csv"
-            disabled={!acknowledged}
+            aria-describedby={`${formId}-file-help`}
+            className="cursor-pointer truncate py-1 pr-3 pl-1 file:mr-2 file:h-8 file:cursor-pointer file:rounded-full file:bg-secondary file:px-3 file:text-secondary-foreground hover:file:bg-accent"
+            disabled={!acknowledged || isPending}
             onChange={handleFileChange}
           />
-          {acknowledged ? null : (
-            <FieldDescription>Confirm the format above to choose a file.</FieldDescription>
-          )}
+          <FieldDescription id={`${formId}-file-help`}>
+            {acknowledged ? "UTF-8 CSV, up to 2 MB." : "Confirm the format above to choose a file."}
+          </FieldDescription>
         </Field>
       </form>
 

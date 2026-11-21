@@ -2,7 +2,6 @@ import { ArrowUpRight, HandCoins, Sparkles } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import type { ReactNode } from "react"
-import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -35,7 +34,6 @@ function DashboardCard({
   href,
   linkText = "View all",
   className,
-  contentClassName,
   children,
 }: {
   title: string
@@ -43,7 +41,6 @@ function DashboardCard({
   href?: string
   linkText?: string
   className?: string
-  contentClassName?: string
   children: ReactNode
 }) {
   return (
@@ -64,7 +61,7 @@ function DashboardCard({
           </CardAction>
         ) : null}
       </CardHeader>
-      <CardContent className={contentClassName}>{children}</CardContent>
+      <CardContent>{children}</CardContent>
     </Card>
   )
 }
@@ -76,7 +73,6 @@ function chartRows(rows: { key: string; count: number }[]) {
 
 export default async function DashboardPage() {
   const [user, summary] = await Promise.all([getCurrentUser(), getDashboardSummary()])
-  const firstName = user.full_name.split(" ")[0]
   const oversight = canViewTeam(user)
   const statusRows = chartRows(
     summary.contacts_by_status.map(({ status, count }) => ({ key: status, count })),
@@ -87,27 +83,28 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader
-        title="Insights"
-        description={`Hi, ${firstName}. ${oversight ? "See where your team stands and what needs attention." : "See where you stand and what needs attention."}`}
-        actions={
-          <>
-            <Button variant="outline" asChild>
-              <Link href="/deals">View deals</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/assistant">
-                <Sparkles /> Help me prioritize
-              </Link>
-            </Button>
-          </>
-        }
-      />
+      <header className="flex flex-col items-start justify-between gap-5 rounded-lg border border-primary/15 bg-card px-5 py-6 sm:flex-row sm:items-end sm:px-7 dark:border-border">
+        <div className="min-w-0 space-y-2">
+          <h1 className="font-heading text-3xl font-semibold tracking-tight wrap-break-word">
+            {oversight ? "Team overview" : "Your workspace"}
+          </h1>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/deals">View deals</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/assistant">
+              <Sparkles aria-hidden /> Help me prioritize
+            </Link>
+          </Button>
+        </div>
+      </header>
       <section aria-label="Business overview">
         <KpiCards summary={summary} />
       </section>
 
-      <div className="grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
+      <div className="dashboard-enter grid items-stretch gap-5 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
         <Card className="min-w-0">
           <CardHeader>
             <CardTitle>
@@ -153,7 +150,7 @@ export default async function DashboardPage() {
         <FocusCard summary={summary} oversight={oversight} />
       </div>
 
-      <div className="grid items-stretch gap-5 lg:grid-cols-2">
+      <div className="dashboard-enter grid items-start gap-5 lg:grid-cols-2">
         <DashboardCard
           title="Closing soon"
           description="Deals expected to close in the next 30 days"
@@ -165,11 +162,9 @@ export default async function DashboardPage() {
         <DashboardCard
           title="Recent activity"
           description="The 5 most recent conversations and updates"
-          className="min-h-64 max-h-96 lg:[contain:size]"
-          contentClassName="flex min-h-0 flex-1 flex-col"
         >
           <section
-            className="min-h-0 flex-1 overflow-y-auto rounded-sm pr-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="max-h-72 overflow-y-auto rounded-sm px-1 py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
             // biome-ignore lint/a11y/noNoninteractiveTabindex: scrollable region needs keyboard focus
             tabIndex={0}
             aria-label="Recent activity updates"
@@ -182,11 +177,8 @@ export default async function DashboardPage() {
       <section aria-labelledby="insights-details" className="space-y-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="insights-details" className="font-heading text-lg font-semibold">
-            A closer look
+            Contacts and activity
           </h2>
-          <p className="text-sm text-muted-foreground">
-            Your contacts and the conversations behind them
-          </p>
         </div>
         <div className="grid gap-5 lg:grid-cols-2">
           <DashboardCard

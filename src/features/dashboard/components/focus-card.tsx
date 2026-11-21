@@ -17,7 +17,7 @@ export function FocusCard({
   const preview = summary.overdue_task_list.slice(0, 3)
 
   return (
-    <Card className="min-w-0">
+    <Card className="min-w-0 ring-primary/20 dark:ring-foreground/10">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalendarDays aria-hidden className="size-4 text-primary" />
@@ -28,7 +28,7 @@ export function FocusCard({
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col gap-5">
-        <dl className="grid grid-cols-3 divide-x rounded-md border bg-muted/30 py-3">
+        <dl className="grid grid-cols-3 divide-x rounded-md border bg-accent py-3 dark:bg-muted/30">
           <div className="flex flex-col px-3">
             <dt className="order-last mt-1 text-xs text-muted-foreground">Overdue</dt>
             <dd

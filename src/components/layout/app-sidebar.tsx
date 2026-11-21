@@ -72,7 +72,7 @@ export function AppSidebar({ user, recentChats, versions, changelog, ...props }:
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border px-2 py-4">
+      <SidebarHeader className="h-14 shrink-0 justify-center border-b border-sidebar-border px-2 py-0">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton

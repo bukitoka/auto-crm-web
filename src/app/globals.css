@@ -100,7 +100,7 @@
 :root {
   --radius: 1rem;
 
-  --background: var(--color-white);
+  --background: var(--color-stone-100);
   --foreground: var(--color-zinc-950);
   --card: var(--color-white);
   --card-foreground: var(--color-zinc-950);
@@ -113,7 +113,7 @@
   --secondary: var(--color-zinc-100);
   --secondary-foreground: var(--color-zinc-900);
   --muted: var(--color-zinc-100);
-  --muted-foreground: var(--color-zinc-500);
+  --muted-foreground: var(--color-zinc-600);
   --accent: var(--color-brand-50);
   --accent-foreground: var(--color-brand-900);
 
@@ -145,8 +145,8 @@
   --sidebar-border: var(--color-zinc-200);
   --sidebar-ring: var(--ring);
 
-  --canvas: var(--color-zinc-100);
-  --canvas-dot: var(--color-zinc-300);
+  --canvas: var(--color-stone-200);
+  --canvas-dot: var(--color-stone-400);
 }
 
 .dark {
@@ -367,5 +367,47 @@
 @media (prefers-reduced-motion: reduce) {
   [data-slot="button"] {
     transition: none;
+  }
+}
+
+@keyframes dashboard-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes auth-photo-enter {
+  from {
+    opacity: 0;
+    transform: scale(1.045);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dashboard-enter {
+    animation: dashboard-enter 350ms ease-out both;
+  }
+
+  .dashboard-enter:nth-child(2) {
+    animation-delay: 45ms;
+  }
+
+  .dashboard-enter:nth-child(3) {
+    animation-delay: 90ms;
+  }
+
+  .dashboard-enter:nth-child(4) {
+    animation-delay: 135ms;
+  }
+
+  .auth-photo {
+    animation: auth-photo-enter 900ms ease-out both;
+  }
+}
+
+@media (min-width: 64rem) {
+  .auth-photo {
+    background-image: url("/auth-staircase.jpg");
   }
 }

@@ -44,7 +44,13 @@ export function CountBarChart({
           tickMargin={8}
         />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <Bar dataKey="count" fill="var(--color-count)" radius={[0, 4, 4, 0]} barSize={20}>
+        <Bar
+          dataKey="count"
+          fill="var(--color-count)"
+          animationDuration={450}
+          radius={[0, 4, 4, 0]}
+          barSize={20}
+        >
           <LabelList
             dataKey="count"
             position="right"

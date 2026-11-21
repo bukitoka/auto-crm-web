@@ -56,7 +56,12 @@ export function PipelineChart({ data }: { data: PipelineStageSummary[] }) {
             />
           }
         />
-        <Bar dataKey="total_value" fill="var(--color-total_value)" radius={[4, 4, 0, 0]} />
+        <Bar
+          dataKey="total_value"
+          fill="var(--color-total_value)"
+          animationDuration={550}
+          radius={[4, 4, 0, 0]}
+        />
       </BarChart>
     </ChartContainer>
   )
