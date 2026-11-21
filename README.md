@@ -31,7 +31,7 @@ in an httpOnly cookie rather than client-side storage. Images can load directly 
 
 ## Run locally
 
-You need [Bun 1.4.3](https://bun.sh) and the API running at `http://localhost:8000`.
+You need [Bun 1.4.5](https://bun.sh) and the API running at `http://localhost:8000`.
 Follow the [API setup guide](https://github.com/bukitoka/auto-crm-api#run-locally) first.
 
 ```bash

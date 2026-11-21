@@ -1,7 +1,15 @@
 import { revalidatePath } from "next/cache"
 import { describe, expect, it, vi } from "vitest"
 import { ApiError, apiFetch } from "@/lib/api-client"
-import { createAdmin, removeMyAvatar, updateAdmin, updateUser, uploadMyAvatar } from "./actions"
+import {
+  changeMyPassword,
+  createAdmin,
+  removeMyAvatar,
+  updateAdmin,
+  updateMyProfile,
+  updateUser,
+  uploadMyAvatar,
+} from "./actions"
 
 vi.mock("@/lib/api-client", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/api-client")>()),
@@ -142,6 +150,62 @@ describe("updateAdmin", () => {
     const result = await updateAdmin("user-2", { ...values, password: "short" })
 
     expect(result).toMatchObject({ ok: false, error: "At least 8 characters" })
+    expect(apiFetchMock).not.toHaveBeenCalled()
+  })
+})
+
+describe("updateMyProfile", () => {
+  it("saves a trimmed name and refreshes the shared layout", async () => {
+    const user = { id: "user-1", full_name: "Jane Doe" }
+    apiFetchMock.mockResolvedValue(user)
+
+    expect(await updateMyProfile({ full_name: "  Jane Doe  " })).toEqual({ ok: true, data: user })
+    expect(apiFetchMock).toHaveBeenCalledWith("/users/me", {
+      method: "PATCH",
+      body: { full_name: "Jane Doe" },
+    })
+    expect(revalidatePath).toHaveBeenCalledWith("/", "layout")
+  })
+
+  it("rejects a blank name without calling the API", async () => {
+    expect(await updateMyProfile({ full_name: " " })).toMatchObject({
+      ok: false,
+      error: "Name is required",
+    })
+    expect(apiFetchMock).not.toHaveBeenCalled()
+  })
+
+  it("reports an API failure without refreshing the layout", async () => {
+    apiFetchMock.mockRejectedValue(new ApiError(403, "This action requires a personal account"))
+
+    expect(await updateMyProfile({ full_name: "Jane Doe" })).toMatchObject({
+      ok: false,
+      status: 403,
+    })
+    expect(revalidatePath).not.toHaveBeenCalled()
+  })
+})
+
+describe("changeMyPassword", () => {
+  const current_password = "old-password"
+  const password = "new-password"
+
+  it("sends the current and new passwords to the API", async () => {
+    apiFetchMock.mockResolvedValue(undefined)
+
+    expect(
+      (await changeMyPassword({ current_password, password, confirmation: password })).ok,
+    ).toBe(true)
+    expect(apiFetchMock).toHaveBeenCalledWith("/users/me/password", {
+      method: "PUT",
+      body: { current_password, password },
+    })
+  })
+
+  it("rejects a mismatched confirmation without calling the API", async () => {
+    expect(
+      await changeMyPassword({ current_password, password, confirmation: "different-password" }),
+    ).toMatchObject({ ok: false, error: "Passwords must match" })
     expect(apiFetchMock).not.toHaveBeenCalled()
   })
 })
