@@ -19,3 +19,16 @@ export const adminEditSchema = z.object({
 export type AdminEditValues = z.infer<typeof adminEditSchema>
 
 export const emptyAdminForm: AdminCreateValues = { full_name: "", email: "", password: "" }
+
+export const profileSchema = adminCreateSchema.pick({ full_name: true })
+
+export const passwordChangeSchema = z
+  .object({
+    current_password: z.string().min(1, "Enter your current password").max(128),
+    password: adminCreateSchema.shape.password,
+    confirmation: z.string(),
+  })
+  .refine(({ password, confirmation }) => password === confirmation, {
+    path: ["confirmation"],
+    message: "Passwords must match",
+  })

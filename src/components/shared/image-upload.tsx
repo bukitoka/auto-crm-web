@@ -11,6 +11,32 @@ import { toastResult } from "@/lib/toast-result"
 import { cn } from "@/lib/utils"
 import { EntityAvatar } from "./entity-avatar"
 
+// Leave room for multipart overhead under Vercel's default 4.5 MB request limit.
+const MAX_ACTION_IMAGE_BYTES = 4 * 1024 * 1024
+
+async function prepareImage(file: File): Promise<File> {
+  if (file.size <= MAX_ACTION_IMAGE_BYTES) return file
+
+  const url = URL.createObjectURL(file)
+  try {
+    const image = new Image()
+    image.src = url
+    await image.decode()
+    const scale = Math.min(1, 512 / Math.max(image.naturalWidth, image.naturalHeight))
+    const canvas = document.createElement("canvas")
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale))
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale))
+    const context = canvas.getContext("2d")
+    if (!context) throw new Error("Image canvas unavailable")
+    context.drawImage(image, 0, 0, canvas.width, canvas.height)
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"))
+    if (!blob || blob.size > MAX_ACTION_IMAGE_BYTES) throw new Error("Image encoding failed")
+    return new File([blob], "upload.png", { type: blob.type })
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
+
 type ImageUploadProps = {
   name: string
   src: string | null
@@ -46,10 +72,19 @@ export function ImageUpload({
       toast.error("Images can be at most 5 MB")
       return
     }
-    const formData = new FormData()
-    formData.set("file", file)
     startTransition(async () => {
-      toastResult(await onUpload(formData), `${capitalize(label)} updated`)
+      const image = await prepareImage(file).catch(() => null)
+      if (!image) {
+        toast.error("Could not resize this image. Try a smaller JPEG, PNG, WebP or GIF.")
+        return
+      }
+      const formData = new FormData()
+      formData.set("file", image)
+      try {
+        toastResult(await onUpload(formData), `${capitalize(label)} updated`)
+      } catch {
+        toast.error(`Could not upload the ${label}. Please try again.`)
+      }
     })
   }
 

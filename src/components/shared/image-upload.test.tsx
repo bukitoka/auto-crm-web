@@ -39,6 +39,43 @@ describe("ImageUpload", () => {
     expect(toast.success).toHaveBeenCalledWith("Photo updated")
   })
 
+  it("resizes an accepted image before it can hit the request body limit", async () => {
+    const { user, onUpload } = setup()
+    onUpload.mockResolvedValue({ ok: true, data: null })
+    const createObjectURL = vi.fn(() => "blob:large-image")
+    const revokeObjectURL = vi.fn()
+    const drawImage = vi.fn()
+    vi.stubGlobal("URL", Object.assign(class extends URL {}, { createObjectURL, revokeObjectURL }))
+    vi.stubGlobal(
+      "Image",
+      class {
+        naturalWidth = 2048
+        naturalHeight = 1024
+        decode = vi.fn().mockResolvedValue(undefined)
+      },
+    )
+    const getContext = vi
+      .spyOn(HTMLCanvasElement.prototype, "getContext")
+      .mockReturnValue({ drawImage } as unknown as CanvasRenderingContext2D)
+    const toBlob = vi
+      .spyOn(HTMLCanvasElement.prototype, "toBlob")
+      .mockImplementation((callback) => callback(new Blob(["resized"], { type: "image/png" })))
+
+    try {
+      const file = new File([new Uint8Array(MAX_IMAGE_BYTES)], "large.png", { type: "image/png" })
+      await user.upload(screen.getByLabelText("Upload photo"), file)
+
+      const uploaded = onUpload.mock.calls[0][0].get("file") as File
+      expect(uploaded.size).toBeLessThan(file.size)
+      expect(drawImage).toHaveBeenCalledWith(expect.anything(), 0, 0, 512, 256)
+      expect(revokeObjectURL).toHaveBeenCalledWith("blob:large-image")
+    } finally {
+      getContext.mockRestore()
+      toBlob.mockRestore()
+      vi.unstubAllGlobals()
+    }
+  })
+
   it("refuses files over 5 MB before uploading", async () => {
     const { user, onUpload } = setup()
     const big = new File([new Uint8Array(MAX_IMAGE_BYTES + 1)], "big.png", { type: "image/png" })

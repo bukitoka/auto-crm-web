@@ -9,6 +9,8 @@ import {
   type AdminEditValues,
   adminCreateSchema,
   adminEditSchema,
+  passwordChangeSchema,
+  profileSchema,
 } from "./schemas"
 import type { User } from "./types"
 
@@ -28,6 +30,31 @@ export async function removeMyAvatar(): Promise<ActionResult<User>> {
   const result = await runAction(() => apiFetch<User>("/users/me/avatar", { method: "DELETE" }))
   if (result.ok) revalidatePath("/", "layout")
   return result
+}
+
+export async function updateMyProfile(values: { full_name: string }): Promise<ActionResult<User>> {
+  const parsed = parseInput(profileSchema, values)
+  if (!parsed.ok) return parsed
+
+  const result = await runAction(() =>
+    apiFetch<User>("/users/me", { method: "PATCH", body: parsed.data }),
+  )
+  if (result.ok) revalidatePath("/", "layout")
+  return result
+}
+
+export async function changeMyPassword(values: {
+  current_password: string
+  password: string
+  confirmation: string
+}): Promise<ActionResult> {
+  const parsed = parseInput(passwordChangeSchema, values)
+  if (!parsed.ok) return parsed
+
+  const { current_password, password } = parsed.data
+  return runAction(() =>
+    apiFetch<void>("/users/me/password", { method: "PUT", body: { current_password, password } }),
+  )
 }
 
 /** Super admin: create an admin account. */

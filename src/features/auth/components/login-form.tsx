@@ -39,8 +39,7 @@ export function LoginForm({ from, expired, reset }: LoginFormProps) {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Log in</h1>
-        <p className="text-sm text-muted-foreground">Log in to your workspace</p>
+        <h1 className="text-4xl font-semibold tracking-tight">Log in</h1>
       </div>
       {expired ? (
         <Alert>
@@ -63,8 +62,7 @@ export function LoginForm({ from, expired, reset }: LoginFormProps) {
                 {...field}
                 id="email"
                 type="email"
-                autoComplete="email"
-                placeholder="you@company.com"
+                autoComplete="username"
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid ? <FieldError errors={[fieldState.error]} /> : null}
@@ -97,12 +95,12 @@ export function LoginForm({ from, expired, reset }: LoginFormProps) {
           )}
         />
         <Field>
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" size="lg" disabled={isPending}>
             {isPending ? <Spinner /> : null}
             Log in
           </Button>
           <FieldDescription className="text-center">
-            Accounts are created by your workspace's super admin.
+            Need an account? Contact your workspace super admin.
           </FieldDescription>
         </Field>
       </FieldGroup>
